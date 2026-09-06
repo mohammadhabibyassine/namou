@@ -1,0 +1,375 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Heart,
+  Minus,
+  Plus,
+  ShoppingBag,
+} from "lucide-react";
+import { ProductMedia } from "@/components/commerce/product-media";
+import { Price } from "@/components/commerce/price";
+import { useAddToCart } from "@/hooks/cart";
+import { useAddToWishlist } from "@/hooks/wishlist";
+import { useGuestCommerce } from "@/providers/guest-commerce-provider";
+import { useSession } from "@/providers/session-provider";
+import type { ProductDetail, ProductVariant } from "@/types/api";
+import { cn } from "@/lib/utils/cn";
+
+function optionMap(variant: ProductVariant) {
+  return Object.fromEntries(
+    variant.options.map((option) => [
+      option.attributeTypeId,
+      option.attributeValueId,
+    ]),
+  );
+}
+
+export function ProductDetailView({ product }: { product: ProductDetail }) {
+  const defaultVariant =
+    product.variants.find((variant) => variant.isDefault) ??
+    product.variants[0] ??
+    null;
+  const [selected, setSelected] = useState<Record<string, string>>(() =>
+    defaultVariant ? optionMap(defaultVariant) : {},
+  );
+  const [imageIndex, setImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [flying, setFlying] = useState(false);
+  const { authenticated } = useSession();
+  const addToServerCart = useAddToCart();
+  const addToServerWishlist = useAddToWishlist();
+  const addGuestCartItem = useGuestCommerce((state) => state.addCartItem);
+  const toggleGuestWishlistItem = useGuestCommerce(
+    (state) => state.toggleWishlistItem,
+  );
+
+  const variant = useMemo(
+    () =>
+      product.variants.find((candidate) =>
+        candidate.options.every(
+          (option) =>
+            selected[option.attributeTypeId] === option.attributeValueId,
+        ),
+      ) ?? defaultVariant,
+    [defaultVariant, product.variants, selected],
+  );
+  const images = useMemo(() => {
+    const selectedImages = variant
+      ? product.images.filter((image) => image.variantId === variant.id)
+      : [];
+    const general = product.images.filter((image) => image.variantId === null);
+    return selectedImages.length
+      ? [...selectedImages, ...general]
+      : general.length
+        ? general
+        : product.images;
+  }, [product.images, variant]);
+  const activeImage = images[imageIndex % Math.max(images.length, 1)] ?? null;
+
+  function confirmCartAddition() {
+    setFlying(true);
+    setNotice("Added to your cart");
+    window.setTimeout(() => setFlying(false), 700);
+  }
+
+  function addToCart() {
+    if (!variant) return;
+    if (authenticated) {
+      addToServerCart.mutate(
+        { variantId: variant.id, quantity },
+        {
+          onSuccess: confirmCartAddition,
+          onError: () =>
+            setNotice("This object could not be added. Please try again."),
+        },
+      );
+      return;
+    }
+    addGuestCartItem(
+      {
+        variantId: variant.id,
+        productId: product.id,
+        title: product.title,
+        slug: product.slug,
+        imageUrl: activeImage?.imageUrl ?? null,
+        sku: variant.sku,
+        options: variant.options.map((option) => ({
+          attributeType: option.attributeTypeName,
+          value: option.value,
+        })),
+        unitPrice: variant.effectivePrice,
+        currencyCode: product.currencyCode,
+      },
+      quantity,
+    );
+    confirmCartAddition();
+  }
+
+  function addToWishlist() {
+    if (authenticated) {
+      addToServerWishlist.mutate(
+        { productId: product.id, variantId: variant?.id ?? null },
+        {
+          onSuccess: () => setNotice("Saved to your objects"),
+          onError: () =>
+            setNotice("This object could not be saved. Please try again."),
+        },
+      );
+      return;
+    }
+    toggleGuestWishlistItem({
+      productId: product.id,
+      variantId: variant?.id ?? null,
+      title: product.title,
+      slug: product.slug,
+      imageUrl: activeImage?.imageUrl ?? null,
+      price: variant?.effectivePrice ?? product.basePrice,
+      currencyCode: product.currencyCode,
+    });
+    setNotice("Saved objects updated");
+  }
+
+  function selectOption(attributeTypeId: string, attributeValueId: string) {
+    const next = { ...selected, [attributeTypeId]: attributeValueId };
+    const exact = product.variants.find((candidate) =>
+      candidate.options.every(
+        (option) => next[option.attributeTypeId] === option.attributeValueId,
+      ),
+    );
+    if (exact) setSelected(optionMap(exact));
+    else {
+      const compatible = product.variants.find((candidate) =>
+        candidate.options.some(
+          (option) =>
+            option.attributeTypeId === attributeTypeId &&
+            option.attributeValueId === attributeValueId,
+        ),
+      );
+      setSelected(compatible ? optionMap(compatible) : next);
+    }
+    setImageIndex(0);
+  }
+
+  const outOfStock = !variant || variant.stockQuantity < 1;
+
+  return (
+    <div className="namou-container py-5 sm:py-8">
+      {flying ? (
+        <div className="fly-to-cart bg-acid text-ink pointer-events-none fixed top-1/2 left-1/2 z-[100] grid size-12 place-items-center rounded-lg">
+          <ShoppingBag size={20} />
+        </div>
+      ) : null}
+      <div className="text-subtle mb-5 font-mono text-[9px] uppercase">
+        Shop / {product.category.name} /{" "}
+        <span className="text-foreground">{product.title}</span>
+      </div>
+      <div className="grid gap-3 lg:grid-cols-[1.5fr_.72fr]">
+        <section
+          className="grid min-h-[34rem] gap-3 md:grid-cols-[1.5fr_.7fr]"
+          aria-label="Product gallery"
+        >
+          <div className="group border-line relative overflow-hidden rounded-xl border">
+            <ProductMedia
+              src={activeImage?.imageUrl ?? null}
+              alt={activeImage?.altText ?? product.title}
+              priority
+              className="h-full min-h-[32rem]"
+              sizes="(max-width: 1024px) 100vw, 55vw"
+            />
+            {images.length > 1 ? (
+              <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
+                <button
+                  onClick={() =>
+                    setImageIndex(
+                      (value) => (value - 1 + images.length) % images.length,
+                    )
+                  }
+                  className="bg-ink grid size-10 place-items-center rounded-full text-white"
+                  aria-label="Previous image"
+                >
+                  <ArrowLeft size={16} />
+                </button>
+                <span className="bg-surface/80 rounded-full px-3 py-2 font-mono text-[9px] backdrop-blur">
+                  {imageIndex + 1} / {images.length}
+                </span>
+                <button
+                  onClick={() =>
+                    setImageIndex((value) => (value + 1) % images.length)
+                  }
+                  className="bg-ink grid size-10 place-items-center rounded-full text-white"
+                  aria-label="Next image"
+                >
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+            ) : null}
+          </div>
+          <div className="hidden grid-rows-2 gap-3 md:grid">
+            {(images.length > 1 ? images.slice(1, 3) : [null, null]).map(
+              (image, index) => (
+                <button
+                  type="button"
+                  key={image?.id ?? index}
+                  onClick={() => image && setImageIndex(images.indexOf(image))}
+                  className="group border-line overflow-hidden rounded-xl border text-left"
+                >
+                  <ProductMedia
+                    src={image?.imageUrl ?? null}
+                    alt={
+                      image?.altText ?? `${product.title} detail ${index + 2}`
+                    }
+                    className="h-full min-h-0"
+                    sizes="24vw"
+                  />
+                </button>
+              ),
+            )}
+          </div>
+        </section>
+
+        <section className="hairline-panel flex flex-col p-5 sm:p-7">
+          <p className="technical-label text-subtle">
+            {product.category.name} / {variant?.sku ?? "Unconfigured"}
+          </p>
+          <h1 className="display-title mt-3 text-5xl sm:text-7xl">
+            {product.title}
+          </h1>
+          <Price
+            amount={variant?.effectivePrice ?? product.basePrice}
+            currencyCode={product.currencyCode}
+            className="mt-4 text-sm"
+          />
+          {product.description ? (
+            <p className="text-subtle mt-6 text-sm leading-6">
+              {product.description}
+            </p>
+          ) : null}
+
+          <div className="border-line mt-7 space-y-6 border-t pt-6">
+            {product.attributes.map((attribute) => (
+              <fieldset key={attribute.id}>
+                <legend className="technical-label mb-3">
+                  {attribute.name}
+                </legend>
+                <div className="flex flex-wrap gap-2">
+                  {attribute.values.map((value) => {
+                    const active = selected[attribute.id] === value.id;
+                    const isColor =
+                      attribute.slug.toLowerCase().includes("color") ||
+                      attribute.slug.toLowerCase().includes("colour");
+                    return (
+                      <button
+                        key={value.id}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => selectOption(attribute.id, value.id)}
+                        className={cn(
+                          "relative min-h-10 rounded-lg border px-4 font-mono text-[10px] uppercase transition",
+                          active
+                            ? "border-ink bg-ink text-white"
+                            : "border-line bg-surface hover:border-ink",
+                          isColor && "pl-9",
+                        )}
+                      >
+                        {isColor ? (
+                          <span className="absolute top-1/2 left-3 size-3 -translate-y-1/2 rounded-full border border-current bg-current opacity-70" />
+                        ) : null}
+                        {value.value}
+                        {active ? (
+                          <Check className="ml-2 inline" size={12} />
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            ))}
+          </div>
+
+          <div className="border-line mt-6 flex items-center justify-between border-y py-4">
+            <span className="technical-label">Quantity</span>
+            <div className="border-line flex items-center rounded-lg border">
+              <button
+                type="button"
+                onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+                className="grid size-10 place-items-center"
+                aria-label="Decrease quantity"
+              >
+                <Minus size={14} />
+              </button>
+              <output className="w-9 text-center font-mono text-xs">
+                {quantity}
+              </output>
+              <button
+                type="button"
+                onClick={() =>
+                  setQuantity((value) =>
+                    Math.min(variant?.stockQuantity ?? 1, value + 1),
+                  )
+                }
+                className="grid size-10 place-items-center"
+                aria-label="Increase quantity"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+          </div>
+
+          {variant && variant.stockQuantity > 0 && variant.stockQuantity < 5 ? (
+            <p className="mt-4 rounded-lg bg-[#efe7cf] p-3 font-mono text-[10px] text-[#765400] uppercase">
+              Low stock / only {variant.stockQuantity} remaining
+            </p>
+          ) : null}
+          <div className="mt-auto pt-6">
+            <button
+              type="button"
+              onClick={addToCart}
+              disabled={outOfStock || addToServerCart.isPending}
+              className="bg-acid text-ink flex min-h-12 w-full items-center justify-between rounded-lg px-5 font-mono text-xs uppercase transition-transform disabled:opacity-50 motion-safe:hover:scale-[1.025]"
+            >
+              <span>
+                {outOfStock
+                  ? "Unavailable"
+                  : addToServerCart.isPending
+                    ? "Adding…"
+                    : "Add to cart"}
+              </span>
+              <Plus size={18} />
+            </button>
+            <button
+              type="button"
+              id="wishlist"
+              onClick={addToWishlist}
+              disabled={addToServerWishlist.isPending}
+              className="border-line mt-2 flex min-h-11 w-full items-center justify-center gap-3 rounded-lg border font-mono text-[10px] uppercase"
+            >
+              <Heart size={15} /> Add to wishlist
+            </button>
+            {notice ? (
+              <p
+                className="mt-3 text-center font-mono text-[9px] uppercase"
+                role="status"
+              >
+                {notice}
+              </p>
+            ) : null}
+          </div>
+          <details className="border-line mt-6 border-t py-4">
+            <summary className="cursor-pointer font-mono text-[10px] uppercase">
+              Product details
+            </summary>
+            <p className="text-subtle mt-3 text-sm leading-6">
+              SKU {variant?.sku}. Designed as part of the Namou modular movement
+              system.
+            </p>
+          </details>
+        </section>
+      </div>
+    </div>
+  );
+}

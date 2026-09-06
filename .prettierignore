@@ -1,0 +1,8 @@
+.next
+coverage
+designs
+node_modules
+package-lock.json
+playwright-report
+public/*.svg
+test-results

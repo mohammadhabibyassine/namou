@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TECHNICAL SHELL 01 | NAMOU</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&amp;family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "canvas-bg": "#ECEAE4",
+              "panel-border": "rgba(0, 0, 0, 0.1)",
+              "brand-lime": "#CCFF00",
+              "brand-lime-hover": "#b8e600",
+            },
+            fontFamily: {
+              condensed: ["Anton", "sans-serif"],
+              mono: ['"IBM Plex Mono"', "monospace"],
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Custom CSS for specialized visuals -->
+    <style data-purpose="custom-typography">
+      .title-display {
+        font-family: "Anton", "Impact", sans-serif;
+        letter-spacing: -0.01em;
+        line-height: 0.92;
+        transform: scaleY(1.05);
+      }
+      .technical-code {
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: -0.01em;
+      }
+    </style>
+    <style data-purpose="diagonal-slash">
+      .diagonal-strike {
+        position: relative;
+        overflow: hidden;
+      }
+      .diagonal-strike::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 142%;
+        height: 1px;
+        background-color: #a3a3a3;
+        transform: rotate(26deg);
+        transform-origin: top left;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-canvas-bg min-h-screen font-sans text-neutral-900 antialiased"
+  >
+    <!-- BEGIN: SiteHeader -->
+    <header
+      class="flex w-full items-center justify-between border-b border-black/[0.08] px-6 py-4 lg:px-12"
+      data-purpose="main-navigation"
+    >
+      <!-- Brand Wordmark -->
+      <div class="flex items-center">
+        <a
+          class="font-sans text-2xl font-black tracking-tighter uppercase"
+          href="#"
+        >
+          NAMOU
+        </a>
+      </div>
+      <!-- Center Navigation -->
+      <nav
+        class="technical-code hidden items-center space-x-10 text-[13px] font-semibold tracking-wider text-neutral-800 md:flex"
+      >
+        <a class="font-bold text-black" href="#">SHOP</a>
+        <a class="transition-colors hover:text-black" href="#">DROPS</a>
+        <a class="transition-colors hover:text-black" href="#">CATEGORIES</a>
+      </nav>
+      <!-- Header Actions (Search & Cart) -->
+      <div class="flex items-center space-x-5">
+        <button
+          class="technical-code flex items-center space-x-2 text-xs font-semibold tracking-wider text-neutral-800 hover:text-black"
+        >
+          <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            ></path>
+          </svg>
+          <span class="">SEARCH</span>
+        </button>
+        <a
+          class="technical-code inline-flex items-center space-x-2 rounded-lg bg-neutral-900 px-4 py-2 text-xs font-semibold tracking-wider text-white transition-colors hover:bg-black"
+          href="#"
+        >
+          <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+            ></path>
+          </svg>
+          <span class="">CART 02</span>
+        </a>
+      </div>
+    </header>
+    <!-- END: SiteHeader -->
+    <!-- BEGIN: MainContent -->
+    <main class="mx-auto max-w-[1536px] px-4 py-5 sm:px-6 lg:px-8">
+      <!-- Breadcrumb Row -->
+      <nav
+        aria-label="Breadcrumb"
+        class="technical-code mb-4 flex items-center space-x-3 text-xs font-medium tracking-wider text-neutral-700"
+      >
+        <span class="">SHOP</span>
+        <span class="text-neutral-400">/</span>
+        <span class="">OUTERWEAR</span>
+        <span class="text-neutral-400">/</span>
+        <span class="font-semibold text-neutral-900">TECHNICAL SHELL 01</span>
+      </nav>
+      <!-- Product Layout Grid: Left Main Gallery, Center Detail Macros, Right Details & Buy Box -->
+      <div class="grid grid-cols-1 items-start gap-5 lg:grid-cols-12">
+        <!-- BEGIN: LeftProductGallery (Large Main Display) -->
+        <section
+          class="relative flex h-[840px] flex-col justify-between overflow-hidden rounded-xl border border-neutral-300 bg-neutral-900 lg:col-span-5"
+          data-purpose="primary-gallery"
+        >
+          <!-- Background Mock Product Image (Clean technical shell jacket float) -->
+          <div class="absolute inset-0 z-0 bg-[#2b2d2f]">
+            <img
+              alt="Technical Shell 01 Front View"
+              class="h-full w-full object-cover object-center opacity-90 mix-blend-luminosity contrast-125"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyY-Ls2drzl5L15yFn0Yz_PR-GNwOOAG3MeyNBCCs21CAlOC39FCI7JPTxezpcasyXsM4VXelcAmuOxLs6RVjEEWi0Tno_Jruu6e6qOEUbm-KLasWPEDz834KjuaOzkCPE5Mc6ungcwDOKaZwXsrOKOIRYZYkkV5GUu9rXk9a6DhS70r7k4xszSLlAuzrcnfle6G1PSeBbuBNqKiiXH5GJozPfhEV_jNaO6kvhFGtrFgoVX0wfX66U"
+            />
+            <div
+              class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"
+            ></div>
+          </div>
+          <!-- Top Gallery Badges -->
+          <div class="relative z-10 flex items-center justify-between p-4">
+            <!-- Slide Counter -->
+            <div
+              class="technical-code rounded-md bg-black/60 px-3 py-1.5 text-xs font-medium tracking-wider text-white backdrop-blur-md"
+            >
+              01 / 03
+            </div>
+            <!-- Fullscreen Expand Button -->
+            <button
+              aria-label="Expand image"
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-white backdrop-blur-md transition-colors hover:bg-black"
+            >
+              <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.2"
+                ></path>
+              </svg>
+            </button>
+          </div>
+          <!-- Bottom Gallery Controls & Pagination -->
+          <div class="relative z-10 flex items-center justify-between p-4">
+            <!-- Previous Button -->
+            <button
+              aria-label="Previous image"
+              class="flex h-9 w-9 items-center justify-center rounded-lg bg-black/80 text-white backdrop-blur-md transition-colors hover:bg-black"
+            >
+              <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                ></path>
+              </svg>
+            </button>
+            <!-- Segmented Indicator Bars -->
+            <div class="flex items-center space-x-2">
+              <span class="bg-brand-lime h-1 w-6 rounded-full"></span>
+              <span class="h-1 w-6 rounded-full bg-white/40"></span>
+              <span class="h-1 w-6 rounded-full bg-white/20"></span>
+            </div>
+            <!-- Next Button -->
+            <button
+              aria-label="Next image"
+              class="flex h-9 w-9 items-center justify-center rounded-lg bg-black/80 text-white backdrop-blur-md transition-colors hover:bg-black"
+            >
+              <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </section>
+        <!-- END: LeftProductGallery -->
+        <!-- BEGIN: CenterDetailGallery (Macro Stacks) -->
+        <section
+          class="flex h-[840px] flex-col gap-4 lg:col-span-3"
+          data-purpose="macro-gallery"
+        >
+          <!-- Macro Top: Fabric & Zipper Detail with droplets -->
+          <div
+            class="group relative h-[410px] w-full overflow-hidden rounded-2xl border border-neutral-300 bg-neutral-900"
+          >
+            <img
+              alt="Water-repellent fabric detail with taped YKK zipper"
+              class="block h-full w-full object-cover object-center contrast-125 grayscale filter transition-transform duration-500 group-hover:scale-105"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt9GEDXVlnWClhb2ERC4JvzuFcPwXOmavM4PsYr2B5KeHzNhZuXoeQ2FQzRksDHpA5gzCrudl0v5yLJJimfDI-l4LiyoTO8yWHd1NzyV0HcjJR4pQCkkcind0pA_kfMeQb3R5p-dsvwEDt3EWpi90SQxWNrOI2U0o6LzZVrskF2kfneQQQBYOSmZ18AALq6_4M0bnW1XrnedZ3bsew2KTmXQADgdfwfa2FcehbNcR0jEo6hoZ9CsNH"
+            />
+            <div class="pointer-events-none absolute inset-0 bg-black/20"></div>
+          </div>
+          <!-- Macro Bottom: Cinch Cord & Hardware Detail -->
+          <div
+            class="group relative h-[410px] w-full overflow-hidden rounded-2xl border border-neutral-300 bg-neutral-900"
+          >
+            <img
+              alt="Drawcord and technical toggle hardware"
+              class="block h-full w-full object-cover object-center contrast-125 grayscale filter transition-transform duration-500 group-hover:scale-105"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwomDVIkFEivG8qzMS5Tc_D83-_GSYyfEFWl4mU68ve7_V-1UBpmgvqIwEhVyW75RYPtk1jJje-EKqNfffYnEV0bmhVGFqn2t02Dz_GoHzYWBeRpYV-n-fniY72RpxeaKfG63do7v2GlLq29d7HPVph7QPMz0xE16vnFMhZeRiwf8nzsFw0-JviNCJVHfLXFFURYYpRtZPL4l5qPbMvDoDE6aCF3571P6z8Syus9w-oufA35Cv3R_r"
+            />
+            <div class="pointer-events-none absolute inset-0 bg-black/20"></div>
+          </div>
+        </section>
+        <!-- END: CenterDetailGallery -->
+        <!-- BEGIN: ProductPurchaseCard (Right Column) -->
+        <aside
+          class="flex flex-col justify-between rounded-xl border border-neutral-300/90 bg-[#EDEBE5] p-7 lg:col-span-4"
+          data-purpose="product-actions-panel"
+        >
+          <!-- Header Info -->
+          <div>
+            <!-- Big Condensed Title -->
+            <h1
+              class="title-display mb-3 text-5xl font-black tracking-normal text-neutral-950 uppercase md:text-[54px]"
+            >
+              TECHNICAL SHELL 01
+            </h1>
+            <!-- Price & SKU -->
+            <div class="space-y-1">
+              <div class="technical-code text-xl font-bold text-neutral-900">
+                $420.00 USD
+              </div>
+              <div class="technical-code text-xs font-medium text-neutral-600">
+                SKU: NMU-JK-2401
+              </div>
+            </div>
+            <!-- Divider -->
+            <hr class="my-5 border-neutral-300/80" />
+            <!-- Short Description -->
+            <p
+              class="technical-code text-[12.5px] leading-relaxed text-neutral-800"
+            >
+              Waterproof technical shell jacket crafted from breathable 3-layer
+              fabric. Built for movement, protection, and everyday adaptability.
+            </p>
+            <!-- Divider -->
+            <hr class="my-5 border-neutral-300/80" />
+            <!-- Color Selector Section -->
+            <div class="mb-5">
+              <div
+                class="technical-code mb-2.5 text-xs font-semibold tracking-wider text-neutral-900"
+              >
+                COLOR
+              </div>
+              <div class="flex items-center gap-2">
+                <!-- Active: BLACK -->
+                <button
+                  class="technical-code flex items-center space-x-2 rounded-md border border-black bg-neutral-900 px-4 py-2 text-xs font-medium text-white shadow-sm"
+                >
+                  <span class="bg-brand-lime h-1.5 w-1.5 rounded-full"></span>
+                  <span class="">BLACK</span>
+                </button>
+                <!-- Inactive: OLIVE -->
+                <button
+                  class="technical-code rounded-md border border-neutral-400 bg-transparent px-4 py-2 text-xs font-medium text-neutral-800 transition-colors hover:bg-neutral-200/60"
+                >
+                  OLIVE
+                </button>
+                <!-- Inactive: STONE -->
+                <button
+                  class="technical-code rounded-md border border-neutral-400 bg-transparent px-4 py-2 text-xs font-medium text-neutral-800 transition-colors hover:bg-neutral-200/60"
+                >
+                  STONE
+                </button>
+              </div>
+            </div>
+            <!-- Size Selector Section -->
+            <div class="mb-5">
+              <div
+                class="technical-code mb-2.5 text-xs font-semibold tracking-wider text-neutral-900"
+              >
+                SIZE
+              </div>
+              <div class="grid grid-cols-5 gap-2">
+                <!-- XS -->
+                <button
+                  class="technical-code flex h-10 items-center justify-center rounded-md border border-neutral-400 text-xs font-medium text-neutral-800 transition-colors hover:bg-neutral-200/50"
+                >
+                  XS
+                </button>
+                <!-- S -->
+                <button
+                  class="technical-code flex h-10 items-center justify-center rounded-md border border-neutral-400 text-xs font-medium text-neutral-800 transition-colors hover:bg-neutral-200/50"
+                >
+                  S
+                </button>
+                <!-- M (Selected) -->
+                <button
+                  class="technical-code flex h-10 items-center justify-center space-x-1.5 rounded-md border border-black bg-neutral-950 text-xs font-medium text-white"
+                >
+                  <span class="bg-brand-lime h-1.5 w-1.5 rounded-full"></span>
+                  <span class="">M</span>
+                </button>
+                <!-- L -->
+                <button
+                  class="technical-code flex h-10 items-center justify-center rounded-md border border-neutral-400 text-xs font-medium text-neutral-800 transition-colors hover:bg-neutral-200/50"
+                >
+                  L
+                </button>
+                <!-- XL (Disabled with diagonal strike) -->
+                <button
+                  class="technical-code diagonal-strike flex h-10 cursor-not-allowed items-center justify-center rounded-md border border-neutral-300 bg-neutral-200/30 text-xs font-medium text-neutral-400"
+                  disabled=""
+                >
+                  XL
+                </button>
+              </div>
+            </div>
+            <!-- Stock Availability Status -->
+            <div
+              class="technical-code mb-3 flex items-center justify-between pt-1 text-xs font-medium"
+            >
+              <span class="text-neutral-700">BLACK / M</span>
+              <span
+                class="flex items-center space-x-1.5 font-semibold text-[#84a900]"
+              >
+                <span
+                  class="bg-brand-lime inline-block h-2 w-2 rounded-full"
+                ></span>
+                <span class="">ONLY 3 LEFT</span>
+              </span>
+            </div>
+            <!-- Quantity Stepper -->
+            <div class="mb-3">
+              <div
+                class="technical-code flex items-center justify-between rounded-lg border border-neutral-400/80 bg-transparent px-4 py-2.5 text-sm"
+              >
+                <button
+                  aria-label="Decrease quantity"
+                  class="px-2 text-base font-semibold text-neutral-600 hover:text-black"
+                >
+                  —
+                </button>
+                <span class="font-medium">1</span>
+                <button
+                  aria-label="Increase quantity"
+                  class="px-2 text-base font-semibold text-neutral-600 hover:text-black"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <!-- CTA Buttons -->
+            <div class="mb-6 space-y-2">
+              <!-- Add to Cart (Neon Lime) -->
+              <button
+                class="bg-brand-lime hover:bg-brand-lime-hover technical-code w-full rounded-md py-3.5 text-xs font-bold tracking-wider text-neutral-950 uppercase shadow-sm transition-colors duration-150"
+              >
+                ADD TO CART
+              </button>
+              <!-- Add to Wishlist -->
+              <button
+                class="technical-code flex w-full items-center justify-center space-x-2 rounded-md border border-neutral-400/90 bg-transparent py-3 text-xs font-semibold tracking-wider text-neutral-900 transition-colors hover:bg-neutral-200/60"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                  ></path>
+                </svg>
+                <span class="">ADD TO WISHLIST</span>
+              </button>
+            </div>
+          </div>
+          <!-- Accordion Rows -->
+          <div class="border-t border-neutral-300/80 pt-1">
+            <!-- Accordion Item: Description -->
+            <div
+              class="technical-code flex cursor-pointer items-center justify-between border-b border-neutral-300/70 py-3 text-xs font-semibold tracking-wider text-neutral-900 hover:text-black"
+            >
+              <span class="">DESCRIPTION</span>
+              <span class="text-sm text-neutral-600">+</span>
+            </div>
+            <!-- Accordion Item: Product Details -->
+            <div
+              class="technical-code flex cursor-pointer items-center justify-between py-3 text-xs font-semibold tracking-wider text-neutral-900 hover:text-black"
+            >
+              <span class="">PRODUCT DETAILS</span>
+              <span class="text-sm text-neutral-600">+</span>
+            </div>
+          </div>
+        </aside>
+        <!-- END: ProductPurchaseCard -->
+      </div>
+    </main>
+    <!-- END: MainContent -->
+  </body>
+</html>

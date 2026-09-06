@@ -1,0 +1,538 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
+    <title>NAMOU — Review / Place Order</title>
+    <!-- Tailwind CSS v3 CDN with forms plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bone: "#F4F1EA",
+              "bone-dark": "#EBE7DD",
+              "bone-card": "#EFECE4",
+              charcoal: "#0C0D0E",
+              obsidian: "#121212",
+              "obsidian-dark": "#0A0A0A",
+              "obsidian-border": "#262626",
+              lime: "#CCFF00",
+              "lime-bright": "#D2FF00",
+              "lime-dim": "#99BF00",
+              "border-subtle": "#D8D4C8",
+              "text-muted": "#70706C",
+              "text-dark": "#111111",
+            },
+            fontFamily: {
+              condensed: [
+                '"Bebas Neue"',
+                '"Anton"',
+                '"DIN Condensed"',
+                "sans-serif",
+              ],
+              mono: [
+                '"SF Mono"',
+                '"JetBrains Mono"',
+                '"Roboto Mono"',
+                "ui-monospace",
+                "monospace",
+              ],
+              sans: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                '"Segoe UI"',
+                "Roboto",
+                "sans-serif",
+              ],
+            },
+            letterSpacing: {
+              "tighter-condensed": "-0.02em",
+              "ultra-wide": "0.18em",
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Google Fonts for Condensed Brutalist Headings & Monospace Labels -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style data-purpose="custom-typography">
+      .font-brutalist {
+        font-family:
+          "Anton",
+          -apple-system,
+          sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 0.88;
+      }
+      .font-mono-tech {
+        font-family: "JetBrains Mono", "SF Mono", monospace;
+      }
+    </style>
+    <style data-purpose="mobile-shell">
+      body {
+        background-color: #e2dfd6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      /* Hide native scrollbars while preserving scrolling */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body
+    class="text-charcoal flex min-h-screen items-start justify-center font-sans select-none sm:py-6"
+  >
+    <!-- BEGIN: MobileDeviceFrame -->
+    <div
+      class="bg-bone border-border-subtle/60 relative flex min-h-screen w-full max-w-[390px] flex-col overflow-x-hidden border-x shadow-2xl"
+      data-purpose="mobile-viewport"
+    >
+      <!-- BEGIN: iOSStatusBar -->
+      <header
+        class="bg-bone z-30 flex w-full shrink-0 items-center justify-between px-7 pt-3.5 pb-2 select-none"
+        data-purpose="status-bar"
+      >
+        <span class="text-charcoal text-[14px] font-semibold tracking-tight"
+          >9:41</span
+        >
+        <!-- iOS Right Status Indicators -->
+        <div class="text-charcoal flex items-center gap-2">
+          <!-- Cellular Signal -->
+          <svg class="h-3.5 w-4 fill-current" viewbox="0 0 17 12">
+            <rect height="4" rx="0.5" width="2.5" x="0" y="8"></rect>
+            <rect height="6.5" rx="0.5" width="2.5" x="4.5" y="5.5"></rect>
+            <rect height="9" rx="0.5" width="2.5" x="9" y="3"></rect>
+            <rect height="12" rx="0.5" width="2.5" x="13.5" y="0"></rect>
+          </svg>
+          <!-- Wifi -->
+          <svg class="h-3.5 w-4 fill-current" viewbox="0 0 16 12">
+            <path
+              d="M8 3.6c2.4 0 4.6.9 6.2 2.4l1.4-1.4C13.8 2.8 11 1.8 8 1.8 5 1.8 2.2 2.8.4 4.6L1.8 6c1.6-1.5 3.8-2.4 6.2-2.4z"
+            ></path>
+            <path
+              d="M8 7.2c1.4 0 2.8.6 3.7 1.5l1.4-1.4C11.9 6 10 5.4 8 5.4s-3.9.6-5.1 1.9L4.3 8.7C5.2 7.8 6.6 7.2 8 7.2z"
+            ></path>
+            <circle cx="8" cy="11.2" r="1.3"></circle>
+          </svg>
+          <!-- Battery Icon with Level -->
+          <div
+            class="border-charcoal flex h-[12px] w-[24px] items-center rounded-[3.5px] border p-[1.5px]"
+          >
+            <div class="bg-charcoal h-full w-full rounded-[1.5px]"></div>
+          </div>
+        </div>
+      </header>
+      <!-- END: iOSStatusBar -->
+      <!-- BEGIN: TopNavigationBar -->
+      <nav
+        class="border-border-subtle/80 bg-bone sticky top-0 z-20 flex w-full items-center justify-between border-b px-5 py-3"
+        data-purpose="app-navigation"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            class="text-charcoal text-xl leading-none font-bold tracking-tight transition-opacity hover:opacity-75"
+            href="#back"
+          >
+            NAMOU
+          </a>
+          <span
+            class="font-mono-tech text-text-muted border-border-subtle rounded border px-2 py-0.5 text-[10px] tracking-wider uppercase"
+          >
+            STEP 03
+          </span>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- Search Trigger -->
+          <button
+            aria-label="Search"
+            class="text-charcoal p-1.5 transition-opacity hover:opacity-70"
+            type="button"
+          >
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-3.5-3.5" stroke-linecap="round"></path>
+            </svg>
+          </button>
+          <!-- Cart Badge -->
+          <button
+            aria-label="Cart 02 items"
+            class="bg-charcoal font-mono-tech flex items-center gap-1.5 rounded px-2.5 py-1.5 text-[11px] font-medium tracking-wide text-white transition-transform active:scale-95"
+            type="button"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span>CART 02</span>
+          </button>
+        </div>
+      </nav>
+      <!-- END: TopNavigationBar -->
+      <!-- BEGIN: ScrollableContent -->
+      <main
+        class="no-scrollbar flex-1 space-y-6 overflow-y-auto px-4 pt-5 pb-8"
+        data-purpose="main-checkout-flow"
+      >
+        <!-- BEGIN: PageTitle -->
+        <section class="pt-1 pb-2">
+          <h1
+            class="font-brutalist text-charcoal m-0 text-[44px] leading-[0.88] tracking-normal"
+          >
+            REVIEW /<br />PLACE ORDER
+          </h1>
+        </section>
+        <!-- END: PageTitle -->
+        <!-- BEGIN: ShippingAddressSection -->
+        <section class="space-y-3" data-purpose="shipping-address-selector">
+          <div class="flex items-center justify-between">
+            <h2
+              class="font-mono-tech tracking-ultra-wide text-charcoal text-[11px] font-semibold uppercase"
+            >
+              SHIPPING ADDRESS
+            </h2>
+            <span class="font-mono-tech text-text-muted text-[10px]"
+              >SELECT 1</span
+            >
+          </div>
+          <div class="space-y-2.5">
+            <!-- Card 1: Selected (Home Default) -->
+            <article
+              class="border-lime-bright relative cursor-pointer rounded-xl border-2 bg-[#F7F5EE] p-4 shadow-[0_2px_12px_rgba(204,255,0,0.18)] transition-all"
+              data-purpose="selected-address-card"
+            >
+              <div class="flex items-start gap-3.5">
+                <!-- Radio Button Active Indicator -->
+                <div class="mt-0.5 flex shrink-0 items-center justify-center">
+                  <div
+                    class="border-charcoal flex h-5 w-5 items-center justify-center rounded-full border-2 bg-transparent"
+                  >
+                    <div class="bg-charcoal h-2.5 w-2.5 rounded-full"></div>
+                  </div>
+                </div>
+                <!-- Address Details -->
+                <div class="min-w-0 flex-1 pr-2">
+                  <div class="mb-1.5 flex items-center gap-2">
+                    <span
+                      class="font-mono-tech text-charcoal text-[12px] font-bold tracking-wider uppercase"
+                      >HOME</span
+                    >
+                    <span
+                      class="bg-lime text-charcoal font-mono-tech rounded px-1.5 py-0.5 text-[9px] font-bold tracking-wide uppercase"
+                    >
+                      DEFAULT
+                    </span>
+                  </div>
+                  <p
+                    class="font-mono-tech text-charcoal text-[12px] leading-relaxed"
+                  >
+                    Alex Morgan<br />
+                    123 Mineral Rd, Apt 4B<br />
+                    Brooklyn, NY 11201<br />
+                    United States
+                  </p>
+                </div>
+                <!-- Action Indicator -->
+                <div class="text-charcoal shrink-0 pt-0.5">
+                  <span class="font-mono-tech text-base">→</span>
+                </div>
+              </div>
+            </article>
+            <!-- Card 2: Unselected (Studio) -->
+            <article
+              class="border-border-subtle bg-bone-card/50 hover:bg-bone-card relative cursor-pointer rounded-xl border p-4 transition-all"
+              data-purpose="unselected-address-card"
+            >
+              <div class="flex items-start gap-3.5">
+                <!-- Radio Button Inactive Indicator -->
+                <div class="mt-0.5 flex shrink-0 items-center justify-center">
+                  <div
+                    class="border-charcoal/40 h-5 w-5 rounded-full border bg-transparent"
+                  ></div>
+                </div>
+                <!-- Address Details -->
+                <div class="min-w-0 flex-1 pr-2">
+                  <div class="mb-1.5 flex items-center gap-2">
+                    <span
+                      class="font-mono-tech text-charcoal text-[12px] font-bold tracking-wider uppercase"
+                      >STUDIO</span
+                    >
+                  </div>
+                  <p
+                    class="font-mono-tech text-charcoal/80 text-[12px] leading-relaxed"
+                  >
+                    Alex Morgan<br />
+                    88 Bridge St, Studio 3<br />
+                    Brooklyn, NY 11201<br />
+                    United States
+                  </p>
+                </div>
+                <!-- Action Indicator -->
+                <div class="text-charcoal/60 shrink-0 pt-0.5">
+                  <span class="font-mono-tech text-base">→</span>
+                </div>
+              </div>
+            </article>
+            <!-- Add New Address Action -->
+            <button
+              class="border-border-subtle text-charcoal group flex w-full items-center justify-start gap-3 rounded-xl border bg-[#F8F6F0] px-4 py-3.5 transition-colors hover:bg-white"
+              type="button"
+            >
+              <span
+                class="font-mono-tech text-base leading-none transition-transform group-hover:scale-110"
+                >+</span
+              >
+              <span
+                class="font-mono-tech text-[11px] font-semibold tracking-wider uppercase"
+                >ADD ADDRESS</span
+              >
+            </button>
+          </div>
+        </section>
+        <!-- END: ShippingAddressSection -->
+        <!-- BEGIN: OrderNotesSection -->
+        <section class="space-y-2" data-purpose="order-notes">
+          <label
+            class="font-mono-tech tracking-ultra-wide text-charcoal block text-[11px] font-semibold uppercase"
+            for="order-notes"
+          >
+            ORDER NOTES — OPTIONAL
+          </label>
+          <div class="relative">
+            <textarea
+              class="border-border-subtle font-mono-tech text-charcoal placeholder:text-text-muted/60 focus:ring-charcoal focus:border-charcoal w-full resize-none rounded-xl border bg-[#EFECE3] p-3.5 text-[12px] leading-relaxed transition-colors focus:ring-1 focus:outline-none"
+              id="order-notes"
+              placeholder="Special delivery instructions, gate code, unit access..."
+              rows="3"
+            ></textarea>
+            <!-- Corner resizing cosmetic indicator matching screenshot -->
+            <div
+              class="text-text-muted/50 pointer-events-none absolute right-2.5 bottom-2.5"
+            >
+              <svg
+                class="h-2.5 w-2.5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 10 10"
+              >
+                <line stroke-width="1.2" x1="8" x2="2" y1="2" y2="8"></line>
+                <line stroke-width="1.2" x1="8" x2="5.5" y1="5.5" y2="8"></line>
+              </svg>
+            </div>
+          </div>
+        </section>
+        <!-- END: OrderNotesSection -->
+        <!-- BEGIN: OrderSummaryDarkCard -->
+        <section
+          class="bg-obsidian border-obsidian-border space-y-5 rounded-2xl border p-4.5 pt-5 pb-5 text-white shadow-xl"
+          data-purpose="dark-order-summary-card"
+        >
+          <!-- Summary Header -->
+          <div
+            class="border-obsidian-border flex items-center justify-between border-b pb-3.5"
+          >
+            <h2
+              class="font-mono-tech tracking-ultra-wide text-[12px] font-bold text-white uppercase"
+            >
+              ORDER SUMMARY
+            </h2>
+            <span class="font-mono-tech text-lime text-[10px] font-bold"
+              >2 ITEMS</span
+            >
+          </div>
+          <!-- Items In Order List -->
+          <div class="space-y-4" data-purpose="checkout-items-list">
+            <!-- Item 1: Technical Shell 01 -->
+            <div class="flex items-start gap-3.5">
+              <div
+                class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[#222222] p-1"
+              >
+                <img
+                  alt="Technical Shell 01"
+                  class="h-full w-full object-cover object-top contrast-125 filter"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtg2pSwFshSTCxCnwjkBBsxCwkd33MCf-jBg0w61m4lxz9E8-LDbE6_ADdL8p9xOQihoKF4Jg7kosztLsm7Q2l2quUfwBS3xqMglvGN2Zmd-S3uF2Yz_Zz7h1jPSw1imOu4C-_iXvIQcKNtUbJvdbJUKrp37kswS5A_xYP_Q3KT75Gn_nlXcin9NIO7jE6nRVoiAaIRtsfZYzV6Lpr4c14kcaLfdWzM3pspYeXcxBaObuJoFx6AkmaiLzvbWvpF2JJ9g"
+                />
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between">
+                  <h3
+                    class="font-mono-tech truncate text-[12px] font-bold tracking-wider text-white uppercase"
+                  >
+                    TECHNICAL SHELL 01
+                  </h3>
+                </div>
+                <p class="font-mono-tech mt-0.5 text-[11px] text-[#888888]">
+                  BLACK / M
+                </p>
+                <div class="mt-2 flex items-center justify-between">
+                  <span class="font-mono-tech text-[11px] text-[#888888]"
+                    >QTY 1</span
+                  >
+                  <span
+                    class="font-mono-tech text-[12px] font-medium text-white"
+                    >$420.00 USD</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Item 2: Motion 01 Sneakers -->
+            <div class="flex items-start gap-3.5">
+              <div
+                class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[#222222] p-1"
+              >
+                <img
+                  alt="Motion 01"
+                  class="h-full w-full object-cover object-bottom contrast-125 filter"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuApkzfwWAQSj2GQB0m1vLo0ptjNRQZP5XwjqLnQZDG7aRWlluDuCt1BVtJSBM7LElPMX6nSP_SINdT_jpPloJI-zXJ44FFksJAr6x0gsPrz5Ihd8fu7SMd4Hr32j6Pf6xrAICHHzYSDYkFzgg-3163FrEZWXKKUPY2lKxCWfewGeh8tcQqFwBSi6jptpepYP73BwO-ALUQA3MdD4IXc8Km1I7SKT0eHy_BkxDpvfw4uWS-ixAMCpyHkozUQYMiCd33i4w"
+                />
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-start justify-between">
+                  <h3
+                    class="font-mono-tech truncate text-[12px] font-bold tracking-wider text-white uppercase"
+                  >
+                    MOTION 01
+                  </h3>
+                </div>
+                <p class="font-mono-tech mt-0.5 text-[11px] text-[#888888]">
+                  BLACK / 42
+                </p>
+                <div class="mt-2 flex items-baseline justify-between">
+                  <span class="font-mono-tech text-[11px] text-[#888888]"
+                    >QTY 2</span
+                  >
+                  <div class="text-right">
+                    <span
+                      class="font-mono-tech text-[12px] font-medium text-white"
+                      >$440.00 USD</span
+                    >
+                    <p class="font-mono-tech text-[9px] text-[#666666]">
+                      $220.00 USD EA
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Financial Breakdown Lines -->
+          <div
+            class="border-obsidian-border font-mono-tech space-y-2 border-t pt-3 text-[11px]"
+          >
+            <div class="flex items-center justify-between text-[#999999]">
+              <span class="tracking-wider uppercase">SUBTOTAL</span>
+              <span class="font-medium text-white">$860.00 USD</span>
+            </div>
+            <div class="flex items-center justify-between text-[#999999]">
+              <span class="tracking-wider uppercase">SHIPPING</span>
+              <span class="text-lime font-semibold uppercase"
+                >FREE (EXPRESS)</span
+              >
+            </div>
+          </div>
+          <!-- Total Monospace Banner -->
+          <div
+            class="border-obsidian-border font-mono-tech flex items-baseline justify-between border-t pt-3"
+          >
+            <span
+              class="text-[14px] font-bold tracking-wider text-white uppercase"
+              >TOTAL</span
+            >
+            <span class="text-[20px] font-bold tracking-tight text-white"
+              >$860.00 USD</span
+            >
+          </div>
+          <!-- Primary Call to Action Button -->
+          <div class="pt-1">
+            <button
+              class="bg-lime hover:bg-lime-bright active:bg-lime-dim font-mono-tech flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-[13px] font-bold tracking-wider text-black uppercase shadow-[0_0_20px_rgba(204,255,0,0.3)] transition-all hover:shadow-[0_0_26px_rgba(204,255,0,0.45)] active:scale-[0.98]"
+              data-purpose="submit-order-button"
+              type="button"
+            >
+              <span>PLACE ORDER</span>
+              <span class="text-base leading-none">→</span>
+            </button>
+          </div>
+          <!-- Brutalist Technical Note / Microcopy -->
+          <div
+            class="font-mono-tech flex items-start gap-1.5 pt-1 text-[9.5px] leading-tight text-[#888888]"
+          >
+            <span class="text-lime text-[12px] leading-none">⌜</span>
+            <p class="tracking-wide uppercase">
+              STOCK IS CONFIRMED WHEN YOU PLACE THE ORDER.
+            </p>
+          </div>
+        </section>
+        <!-- END: OrderSummaryDarkCard -->
+        <!-- BEGIN: SecurityBadges -->
+        <footer
+          class="font-mono-tech text-text-muted space-y-2 pt-2 pb-4 text-center text-[10px]"
+          data-purpose="security-guarantee"
+        >
+          <div class="text-charcoal/60 flex items-center justify-center gap-4">
+            <span class="flex items-center gap-1">
+              <svg
+                class="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewbox="0 0 24 24"
+              >
+                <rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              256-BIT ENCRYPTION
+            </span>
+            <span>•</span>
+            <span>DISPATCH IN 24H</span>
+          </div>
+          <p class="text-text-muted/60">
+            NAMOU LABS © 2025 // ALL RIGHTS RESERVED
+          </p>
+        </footer>
+        <!-- END: SecurityBadges -->
+      </main>
+      <!-- END: ScrollableContent -->
+      <!-- BEGIN: iOSHomeIndicator -->
+      <div
+        class="bg-bone pointer-events-none flex w-full shrink-0 justify-center pt-1 pb-2 select-none"
+        data-purpose="home-indicator"
+      >
+        <div class="bg-charcoal/80 h-[5px] w-[134px] rounded-full"></div>
+      </div>
+      <!-- END: iOSHomeIndicator -->
+    </div>
+    <!-- END: MobileDeviceFrame -->
+  </body>
+</html>

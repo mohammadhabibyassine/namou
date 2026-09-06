@@ -1,0 +1,63 @@
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { HeroObject } from "@/components/home/hero-object";
+
+export function HomeHero() {
+  return (
+    <section className="namou-container border-line bg-surface mt-3 overflow-hidden rounded-xl border">
+      <div className="grid min-h-[38rem] lg:grid-cols-[1.05fr_.75fr_.75fr]">
+        <div className="border-line relative flex min-h-[31rem] flex-col justify-between overflow-hidden border-b p-6 sm:p-9 lg:border-r lg:border-b-0">
+          <span className="technical-label text-subtle">
+            Drop index{" "}
+            <strong className="text-foreground ml-7 font-medium">N/02</strong>
+          </span>
+          <div className="relative z-10 py-12">
+            <h1 className="display-title text-[clamp(5.8rem,12vw,11rem)]">
+              Move
+              <br />
+              Different.
+            </h1>
+            <Link
+              href="/shop?sort=newest"
+              className="bg-acid mt-9 inline-flex min-h-12 items-center gap-12 rounded-lg px-6 font-mono text-xs uppercase transition-transform motion-safe:hover:scale-105 motion-safe:hover:shadow-lg"
+            >
+              Shop drop 02 <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="flex items-end justify-between">
+            <div className="technical-label">
+              Built for motion
+              <br />
+              Defined by utility
+            </div>
+            <div className="text-subtle hidden font-mono text-[10px] leading-6 sm:block">
+              01
+              <br />
+              <span className="text-acid">02 →</span>
+              <br />
+              03
+              <br />
+              04
+            </div>
+          </div>
+        </div>
+        <div className="group border-line relative min-h-[28rem] overflow-hidden border-b bg-[#111215] lg:border-r lg:border-b-0">
+          <Image
+            src="/images/home-editorial.jpg"
+            alt="Namou technical outerwear in motion"
+            fill
+            priority
+            sizes="(min-width: 1024px) 30vw, 100vw"
+            className="object-cover object-center contrast-125 grayscale transition-transform duration-700 motion-safe:group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
+          <span className="absolute bottom-5 left-5 font-mono text-[9px] text-white/55 uppercase">
+            Field shell / 02
+          </span>
+        </div>
+        <HeroObject />
+      </div>
+    </section>
+  );
+}

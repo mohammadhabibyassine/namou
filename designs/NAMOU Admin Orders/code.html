@@ -1,0 +1,761 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NAMOU Admin - Orders</title>
+    <!-- Tailwind CSS v3 with forms and container queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts for Brutalist / Techwear Aesthetic -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "app-bg": "#f4f1ea",
+              "panel-bg": "#fbfaf8",
+              "card-bg": "#ffffff",
+              "neon-lime": "#cbf916",
+              "border-subtle": "#e6e2d8",
+              "border-line": "#ded9ce",
+              "text-main": "#111111",
+              "text-muted": "#77756f",
+              "alert-red": "#f04438",
+            },
+            fontFamily: {
+              display: ["Anton", "Impact", "sans-serif"],
+              mono: ['"Space Mono"', "monospace"],
+              sans: ["Inter", "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style data-purpose="custom-scrollbars-and-resets">
+      /* Subtle custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #ded9ce;
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #c3bcae;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-app-bg text-text-main selection:bg-neon-lime flex min-h-screen font-sans antialiased selection:text-black"
+  >
+    <!-- BEGIN: LeftSidebar -->
+    <aside
+      class="border-border-line flex min-h-screen w-64 shrink-0 flex-col justify-between border-r px-5 py-7"
+      data-purpose="sidebar-navigation"
+    >
+      <!-- Top Nav Section -->
+      <div class="space-y-8">
+        <!-- Brand Logo -->
+        <div class="px-2">
+          <h1
+            class="flex items-baseline gap-1.5 font-sans text-xl font-bold tracking-tight text-black"
+          >
+            <span>NAMOU</span>
+            <span
+              class="text-xs font-semibold tracking-wider text-black uppercase"
+              >ADMIN</span
+            >
+          </h1>
+        </div>
+        <!-- Navigation Links -->
+        <nav class="space-y-1 font-mono text-xs tracking-wider">
+          <!-- Orders (Active) -->
+          <a
+            class="flex items-center justify-between rounded-lg bg-[#eae6dc] px-3 py-2.5 font-medium text-black transition-colors"
+            href="#"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                class="h-4 w-4 stroke-[1.75] text-black"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+              <span>ORDERS</span>
+            </div>
+            <!-- Active Neon Dot -->
+            <span
+              class="bg-neon-lime h-2 w-2 rounded-full ring-2 ring-[#cbf916]/30"
+            ></span>
+          </a>
+          <!-- Products -->
+          <a
+            class="text-text-main flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-[#eae6dc]/60"
+            href="#"
+          >
+            <svg
+              class="h-4 w-4 stroke-[1.75] text-neutral-700"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M7 7h.01M7 3h5a1.99 1.99 0 011.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span>PRODUCTS</span>
+          </a>
+          <!-- Categories -->
+          <a
+            class="text-text-main flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-[#eae6dc]/60"
+            href="#"
+          >
+            <svg
+              class="h-4 w-4 stroke-[1.75] text-neutral-700"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span>CATEGORIES</span>
+          </a>
+          <!-- Attributes -->
+          <a
+            class="text-text-main flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-[#eae6dc]/60"
+            href="#"
+          >
+            <svg
+              class="h-4 w-4 stroke-[1.75] text-neutral-700"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span>ATTRIBUTES</span>
+          </a>
+        </nav>
+      </div>
+      <!-- Bottom Anchor / Logout -->
+      <div class="border-border-line border-t pt-4">
+        <a
+          class="text-text-main flex items-center gap-3 px-3 py-2.5 font-mono text-xs tracking-wider transition-colors hover:text-black"
+          href="#"
+        >
+          <svg
+            class="h-4 w-4 stroke-[1.75]"
+            fill="none"
+            stroke="currentColor"
+            viewbox="0 0 24 24"
+          >
+            <path
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+          <span>LOGOUT</span>
+        </a>
+      </div>
+    </aside>
+    <!-- END: LeftSidebar -->
+    <!-- BEGIN: MainContent -->
+    <main class="flex flex-1 overflow-hidden" data-purpose="main-orders-layout">
+      <!-- Central Table Area -->
+      <section class="flex flex-1 flex-col overflow-y-auto p-8">
+        <!-- Title -->
+        <h2
+          class="font-display mb-6 text-4xl tracking-wide text-black uppercase"
+        >
+          ORDERS
+        </h2>
+        <!-- Filters Row -->
+        <div
+          class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-12"
+          data-purpose="orders-filter-controls"
+        >
+          <!-- Status Filter -->
+          <div class="md:col-span-3">
+            <label
+              class="text-text-muted mb-1.5 block font-mono text-[11px] tracking-wider uppercase"
+              >STATUS</label
+            >
+            <div class="relative">
+              <select
+                class="border-border-line w-full cursor-pointer appearance-none rounded-lg border bg-transparent py-2 pr-8 pl-3 font-mono text-xs text-black uppercase focus:border-black focus:ring-0 focus:outline-none"
+              >
+                <option value="ALL">ALL</option>
+                <option value="CONFIRMED">CONFIRMED</option>
+                <option value="PENDING">PENDING</option>
+                <option value="SHIPPED">SHIPPED</option>
+                <option value="DELIVERED">DELIVERED</option>
+                <option value="CANCELLED">CANCELLED</option>
+              </select>
+              <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-black"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-[2]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- Order Search -->
+          <div class="md:col-span-5">
+            <label
+              class="text-text-muted mb-1.5 block font-mono text-[11px] tracking-wider uppercase"
+              >ORDER</label
+            >
+            <div class="relative">
+              <span
+                class="text-text-muted pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-[2]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </span>
+              <input
+                class="border-border-line placeholder:text-text-muted/70 w-full rounded-lg border bg-transparent py-2 pr-3 pl-9 font-mono text-xs text-black focus:border-black focus:ring-0 focus:outline-none"
+                placeholder="Search by order number"
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- Orders Data Table Container -->
+        <div
+          class="border-border-line mb-6 overflow-hidden rounded-xl border bg-transparent"
+          data-purpose="orders-table"
+        >
+          <table class="w-full border-collapse text-left font-mono text-[11px]">
+            <thead>
+              <tr
+                class="border-border-line text-text-muted border-b bg-[#ece8df]/40"
+              >
+                <th class="px-4 py-3 font-normal tracking-wider">ORDER</th>
+                <th class="px-4 py-3 font-normal tracking-wider">CREATED</th>
+                <th class="px-4 py-3 font-normal tracking-wider">STATUS</th>
+                <th class="px-4 py-3 font-normal tracking-wider">TOTAL</th>
+                <th class="px-4 py-3 font-normal tracking-wider">CURRENCY</th>
+                <th class="px-4 py-3 text-right font-normal tracking-wider">
+                  ACTION
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-border-line divide-y">
+              <!-- Row 1: Active/Selected -->
+              <tr
+                class="bg-[#ece8df]/30 transition-colors hover:bg-[#ece8df]/50"
+              >
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260906-A1B2C3D4E5F6
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 06, 2026 10:42</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span
+                      class="bg-neon-lime ring-neon-lime/20 h-2 w-2 rounded-full ring-2"
+                    ></span>
+                    CONFIRMED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$280.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260906-F7G8H9I0J1K2
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 06, 2026 09:11</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                    PENDING
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$160.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260905-L3M4N5O6P7Q8
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 05, 2026 16:23</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="bg-neon-lime h-2 w-2 rounded-full"></span>
+                    SHIPPED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$220.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260905-R9S0T1U2V3W4
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 05, 2026 14:02</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="bg-neon-lime h-2 w-2 rounded-full"></span>
+                    DELIVERED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$420.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 5 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260904-X5Y6Z7A8B9C0
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 04, 2026 11:37</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="h-2 w-2 rounded-full bg-neutral-400"></span>
+                    PENDING
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$160.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 6 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260904-D1E2F3G4H5I6
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 04, 2026 10:05</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="bg-neon-lime h-2 w-2 rounded-full"></span>
+                    CONFIRMED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$280.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 7 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260903-J7K8L9M0N1O2
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 03, 2026 18:45</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="bg-neon-lime h-2 w-2 rounded-full"></span>
+                    SHIPPED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$280.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 8 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260903-P3Q4R5S6T7U8
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 03, 2026 12:14</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="bg-neon-lime h-2 w-2 rounded-full"></span>
+                    DELIVERED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$160.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 9 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260902-V9W0X1Y2Z3A4
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 02, 2026 15:22</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="bg-alert-red h-2 w-2 rounded-full"></span>
+                    CANCELLED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$220.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+              <!-- Row 10 -->
+              <tr class="transition-colors hover:bg-[#ece8df]/50">
+                <td class="px-4 py-3.5 font-mono text-black">
+                  ORD-20260902-B5C6D7E8F9G0
+                </td>
+                <td class="text-text-muted px-4 py-3.5">SEP 02, 2026 09:33</td>
+                <td class="px-4 py-3.5 text-black">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="bg-neon-lime h-2 w-2 rounded-full"></span>
+                    CONFIRMED
+                  </span>
+                </td>
+                <td class="px-4 py-3.5 font-semibold text-black">$420.00</td>
+                <td class="text-text-muted px-4 py-3.5">USD</td>
+                <td class="px-4 py-3.5 text-right">
+                  <button
+                    class="border-border-line rounded border bg-white/70 px-3 py-1 text-[10px] tracking-wider transition-all hover:border-black hover:bg-white"
+                  >
+                    VIEW
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Load More Button -->
+        <button
+          class="border-border-line w-full rounded-lg border py-2.5 text-center font-mono text-xs tracking-widest text-black uppercase transition-all hover:border-black hover:bg-white/40"
+          data-purpose="load-more-btn"
+        >
+          LOAD MORE
+        </button>
+      </section>
+      <!-- BEGIN: DetailPanel -->
+      <aside
+        class="border-border-line bg-panel-bg flex w-96 shrink-0 flex-col justify-between overflow-y-auto border-l p-6"
+        data-purpose="order-details-drawer"
+      >
+        <div>
+          <!-- Order Header -->
+          <div class="mb-5">
+            <span
+              class="text-text-muted mb-0.5 block font-mono text-[10px] tracking-wider uppercase"
+              >ORDER</span
+            >
+            <h3
+              class="font-mono text-base font-bold tracking-tight break-all text-black"
+            >
+              ORD-20260906-A1B2C3D4E5F6
+            </h3>
+            <div class="text-text-muted mt-3 font-mono text-xs">
+              <span class="block text-[10px] tracking-wider uppercase"
+                >CUSTOMER ID</span
+              >
+              <span class="text-black">CUS-009872</span>
+            </div>
+          </div>
+          <hr class="border-border-line mb-5 border-t" />
+          <!-- Shipping Address -->
+          <div class="mb-5 font-mono text-xs">
+            <span
+              class="text-text-muted mb-2 block text-[10px] tracking-wider uppercase"
+              >SHIPPING ADDRESS</span
+            >
+            <div class="space-y-0.5 leading-relaxed text-black">
+              <p>Alex Morgan</p>
+              <p>742 Evergreen Terrace</p>
+              <p>Apt 5B</p>
+              <p>Portland, OR 97201</p>
+              <p>United States</p>
+            </div>
+          </div>
+          <hr class="border-border-line mb-5 border-t" />
+          <!-- Order Items -->
+          <div class="mb-5">
+            <span
+              class="text-text-muted mb-3 block font-mono text-[10px] tracking-wider uppercase"
+              >ITEMS</span
+            >
+            <div class="space-y-4">
+              <!-- Item 1 -->
+              <div class="flex items-center justify-between font-mono text-xs">
+                <div class="flex items-center gap-3">
+                  <!-- Product Thumbnail 1 -->
+                  <div
+                    class="border-border-line flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded border bg-neutral-200 p-1"
+                  >
+                    <svg
+                      class="h-10 w-10 text-neutral-800"
+                      fill="currentColor"
+                      viewbox="0 0 100 100"
+                    >
+                      <rect
+                        fill="#1e1e1e"
+                        height="50"
+                        rx="6"
+                        width="60"
+                        x="20"
+                        y="30"
+                      ></rect>
+                      <rect
+                        fill="#2d2d2d"
+                        height="30"
+                        rx="3"
+                        width="50"
+                        x="25"
+                        y="45"
+                      ></rect>
+                      <path
+                        d="M35 30 V20 H65 V30"
+                        fill="none"
+                        stroke="#1e1e1e"
+                        stroke-linecap="round"
+                        stroke-width="4"
+                      ></path>
+                      <circle cx="50" cy="55" fill="#a1a1aa" r="4"></circle>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-[11px] leading-tight font-bold text-black uppercase"
+                    >
+                      MODULAR BAG
+                    </h4>
+                    <p class="text-text-muted text-[10px]">NMU-BG-0202</p>
+                    <p class="text-text-muted mt-0.5 text-[10px]">QTY: 1</p>
+                  </div>
+                </div>
+                <span class="font-semibold text-black">$280.00</span>
+              </div>
+              <!-- Item 2 -->
+              <div class="flex items-center justify-between font-mono text-xs">
+                <div class="flex items-center gap-3">
+                  <!-- Product Thumbnail 2 -->
+                  <div
+                    class="border-border-line flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded border bg-neutral-200 p-1"
+                  >
+                    <svg
+                      class="h-10 w-10 text-neutral-800"
+                      fill="currentColor"
+                      viewbox="0 0 100 100"
+                    >
+                      <circle cx="50" cy="50" fill="#222" r="28"></circle>
+                      <circle cx="50" cy="50" fill="#111" r="18"></circle>
+                      <rect
+                        fill="#333"
+                        height="14"
+                        rx="4"
+                        width="70"
+                        x="15"
+                        y="43"
+                      ></rect>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-[11px] leading-tight font-bold text-black uppercase"
+                    >
+                      WEARABLE OBJECT
+                    </h4>
+                    <p class="text-text-muted text-[10px]">NMU-AC-0003</p>
+                    <p class="text-text-muted mt-0.5 text-[10px]">QTY: 1</p>
+                  </div>
+                </div>
+                <span class="font-semibold text-black">$160.00</span>
+              </div>
+            </div>
+          </div>
+          <hr class="border-border-line mb-5 border-t" />
+          <!-- Status Details -->
+          <div class="mb-5 font-mono">
+            <span
+              class="text-text-muted mb-1.5 block text-[10px] tracking-wider uppercase"
+              >STATUS</span
+            >
+            <div class="flex items-center gap-2">
+              <span class="bg-neon-lime h-2.5 w-2.5 rounded-full"></span>
+              <span class="text-sm font-bold tracking-wide text-black uppercase"
+                >CONFIRMED</span
+              >
+            </div>
+          </div>
+          <hr class="border-border-line mb-5 border-t" />
+          <!-- Vertical Timeline Tracker -->
+          <div class="mb-6">
+            <span
+              class="text-text-muted mb-3 block font-mono text-[10px] tracking-wider uppercase"
+              >TIMELINE</span
+            >
+            <div class="relative space-y-4 pl-6 font-mono text-[10px]">
+              <!-- Vertical Line Indicator -->
+              <div
+                class="bg-border-line absolute top-2 bottom-2 left-2 w-px"
+              ></div>
+              <!-- Step 1: Placed -->
+              <div class="relative flex items-baseline justify-between">
+                <span
+                  class="bg-neon-lime ring-panel-bg absolute top-1 -left-6 h-2.5 w-2.5 rounded-full ring-4"
+                ></span>
+                <span class="text-text-muted">SEP 06, 2026 10:42</span>
+                <span class="text-right text-black">Order placed</span>
+              </div>
+              <!-- Step 2: Confirmed -->
+              <div class="relative flex items-baseline justify-between">
+                <span
+                  class="bg-neon-lime ring-panel-bg absolute top-1 -left-6 h-2.5 w-2.5 rounded-full ring-4"
+                ></span>
+                <span class="text-text-muted">SEP 06, 2026 10:45</span>
+                <span class="text-right text-black">Order confirmed</span>
+              </div>
+              <!-- Step 3: Shipped -->
+              <div class="relative flex items-baseline justify-between">
+                <span
+                  class="border-text-muted bg-panel-bg ring-panel-bg absolute top-1 -left-6 h-2.5 w-2.5 rounded-full border ring-4"
+                ></span>
+                <span class="text-text-muted">—</span>
+                <span class="text-text-muted text-right">Order shipped</span>
+              </div>
+              <!-- Step 4: Delivered -->
+              <div class="relative flex items-baseline justify-between">
+                <span
+                  class="border-text-muted bg-panel-bg ring-panel-bg absolute top-1 -left-6 h-2.5 w-2.5 rounded-full border ring-4"
+                ></span>
+                <span class="text-text-muted">—</span>
+                <span class="text-text-muted text-right">Order delivered</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Action Bottom Trigger Area -->
+        <div class="border-border-line space-y-3 border-t pt-4 font-mono">
+          <!-- Mark as Shipped Button -->
+          <button
+            class="bg-neon-lime w-full rounded-lg py-3 text-xs font-bold tracking-wider text-black uppercase shadow-sm transition-colors hover:bg-[#b8e310]"
+          >
+            MARK AS SHIPPED
+          </button>
+          <!-- Cancel Order Button -->
+          <button
+            class="hover:bg-alert-red/5 border-alert-red/80 text-alert-red w-full rounded-lg border bg-transparent py-2.5 text-xs font-semibold tracking-wider uppercase transition-colors"
+          >
+            CANCEL ORDER
+          </button>
+          <!-- Warning Disclaimer -->
+          <p
+            class="text-text-muted flex items-center justify-center gap-1.5 pt-1 text-[10px] tracking-tight uppercase"
+          >
+            <svg
+              class="text-text-muted h-3.5 w-3.5 stroke-[1.75]"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span>CANCELLATION RESTORES INVENTORY</span>
+          </p>
+        </div>
+      </aside>
+      <!-- END: DetailPanel -->
+    </main>
+    <!-- END: MainContent -->
+  </body>
+</html>

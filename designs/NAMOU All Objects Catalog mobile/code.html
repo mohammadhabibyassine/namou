@@ -1,0 +1,902 @@
+<!doctype html>
+
+<html class="bg-[#EAE7E0] text-[#0D0D0D]" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      name="viewport"
+    />
+    <title>NAMOU — ALL OBJECTS</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                bg: "#EAE7E0",
+                card: "#DFDCD4",
+                surface: "#F5F3EF",
+                black: "#0D0D0D",
+                lime: "#D4FF00",
+                muted: "#706E6B",
+                border: "#CFCBC1",
+              },
+            },
+            fontFamily: {
+              display: ['"Bebas Neue"', "Impact", "sans-serif"],
+              mono: ['"JetBrains Mono"', '"Space Mono"', "monospace"],
+              sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Google Fonts for Ultra-Condensed Display & Monospace Specs -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style data-purpose="custom-layout">
+      /* Hide scrollbar for neat horizontal pill scrolling */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* iOS safe areas */
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 24px);
+      }
+      .pt-safe {
+        padding-top: env(safe-area-inset-top, 44px);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-brand-bg text-brand-black selection:bg-brand-lime flex min-h-screen justify-center font-sans antialiased selection:text-black"
+  >
+    <!-- Mobile Viewport Shell (390px simulated iOS canvas) -->
+    <div
+      class="bg-brand-bg relative flex min-h-screen w-full max-w-[390px] flex-col border-x border-black/10 pb-28 shadow-2xl"
+    >
+      <!-- BEGIN: TopStatusBar -->
+      <header
+        class="pt-safe flex items-center justify-between px-5 pt-3 font-mono text-xs select-none"
+      >
+        <span class="text-xs font-semibold tracking-tight">09:41</span>
+        <div class="flex items-center space-x-2 text-[11px]">
+          <!-- Signal / Cellular -->
+          <svg class="h-3.5 w-3.5 fill-current" viewbox="0 0 24 24">
+            <rect height="6" rx="0.8" width="3" x="2" y="16"></rect>
+            <rect height="10" rx="0.8" width="3" x="7" y="12"></rect>
+            <rect height="14" rx="0.8" width="3" x="12" y="8"></rect>
+            <rect height="18" rx="0.8" width="3" x="17" y="4"></rect>
+          </svg>
+          <!-- Wifi -->
+          <svg
+            class="h-3.5 w-3.5 fill-none stroke-current stroke-2"
+            viewbox="0 0 24 24"
+          >
+            <path
+              d="M3 8a17.2 17.2 0 0 1 18 0M6 12a11.5 11.5 0 0 1 12 0M9 16a5.8 5.8 0 0 1 6 0M12 20h.01"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+          <!-- Battery -->
+          <div
+            class="flex h-2.5 w-5 items-center rounded-sm border border-black/60 p-0.5"
+          >
+            <div class="h-full w-3.5 rounded-xs bg-black"></div>
+          </div>
+        </div>
+      </header>
+      <!-- END: TopStatusBar -->
+      <!-- BEGIN: MobileNavBar -->
+      <nav
+        class="bg-brand-bg/95 sticky top-0 z-40 flex items-center justify-between border-b border-black/10 px-4 py-3 backdrop-blur-md"
+      >
+        <div class="flex items-center gap-2">
+          <span
+            class="font-display text-2xl leading-none font-black tracking-widest text-black uppercase"
+            >NAMOU</span
+          >
+        </div>
+        <div class="flex items-center gap-2.5">
+          <!-- Search Button -->
+          <button
+            aria-label="Search"
+            class="rounded-full p-2 transition-colors active:bg-black/5"
+          >
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+            </svg>
+          </button>
+          <!-- Wishlist Button -->
+          <button
+            aria-label="Wishlist"
+            class="relative rounded-full p-2 transition-colors active:bg-black/5"
+          >
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </button>
+          <!-- Cart Badge Button -->
+          <button
+            class="flex items-center gap-1.5 rounded-full bg-black px-2.5 py-1.5 font-mono text-[11px] font-medium tracking-tight text-white shadow-sm transition-transform active:scale-95"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+            </svg>
+            <span class="tracking-wider">CART</span>
+            <span
+              class="bg-brand-lime rounded-full px-1.5 text-[10px] leading-tight font-bold text-black"
+              >02</span
+            >
+          </button>
+        </div>
+      </nav>
+      <!-- END: MobileNavBar -->
+      <!-- BEGIN: MainContent -->
+      <main class="flex flex-1 flex-col px-4 pt-3">
+        <!-- Technical Breadcrumbs -->
+        <nav
+          aria-label="Breadcrumb"
+          class="text-brand-muted mb-1 flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase"
+        >
+          <span>HOME</span>
+          <span class="opacity-40">/</span>
+          <span>SHOP</span>
+          <span class="opacity-40">/</span>
+          <span class="text-brand-black font-semibold">ALL OBJECTS</span>
+        </nav>
+        <!-- Monumental Headline -->
+        <section class="mt-1 mb-3">
+          <h1
+            class="font-display text-[64px] leading-[0.88] font-black tracking-tight text-black uppercase"
+          >
+            ALL OBJECTS
+          </h1>
+          <!-- Technical Bracket Note -->
+          <div
+            class="text-brand-muted relative mt-2.5 border-l-2 border-black/80 py-1 pr-2 pl-3.5 font-mono text-[10.5px] leading-snug"
+          >
+            <span class="absolute top-0 left-0 text-xs text-black/30">┌</span>
+            Objects engineered for movement, built for utility, designed to
+            adapt.
+            <span class="absolute right-0 bottom-0 text-xs text-black/30"
+              >┘</span
+            >
+          </div>
+        </section>
+        <!-- BEGIN: FilterAndSortingSection -->
+        <section class="mt-2 mb-4 space-y-2.5">
+          <!-- Filter Controls Bar -->
+          <div
+            class="flex items-center justify-between border-t border-black/15 pt-2"
+          >
+            <!-- Filter Trigger Button -->
+            <button
+              class="flex items-center gap-1.5 rounded border border-black/10 bg-black/5 px-2.5 py-1 font-mono text-xs font-medium tracking-tight active:bg-black/10"
+            >
+              <svg
+                class="h-3.5 w-3.5 stroke-current"
+                fill="none"
+                stroke-width="2"
+                viewbox="0 0 24 24"
+              >
+                <line x1="4" x2="4" y1="21" y2="14"></line>
+                <line x1="4" x2="4" y1="10" y2="3"></line>
+                <line x1="12" x2="12" y1="21" y2="12"></line>
+                <line x1="12" x2="12" y1="8" y2="3"></line>
+                <line x1="20" x2="20" y1="21" y2="16"></line>
+                <line x1="20" x2="20" y1="12" y2="3"></line>
+                <circle cx="4" cy="12" r="2"></circle>
+                <circle cx="12" cy="10" r="2"></circle>
+                <circle cx="20" cy="14" r="2"></circle>
+              </svg>
+              <span>FILTER</span>
+              <span class="bg-brand-lime h-1.5 w-1.5 rounded-full"></span>
+            </button>
+            <!-- Sort Selector -->
+            <button
+              class="text-brand-black flex items-center gap-1 font-mono text-[11px] tracking-tight active:opacity-70"
+            >
+              <span class="text-brand-muted">SORT:</span>
+              <span
+                class="font-semibold underline decoration-black/40 underline-offset-4"
+                >NEWEST ↓</span
+              >
+            </button>
+          </div>
+          <!-- Active Filter Tags Row -->
+          <div
+            class="no-scrollbar flex items-center gap-2 overflow-x-auto py-0.5"
+          >
+            <!-- Black Color Chip -->
+            <div
+              class="bg-brand-lime flex items-center gap-1.5 rounded px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wide uppercase shadow-sm"
+            >
+              <span>COLOR: BLACK</span>
+              <button aria-label="Remove filter" class="hover:opacity-75">
+                ×
+              </button>
+            </div>
+            <!-- Size M Chip -->
+            <div
+              class="bg-brand-lime flex items-center gap-1.5 rounded px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wide uppercase shadow-sm"
+            >
+              <span>SIZE: M</span>
+              <button aria-label="Remove filter" class="hover:opacity-75">
+                ×
+              </button>
+            </div>
+            <!-- Reset Filter Clear Link -->
+            <button
+              class="text-brand-muted ml-1 font-mono text-[10px] tracking-tight whitespace-nowrap underline active:text-black"
+            >
+              RESET ALL
+            </button>
+          </div>
+          <!-- Category Horizontal Quick Selector Chips -->
+          <div
+            class="no-scrollbar flex items-center gap-1.5 overflow-x-auto border-b border-black/10 pb-1 font-mono text-[11px]"
+          >
+            <button
+              class="rounded bg-black px-2.5 py-1 font-medium whitespace-nowrap text-white"
+            >
+              ● ALL (08)
+            </button>
+            <button
+              class="text-brand-black rounded border border-black/10 bg-white/40 px-2.5 py-1 whitespace-nowrap active:bg-black/5"
+            >
+              OUTERWEAR
+            </button>
+            <button
+              class="text-brand-black rounded border border-black/10 bg-white/40 px-2.5 py-1 whitespace-nowrap active:bg-black/5"
+            >
+              FOOTWEAR
+            </button>
+            <button
+              class="text-brand-black rounded border border-black/10 bg-white/40 px-2.5 py-1 whitespace-nowrap active:bg-black/5"
+            >
+              CARRY
+            </button>
+            <button
+              class="text-brand-black rounded border border-black/10 bg-white/40 px-2.5 py-1 whitespace-nowrap active:bg-black/5"
+            >
+              ACCESSORIES
+            </button>
+          </div>
+        </section>
+        <!-- END: FilterAndSortingSection -->
+        <!-- BEGIN: ProductGrid -->
+        <section class="grid grid-cols-2 gap-x-2.5 gap-y-5">
+          <!-- Item 1: Technical Jacket -->
+          <article class="group flex flex-col">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Technical Jacket to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex h-full w-full items-center justify-center p-1">
+                <img
+                  alt="Technical Jacket"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN13TJ3Ffp7Rf66AS8BO7Y1ZJKxUfFD_X_aRl9AUp5B-S4psj1zVpM3ftb5v_w2dGVL-HuQKVOzg9BD4MT0-CZJ3ORg-7ti7NfH62dBI_vFQbHVg-2Qd5NQbRCUIaQ01ZKgc2C9qsR1SMGzQq2OhwrKxznXivdejh48eA8rrwW1IZPTscyRGEHyu4KTRFhtkIIA_ck1k0wUNfRdfK1sAalF8ecf67wjCoTZt1OfMGhwvBBLpd_c-ho"
+                />
+              </div>
+              <span
+                class="bg-brand-lime absolute bottom-1.5 left-2 rounded px-1 font-mono text-[8px] font-semibold text-black"
+                >OBJ // 01</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >OUTERWEAR</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                TECHNICAL JACKET
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black">$420.00 USD</span>
+                <span class="text-[9px] font-medium text-emerald-700"
+                  >● IN STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+          <!-- Item 2: Motion 01 -->
+          <article class="group flex flex-col">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Motion 01 to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex h-full w-full items-center justify-center p-1">
+                <img
+                  alt="Motion 01 Trail Sneaker"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgpY5TIOYiT4KY_P0itMVJIm2guGcAXmMz17hBnx9I_32VyRIB_9FObVsgiTLYCeYyTQk_HPKWk87_w8paqSgdjROxRZ0HS7_X84EYjyJas7RfU42XDyVJdXVzLrb59cSaFh6I498FSl9a5nJdJrjTjz7xDYuhqWniEDrcTuXYDXECKUPOOSdcK8xGjcB58p8aTJWfxOPdo4ZvmUHaHWOeOrunqKwpr-YZO4x2qYPhgybDrXU3Nj1O"
+                />
+              </div>
+              <span
+                class="absolute bottom-1.5 left-2 rounded bg-white/80 px-1 font-mono text-[8px] text-black"
+                >OBJ // 02</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >FOOTWEAR</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                MOTION 01
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black">$220.00 USD</span>
+                <span class="text-[9px] font-medium text-emerald-700"
+                  >● IN STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+          <!-- Item 3: Modular Bag -->
+          <article class="group flex flex-col">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Modular Bag to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex h-full w-full items-center justify-center p-1">
+                <img
+                  alt="Modular Bag"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd2CH_zFi550QM9PUIr-RtKaGiu3YqYw982k3sLyisn8aujGzf0UAKOjQjaoFveiRUI5xhbKBCXQDCIT7_Oq5_7s-3FWFnh0WVjl2kKjmI-CvktYZl9W3hl13aOF8rdGDcKrHP9IKGDkJ9KHdD_12Av6XGroGF02vDKyxJalPsATAxfz6XsanhldN53E7pSdV2d4PQNuzjLxCrpFidil67zgX4_uc4tLADzkZG1VWGf_SX0a6Owufs"
+                />
+              </div>
+              <span
+                class="absolute bottom-1.5 left-2 rounded bg-white/80 px-1 font-mono text-[8px] text-black"
+                >OBJ // 03</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >CARRY</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                MODULAR BAG
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black">$280.00 USD</span>
+                <span class="text-[9px] font-medium text-emerald-700"
+                  >● IN STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+          <!-- Item 4: Wearable Object -->
+          <article class="group flex flex-col">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Wearable Object to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex h-full w-full items-center justify-center p-1">
+                <img
+                  alt="Wearable Object"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiC5r60YiRBDDhEQEfdB-DOoE745IGOOfHw2OzVDpM0rODzNsnUB2lwd_ok3YNS8laAN0ywv5511AhryAJdtHA7JGL5Uu6nFmg4zkjwsyISAho9XpilFyyGlnET2QBlKeDupgz7v6J8sE_NZMoC3Dl2s6uXNhPtQ-2IutNpnLeKau-tvRf4pixa1cEZwyEE1EQHRnh9Mtf7XUD9HlQmXUlAzfc2VmiK3GZviaH8d-MYbHCtPDxYuxa"
+                />
+              </div>
+              <span
+                class="absolute bottom-1.5 left-2 rounded bg-white/80 px-1 font-mono text-[8px] text-black"
+                >OBJ // 04</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >ACCESSORIES</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                WEARABLE OBJECT
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black">$180.00 USD</span>
+                <span class="text-[9px] font-medium text-emerald-700"
+                  >● IN STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+          <!-- Item 5: Utility Vest -->
+          <article class="group flex flex-col">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Utility Vest to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex h-full w-full items-center justify-center p-1">
+                <img
+                  alt="Utility Vest"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwBJui9MW3PDgjf935rYZLoAnybXgGgl3ePVsIjhb9jskZbyUgHOYJjFNc60T7JTZIBY1i_WDaU8KnyvwgB5NAaYIRjvC3_1l6frJCO-xyUhVpDg9xvKQG3yUB86-OHiTEgu2ZYqrS6CiTKKznKXvmtzrN31mUajWMxVT9pdqVPh27BCRqQ6T4N6Y6_m4BGPO8DVOCHU5v1YAGKF2Rs2AjN6tfGHhv8aHN2DkikYCUdinAMU4_cEn-"
+                />
+              </div>
+              <span
+                class="absolute bottom-1.5 left-2 rounded bg-white/80 px-1 font-mono text-[8px] text-black"
+                >OBJ // 05</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >OUTERWEAR</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                UTILITY VEST
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black">$260.00 USD</span>
+                <span class="text-[9px] font-medium text-emerald-700"
+                  >● IN STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+          <!-- Item 6: Technical Trousers -->
+          <article class="group flex flex-col">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Technical Trousers to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex h-full w-full items-center justify-center p-1">
+                <img
+                  alt="Technical Trousers"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhruEnUBNRe2cbd-W3Xa5pKfdqLgiDPQj_iRevdtOLErJnIRPEmW5ry2gDExh21Ds9A1g8sY8GeX-rh0D2KbR4MRmzk9NUXT8kKQFuZL1dYq-yj2cUHzZVwsaBei5PiiGZu2eF57GvraRzNUreiUQItscHitFSPXjuKcM2WquKYzl32Hxenw4-GWcr0mVg5lb3uLrv8yQctqe1_uNohpMkqPK38DgsRBwfnql_0XSdyBFklDv4ZF-P"
+                />
+              </div>
+              <span
+                class="absolute bottom-1.5 left-2 rounded bg-white/80 px-1 font-mono text-[8px] text-black"
+                >OBJ // 06</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >OUTERWEAR</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                TECHNICAL TROUSERS
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black">$240.00 USD</span>
+                <span class="text-[9px] font-medium text-emerald-700"
+                  >● IN STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+          <!-- Item 7: Shell Cap -->
+          <article class="group flex flex-col">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Shell Cap to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex h-full w-full items-center justify-center p-1">
+                <img
+                  alt="Shell Cap"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU7yCcZiQVsqAQWpauDYbdLQ9SytWvCHUCvgz-N0M-oIvXGo4JYuQgOvDTntSkmihefwm1C0PYvVWoGb6xxmqlniD4XMNn4BXavcBSBUrJ9vIHxJqx0IpaMlUDZgKLD31z-EqnSbgNVOLZrh4hhe9kcKHQwLXDV4Mk5vtgx3aeuTebPcnQ3jyJ1LsMs9Dbf_ACHCP-UD5w7Tlwml1Ijd7tNGeH3OSXeqbS2vboqZQud85qZ21RcV7E"
+                />
+              </div>
+              <span
+                class="absolute bottom-1.5 left-2 rounded bg-white/80 px-1 font-mono text-[8px] text-black"
+                >OBJ // 07</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >ACCESSORIES</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                SHELL CAP
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black">$90.00 USD</span>
+                <span class="text-[9px] font-medium text-emerald-700"
+                  >● IN STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+          <!-- Item 8: Structured Pack -->
+          <article class="group flex flex-col opacity-90">
+            <div
+              class="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-black/5 bg-[#DBD7CE] p-2 shadow-inner"
+            >
+              <button
+                aria-label="Add Structured Pack to wishlist"
+                class="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur transition-transform active:scale-90"
+              >
+                <svg
+                  class="h-3.5 w-3.5 stroke-current"
+                  fill="none"
+                  stroke-width="2"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+              <div
+                class="flex h-full w-full items-center justify-center p-1 contrast-125 grayscale"
+              >
+                <img
+                  alt="Structured Pack"
+                  class="max-h-full max-w-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNZ91FIk3hRbK3TSh_kB_wRU2_7NIyzV_jTIGosG-KbOgnQx-hbk8k0WM9oU3YxZZE1hj9n_PnVPx-dslWrOx_0_rcHoE66LMvCAsdxDh92r-R_g7T7qjS3pWd_tNkj2jgrrDvmb81qYhZZZsdor3PAd7SeUETkprfxGMKJNREjUOidOGDuXRnj14IgBeZz7OUklr8Cm0kfx2GcMnBmhuZmVqYqB0yrosBQcFC1M_oYbxDyGtkjKpH"
+                />
+              </div>
+              <!-- Out of stock badge -->
+              <div
+                class="bg-brand-bg/40 absolute inset-0 flex items-center justify-center backdrop-blur-[1px]"
+              >
+                <span
+                  class="bg-black px-2 py-0.5 font-mono text-[9px] tracking-widest text-white uppercase"
+                  >SOLD OUT</span
+                >
+              </div>
+              <span
+                class="absolute bottom-1.5 left-2 rounded bg-white/80 px-1 font-mono text-[8px] text-black"
+                >OBJ // 08</span
+              >
+            </div>
+            <div class="mt-2 space-y-0.5">
+              <span
+                class="text-brand-muted block font-mono text-[9px] tracking-wider uppercase"
+                >CARRY</span
+              >
+              <h2
+                class="font-display text-base leading-tight font-bold tracking-wide text-black uppercase"
+              >
+                STRUCTURED PACK
+              </h2>
+              <div
+                class="flex items-center justify-between pt-0.5 font-mono text-[10px]"
+              >
+                <span class="font-semibold text-black/60">$360.00 USD</span>
+                <span class="text-[9px] font-medium text-black/40"
+                  >OUT OF STOCK</span
+                >
+              </div>
+            </div>
+          </article>
+        </section>
+        <!-- END: ProductGrid -->
+        <!-- BEGIN: LoadMoreCTA -->
+        <section class="mt-8 mb-6">
+          <button
+            class="flex w-full items-center justify-center gap-2 border border-black/80 bg-transparent py-3.5 font-mono text-xs font-bold tracking-widest uppercase transition-all hover:bg-black hover:text-white active:scale-[0.98]"
+          >
+            <span>LOAD MORE OBJECTS</span>
+            <svg
+              class="h-3.5 w-3.5 stroke-current"
+              fill="none"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </button>
+          <p
+            class="text-brand-muted mt-2 text-center font-mono text-[10px] tracking-tight"
+          >
+            SHOWING 8 OF 24 TECHNICAL ARTIFACTS
+          </p>
+        </section>
+        <!-- END: LoadMoreCTA -->
+      </main>
+      <!-- END: MainContent -->
+      <!-- BEGIN: BottomNavDock -->
+      <nav
+        class="bg-brand-bg/95 pb-safe fixed right-0 bottom-0 left-0 z-50 mx-auto max-w-[390px] border-t border-black/15 px-4 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-lg"
+      >
+        <div class="flex items-center justify-around text-center">
+          <!-- Shop (Active) -->
+          <a
+            class="group flex flex-col items-center gap-1 py-1 text-black"
+            href="#shop"
+          >
+            <div class="relative flex h-5 w-5 items-center justify-center">
+              <svg
+                class="h-4 w-4 fill-none stroke-current stroke-2"
+                viewbox="0 0 24 24"
+              >
+                <rect height="7" rx="1" width="7" x="3" y="3"></rect>
+                <rect height="7" rx="1" width="7" x="14" y="3"></rect>
+                <rect height="7" rx="1" width="7" x="14" y="14"></rect>
+                <rect height="7" rx="1" width="7" x="3" y="14"></rect>
+              </svg>
+            </div>
+            <span
+              class="font-mono text-[9px] font-bold tracking-widest uppercase"
+              >SHOP</span
+            >
+            <div class="bg-brand-lime h-1 w-1 rounded-full"></div>
+          </a>
+          <!-- Drops -->
+          <a
+            class="group text-brand-muted flex flex-col items-center gap-1 py-1 transition-colors hover:text-black"
+            href="#drops"
+          >
+            <div class="flex h-5 w-5 items-center justify-center">
+              <svg
+                class="h-4 w-4 fill-none stroke-current stroke-2"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+            <span
+              class="font-mono text-[9px] font-medium tracking-widest uppercase"
+              >DROPS</span
+            >
+            <div class="h-1 w-1 bg-transparent"></div>
+          </a>
+          <!-- Saved -->
+          <a
+            class="group text-brand-muted flex flex-col items-center gap-1 py-1 transition-colors hover:text-black"
+            href="#saved"
+          >
+            <div class="flex h-5 w-5 items-center justify-center">
+              <svg
+                class="h-4 w-4 fill-none stroke-current stroke-2"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+            <span
+              class="font-mono text-[9px] font-medium tracking-widest uppercase"
+              >SAVED</span
+            >
+            <div class="h-1 w-1 bg-transparent"></div>
+          </a>
+          <!-- Account -->
+          <a
+            class="group text-brand-muted flex flex-col items-center gap-1 py-1 transition-colors hover:text-black"
+            href="#account"
+          >
+            <div class="flex h-5 w-5 items-center justify-center">
+              <svg
+                class="h-4 w-4 fill-none stroke-current stroke-2"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </div>
+            <span
+              class="font-mono text-[9px] font-medium tracking-widest uppercase"
+              >ACCOUNT</span
+            >
+            <div class="h-1 w-1 bg-transparent"></div>
+          </a>
+          <!-- Cart Quick View -->
+          <a
+            class="group text-brand-muted flex flex-col items-center gap-1 py-1 transition-colors hover:text-black"
+            href="#cart"
+          >
+            <div class="relative flex h-5 w-5 items-center justify-center">
+              <svg
+                class="h-4 w-4 fill-none stroke-current stroke-2"
+                viewbox="0 0 24 24"
+              >
+                <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+              </svg>
+              <span
+                class="bg-brand-lime absolute -top-1 -right-1.5 flex h-3 w-3 items-center justify-center rounded-full text-[8px] font-bold text-black"
+                >2</span
+              >
+            </div>
+            <span
+              class="font-mono text-[9px] font-medium tracking-widest uppercase"
+              >BAG</span
+            >
+            <div class="h-1 w-1 bg-transparent"></div>
+          </a>
+        </div>
+      </nav>
+      <!-- END: BottomNavDock -->
+    </div>
+  </body>
+</html>

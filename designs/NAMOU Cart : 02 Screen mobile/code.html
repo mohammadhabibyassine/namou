@@ -1,0 +1,477 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      name="viewport"
+    />
+    <title>NAMOU — CART / 02</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                bg: "#EAE6DF",
+                surface: "#DFDAD0",
+                obsidian: "#0E0F0E",
+                darkcard: "#121212",
+                lime: "#D2FF00",
+                muted: "#7E7C76",
+                hairline: "#CBC6BD",
+                borderDark: "#232323",
+              },
+            },
+            fontFamily: {
+              display: ['"Oswald"', "Impact", "sans-serif"],
+              mono: [
+                '"JetBrains Mono"',
+                '"Space Mono"',
+                "ui-monospace",
+                "monospace",
+              ],
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Google Fonts for Oswald & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&amp;family=Oswald:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style data-purpose="custom-layout">
+      body {
+        background-color: #eae6df;
+        color: #0e0f0e;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+      }
+
+      /* Radar dial circular ticks effect */
+      .radar-dial {
+        background-image: repeating-conic-gradient(
+          from 0deg,
+          rgba(255, 255, 255, 0.45) 0deg 0.75deg,
+          transparent 0.75deg 9deg
+        );
+        mask-image: radial-gradient(
+          circle at center,
+          transparent 66%,
+          black 67%,
+          black 99%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          circle at center,
+          transparent 66%,
+          black 67%,
+          black 99%,
+          transparent 100%
+        );
+      }
+
+      /* Touch buttons feedback */
+      .btn-press:active {
+        transform: scale(0.98);
+      }
+    </style>
+  </head>
+  <body
+    class="flex min-h-screen flex-col pb-36 font-mono text-[13px] leading-tight"
+  >
+    <!-- BEGIN: MobileStatusBar -->
+    <header
+      class="border-brand-hairline/40 sticky top-0 z-40 border-b bg-[#EAE6DF]/90 px-6 pt-2 pb-2 backdrop-blur-md"
+      data-purpose="ios-status-bar"
+    >
+      <div
+        class="flex items-center justify-between font-mono text-xs font-medium tracking-tight"
+      >
+        <span>9:41</span>
+        <div class="flex items-center space-x-2">
+          <span class="text-[10px] tracking-tighter">5G</span>
+          <!-- Cellular Bars -->
+          <svg class="h-3.5 w-3.5 fill-current" viewbox="0 0 24 24">
+            <path
+              d="M2 17h3v4H2v-4zm6-5h3v9H8v-9zm6-5h3v14h-3V7zm6-5h3v19h-3V2z"
+            ></path>
+          </svg>
+          <!-- Battery Icon -->
+          <div
+            class="flex h-2.5 w-5 items-center rounded-sm border border-current p-[1px]"
+          >
+            <div class="rounded-2xs h-full w-full bg-current"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- END: MobileStatusBar -->
+    <!-- BEGIN: TopNavigation -->
+    <nav
+      class="border-brand-hairline flex items-center justify-between border-b px-5 pt-3 pb-3"
+      data-purpose="main-navigation"
+    >
+      <!-- Brand Logo -->
+      <a
+        class="font-display text-2xl font-bold tracking-tight tracking-wider uppercase"
+        href="#"
+      >
+        NAMOU
+      </a>
+      <!-- Top Action Links & Counter -->
+      <div class="flex items-center gap-3">
+        <button
+          aria-label="Search"
+          class="text-brand-obsidian p-1.5 transition-opacity hover:opacity-75"
+        >
+          <svg
+            class="h-4 w-4 stroke-[2.2]"
+            fill="none"
+            stroke="currentColor"
+            viewbox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="7"></circle>
+            <line
+              stroke-linecap="round"
+              x1="16.5"
+              x2="21"
+              y1="16.5"
+              y2="21"
+            ></line>
+          </svg>
+        </button>
+        <!-- Cart Counter Pill -->
+        <div
+          class="bg-brand-obsidian text-brand-bg flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-[11px] font-bold tracking-wider"
+        >
+          <svg
+            class="h-3.5 w-3.5 stroke-[2]"
+            fill="none"
+            stroke="currentColor"
+            viewbox="0 0 24 24"
+          >
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+            <line x1="3" x2="21" y1="6" y2="6"></line>
+            <path d="M16 10a4 4 0 01-8 0"></path>
+          </svg>
+          <span>CART 02</span>
+        </div>
+      </div>
+    </nav>
+    <!-- END: TopNavigation -->
+    <main class="flex-1 px-5 pt-5">
+      <!-- BEGIN: HeaderTitleSection -->
+      <section class="mb-6" data-purpose="cart-hero-header">
+        <div class="flex items-baseline justify-between">
+          <h1
+            class="font-display text-brand-obsidian text-6xl leading-none font-bold tracking-tight"
+          >
+            CART / 02
+          </h1>
+          <span
+            class="text-brand-muted font-mono text-[11px] font-semibold tracking-widest uppercase"
+          >
+            [ 2 ITEMS ]
+          </span>
+        </div>
+        <div
+          class="text-brand-muted border-brand-hairline mt-1.5 flex items-center justify-between border-b pb-2.5 text-[11px] tracking-wider uppercase"
+        >
+          <span>SESSION ID: #NMU-8890</span>
+          <span>INDEX: 02 // 03 UNITS</span>
+        </div>
+      </section>
+      <!-- END: HeaderTitleSection -->
+      <!-- BEGIN: CartItemsList -->
+      <section class="space-y-6" data-purpose="cart-items">
+        <!-- ITEM 01: TECHNICAL SHELL 01 -->
+        <article class="group" data-purpose="cart-item-card">
+          <div class="flex gap-3.5">
+            <!-- Thumbnail Frame -->
+            <div
+              class="border-brand-hairline relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden border bg-[#dedad2] p-1.5"
+            >
+              <img
+                alt="Technical Shell 01 Black Jacket"
+                class="h-full w-full object-cover mix-blend-darken"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZbierFwNxzAl0DqtymUTN-XPDCscLztX8Y8Jo8kojEr6c2lvC7FIC0ncY-gHCSVqbiMRvFsO4HokHT55pPpjrTAO6_OQQZ1TDRz3AcuFkZ_D8toAhWdOkU2tAhScLe5kE2W711Imxa_9kc220iQ7jOv_W68pe03oLsykATHTIqPO2pCtenhmDvlcZyPjb4i0vo8AL9TG7TVKm1w0wLCN3X5glIxLpux4tEfF_zftGqPBHFAYT06An"
+              />
+              <span
+                class="text-brand-muted bg-brand-bg/90 border-brand-hairline/60 absolute bottom-1 left-1 border px-1 text-[8px] tracking-tighter uppercase"
+              >
+                JK-2401
+              </span>
+            </div>
+            <!-- Product Details -->
+            <div class="flex flex-1 flex-col justify-between py-0.5">
+              <div>
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h2
+                      class="font-display text-brand-obsidian text-xl leading-5 font-bold tracking-tight uppercase"
+                    >
+                      TECHNICAL SHELL 01
+                    </h2>
+                    <p
+                      class="text-brand-muted mt-0.5 text-[10px] tracking-wider uppercase"
+                    >
+                      NMU-JK-2401
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="mt-2.5 flex items-baseline justify-between text-xs font-semibold"
+                >
+                  <span class="tracking-wider uppercase">BLACK / M</span>
+                  <span class="text-brand-obsidian font-bold">$420.00 USD</span>
+                </div>
+              </div>
+              <!-- Stepper and Availability -->
+              <div class="mt-3 flex items-center justify-between">
+                <div
+                  class="border-brand-obsidian flex h-7 items-center rounded-none border bg-transparent px-1"
+                >
+                  <button
+                    aria-label="Decrease quantity"
+                    class="active:bg-brand-hairline flex h-full w-6 items-center justify-center text-sm font-bold"
+                  >
+                    −
+                  </button>
+                  <span class="w-6 text-center font-mono text-xs font-bold"
+                    >1</span
+                  >
+                  <button
+                    aria-label="Increase quantity"
+                    class="active:bg-brand-hairline flex h-full w-6 items-center justify-center text-sm font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+                <span
+                  class="text-brand-muted text-[10px] font-medium tracking-wider uppercase"
+                  >AVAILABLE: 6</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Inline Actions -->
+          <div
+            class="border-brand-hairline mt-3.5 flex items-center justify-between border-t pt-2 text-[11px] font-semibold tracking-wider uppercase"
+          >
+            <button
+              class="text-brand-obsidian flex items-center gap-1 hover:underline"
+            >
+              <span>CHANGE OPTIONS</span>
+              <span>→</span>
+            </button>
+            <button
+              class="text-brand-muted hover:text-brand-obsidian transition-colors"
+            >
+              REMOVE
+            </button>
+          </div>
+        </article>
+        <!-- ITEM 02: MOTION 01 -->
+        <article class="group pt-2" data-purpose="cart-item-card">
+          <div class="flex gap-3.5">
+            <!-- Thumbnail Frame -->
+            <div
+              class="border-brand-hairline relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden border bg-[#dedad2] p-1.5"
+            >
+              <img
+                alt="Motion 01 Black Technical Footwear"
+                class="h-full w-full object-cover mix-blend-darken"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYmQDfqCNZ08zzHf-s3ah0JmXfFvTcoEs00Y08jcL-qkeXPNqk1xTsAEmMdqrC9jkjMconBbVnJkZrgHCWV_SCUn3FniwwaLdIw2UgfdTGcEB6g0-ofWaeEbgzMnZDUdtH1FTd7eQPAlJhiiSwjBohgIth_ehIC0UqpTlYROKq2kvQttJEXQH4aU1vuFSla-nLhReY3mQDN-nvKNf39zt-uaIZsWQDZMAIO-bCoEYX4m_hLLEzaf3b"
+              />
+              <span
+                class="text-brand-muted bg-brand-bg/90 border-brand-hairline/60 absolute bottom-1 left-1 border px-1 text-[8px] tracking-tighter uppercase"
+              >
+                FT-0101
+              </span>
+            </div>
+            <!-- Product Details -->
+            <div class="flex flex-1 flex-col justify-between py-0.5">
+              <div>
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h2
+                      class="font-display text-brand-obsidian text-xl leading-5 font-bold tracking-tight uppercase"
+                    >
+                      MOTION 01
+                    </h2>
+                    <p
+                      class="text-brand-muted mt-0.5 text-[10px] tracking-wider uppercase"
+                    >
+                      NMU-FT-0101
+                    </p>
+                  </div>
+                </div>
+                <div class="mt-2 flex flex-col">
+                  <div
+                    class="flex items-baseline justify-between text-xs font-semibold"
+                  >
+                    <span class="tracking-wider uppercase">BLACK / 42</span>
+                    <span class="text-brand-obsidian font-bold">$440.00</span>
+                  </div>
+                  <div class="text-brand-muted mt-0.5 text-[10px] font-medium">
+                    UNIT $220.00 / LINE $440.00
+                  </div>
+                </div>
+              </div>
+              <!-- Stepper and Availability -->
+              <div class="mt-3 flex items-center justify-between">
+                <div
+                  class="border-brand-obsidian flex h-7 items-center rounded-none border bg-transparent px-1"
+                >
+                  <button
+                    aria-label="Decrease quantity"
+                    class="active:bg-brand-hairline flex h-full w-6 items-center justify-center text-sm font-bold"
+                  >
+                    −
+                  </button>
+                  <span class="w-6 text-center font-mono text-xs font-bold"
+                    >2</span
+                  >
+                  <button
+                    aria-label="Increase quantity"
+                    class="active:bg-brand-hairline flex h-full w-6 items-center justify-center text-sm font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+                <span
+                  class="text-brand-muted text-[10px] font-medium tracking-wider uppercase"
+                  >AVAILABLE: 8</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Inline Actions -->
+          <div
+            class="border-brand-hairline mt-3.5 flex items-center justify-between border-t pt-2 text-[11px] font-semibold tracking-wider uppercase"
+          >
+            <button
+              class="text-brand-obsidian flex items-center gap-1 hover:underline"
+            >
+              <span>CHANGE OPTIONS</span>
+              <span>→</span>
+            </button>
+            <button
+              class="text-brand-muted hover:text-brand-obsidian transition-colors"
+            >
+              REMOVE
+            </button>
+          </div>
+        </article>
+      </section>
+      <!-- END: CartItemsList -->
+      <!-- BEGIN: TechnicalRadarSummary -->
+      <section
+        class="bg-brand-darkcard border-brand-borderDark relative mt-8 overflow-hidden rounded-md border p-5 text-white shadow-xl"
+        data-purpose="radar-summary-card"
+      >
+        <!-- Top Meta Readout -->
+        <div
+          class="flex items-center justify-between border-b border-zinc-800/80 pb-3 text-[10px] tracking-widest text-zinc-400 uppercase"
+        >
+          <span>2 ITEMS</span>
+          <span class="text-brand-lime font-bold">3 UNITS</span>
+        </div>
+        <!-- Radar Circular Graphic Module -->
+        <div class="relative my-5 flex flex-col items-center justify-center">
+          <div class="relative flex h-44 w-44 items-center justify-center">
+            <!-- Dial Ticks Ring -->
+            <div
+              class="radar-dial absolute inset-0 rounded-full opacity-75"
+            ></div>
+            <!-- Active Indicator Tick Marker (Lime top tick) -->
+            <div
+              class="bg-brand-lime absolute top-1 left-1/2 h-2.5 w-0.5 -translate-x-1/2 rounded-full"
+            ></div>
+            <!-- Center Content: Bag Line Icon + Labels -->
+            <div
+              class="z-10 flex flex-col items-center justify-center space-y-1 text-center"
+            >
+              <svg
+                class="h-9 w-9 stroke-current stroke-[1.4] text-white"
+                fill="none"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+              <div
+                class="font-display mt-1 text-sm font-bold tracking-widest uppercase"
+              >
+                NAMOU
+              </div>
+              <div
+                class="font-mono text-[9px] tracking-widest text-zinc-400 uppercase"
+              >
+                CART SUMMARY
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Subtotal Strip -->
+        <div
+          class="flex items-baseline justify-between border-t border-zinc-800/90 pt-3"
+        >
+          <span
+            class="font-mono text-xs tracking-widest text-zinc-400 uppercase"
+            >SUBTOTAL</span
+          >
+          <span class="font-mono text-xl font-bold tracking-tight text-white"
+            >$860.00
+            <span class="text-xs font-normal text-zinc-400">USD</span></span
+          >
+        </div>
+      </section>
+      <!-- END: TechnicalRadarSummary -->
+      <!-- Secondary Action Button -->
+      <div class="mt-4 mb-2">
+        <button
+          class="border-brand-obsidian hover:bg-brand-obsidian hover:text-brand-bg btn-press flex w-full items-center justify-center gap-2 border px-4 py-3 font-mono text-xs font-bold tracking-wider uppercase transition-colors"
+        >
+          <span>←</span>
+          <span>CONTINUE SHOPPING</span>
+        </button>
+      </div>
+    </main>
+    <!-- BEGIN: StickyCheckoutDock -->
+    <aside
+      class="border-brand-hairline fixed right-0 bottom-0 left-0 z-50 border-t bg-[#EAE6DF]/95 px-5 pt-3 pb-6 shadow-[0_-8px_20px_rgba(0,0,0,0.06)] backdrop-blur-md"
+      data-purpose="sticky-bottom-bar"
+    >
+      <!-- Primary CTA Checkout Button -->
+      <button
+        class="bg-brand-lime text-brand-obsidian font-display flex w-full items-center justify-between rounded-none px-6 py-3.5 text-lg font-bold tracking-wider uppercase shadow-sm transition-all hover:bg-[#bceb00] active:scale-[0.99]"
+      >
+        <span class="tracking-wide">CHECKOUT</span>
+        <span class="text-xl leading-none">→</span>
+      </button>
+      <!-- Technical Status Notice -->
+      <div
+        class="text-brand-muted mt-2.5 flex items-center justify-center gap-2 font-mono text-[9px] tracking-wider uppercase"
+      >
+        <span
+          class="bg-brand-lime inline-block h-1.5 w-1.5 animate-pulse rounded-full"
+        ></span>
+        <span>STOCK IS CONFIRMED WHEN YOU PLACE THE ORDER.</span>
+      </div>
+    </aside>
+    <!-- END: StickyCheckoutDock -->
+  </body>
+</html>

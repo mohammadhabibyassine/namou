@@ -1,0 +1,1021 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
+    <title>NAMOU ADMIN — Category Tree</title>
+    <!-- Google Fonts: Bebas Neue for Brutalist Headings, Space Mono for Technical Readouts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              bone: {
+                DEFAULT: "#FAF8F3",
+                50: "#FFFFFF",
+                100: "#FAF8F3",
+                200: "#F2EFE7",
+                300: "#E4DFD3",
+                400: "#CBC5B6",
+              },
+              lime: {
+                accent: "#CCFF00",
+                soft: "#D4FF00",
+                muted: "#B8E600",
+              },
+              obsidian: {
+                DEFAULT: "#111111",
+                pure: "#080808",
+                surface: "#1A1A1A",
+              },
+              techgray: {
+                border: "#DDD8CE",
+                subtle: "#E8E4DA",
+                muted: "#7E7A70",
+                dim: "#9E9A90",
+              },
+            },
+            fontFamily: {
+              display: ['"Bebas Neue"', "Impact", "sans-serif"],
+              mono: ['"Space Mono"', "Consolas", "Courier New", "monospace"],
+            },
+            letterSpacing: {
+              tighter: "-0.04em",
+              tightest: "-0.06em",
+              ultra: "0.12em",
+            },
+          },
+        },
+      };
+    </script>
+    <style data-purpose="base-typography">
+      body {
+        font-family: "Space Mono", monospace;
+        background-color: #faf8f3;
+        color: #111111;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Technical hairline scrollbars */
+      ::-webkit-scrollbar {
+        height: 3px;
+        width: 3px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #faf8f3;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbc5b6;
+        border-radius: 2px;
+      }
+    </style>
+    <style data-purpose="custom-ui-accents">
+      .tech-border {
+        border: 1px solid #ddd8ce;
+      }
+      .tech-border-b {
+        border-bottom: 1px solid #ddd8ce;
+      }
+      .tech-dot-grid {
+        background-image: radial-gradient(#111111 0.75px, transparent 0.75px);
+        background-size: 8px 8px;
+      }
+      .custom-inner-shadow {
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-bone-100 text-obsidian selection:bg-lime-accent selection:text-obsidian flex min-h-screen flex-col justify-between"
+  >
+    <!-- BEGIN: MobileDeviceFrame -->
+    <div
+      class="bg-bone border-techgray-border relative mx-auto flex min-h-screen w-full max-w-[420px] flex-col border-x shadow-2xl"
+    >
+      <!-- BEGIN: TopBar -->
+      <header
+        class="bg-bone-100/95 border-techgray-border sticky top-0 z-30 border-b px-4 py-3 backdrop-blur-md"
+      >
+        <!-- Status Bar Sim & Wordmark -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div
+              class="bg-lime-accent border-obsidian h-2 w-2 animate-pulse rounded-full border"
+            ></div>
+            <h1
+              class="font-display tracking-ultra text-obsidian text-2xl leading-none uppercase"
+            >
+              NAMOU ADMIN
+            </h1>
+          </div>
+          <!-- Action Group: New Button & User/Drawer Icon -->
+          <div class="flex items-center space-x-2">
+            <button
+              class="bg-obsidian text-bone-100 flex h-7 items-center space-x-1 rounded px-2.5 font-mono text-[10px] font-bold tracking-wider uppercase transition-colors hover:bg-black active:scale-95"
+              data-purpose="create-cat-shortcut"
+            >
+              <span class="text-lime-accent font-black">+</span>
+              <span>NEW</span>
+            </button>
+            <button
+              aria-label="System Menu"
+              class="border-techgray-border text-obsidian active:bg-bone-200 flex h-7 w-7 flex-col items-center justify-center space-y-1 rounded border bg-white"
+              data-purpose="system-menu"
+            >
+              <span class="bg-obsidian h-[1.5px] w-3.5"></span>
+              <span class="bg-obsidian h-[1.5px] w-3.5"></span>
+              <span class="bg-obsidian mr-1.5 h-[1.5px] w-2 self-end"></span>
+            </button>
+          </div>
+        </div>
+        <!-- Horizontal Module Navigation Pills -->
+        <nav
+          class="no-scrollbar mt-3 flex items-center space-x-2 overflow-x-auto py-0.5 font-mono text-[11px] font-bold tracking-tight"
+        >
+          <a
+            class="bg-bone-200 border-techgray-border text-techgray-muted hover:text-obsidian rounded border px-2.5 py-1 whitespace-nowrap"
+            href="#"
+          >
+            ORDERS
+          </a>
+          <a
+            class="bg-bone-200 border-techgray-border text-techgray-muted hover:text-obsidian rounded border px-2.5 py-1 whitespace-nowrap"
+            href="#"
+          >
+            PRODUCTS
+          </a>
+          <a
+            class="bg-lime-accent border-obsidian text-obsidian flex items-center space-x-1.5 rounded border px-3 py-1 whitespace-nowrap shadow-sm"
+            href="#"
+          >
+            <span
+              class="bg-obsidian inline-block h-1.5 w-1.5 rounded-full"
+            ></span>
+            <span class="font-bold">CATEGORIES</span>
+          </a>
+          <a
+            class="bg-bone-200 border-techgray-border text-techgray-muted hover:text-obsidian rounded border px-2.5 py-1 whitespace-nowrap"
+            href="#"
+          >
+            ATTRIBUTES
+          </a>
+        </nav>
+      </header>
+      <!-- END: TopBar -->
+      <!-- BEGIN: MainContent -->
+      <main class="flex-1 space-y-5 p-4">
+        <!-- Screen Title & Node Diagnostic Readout -->
+        <section
+          class="flex items-baseline justify-between pt-1"
+          data-purpose="screen-header"
+        >
+          <div>
+            <h2
+              class="font-display text-obsidian text-4xl leading-none tracking-tighter uppercase"
+            >
+              CATEGORY TREE
+            </h2>
+            <p
+              class="text-techgray-muted mt-1 flex items-center space-x-2 font-mono text-[10px] tracking-wider uppercase"
+            >
+              <span>INDEX: 05 ROOT</span>
+              <span class="text-techgray-dim">•</span>
+              <span>11 SUB-NODES</span>
+            </p>
+          </div>
+          <div class="text-right">
+            <span
+              class="bg-techgray-subtle border-techgray-border text-obsidian inline-block rounded border px-1.5 py-0.5 font-mono text-[9px] font-bold tracking-widest uppercase"
+            >
+              LIVE DB
+            </span>
+          </div>
+        </section>
+        <!-- BEGIN: CategoryTreeCard -->
+        <section
+          class="border-techgray-border overflow-hidden rounded-lg border bg-white shadow-sm"
+          data-purpose="tree-hierarchy-container"
+        >
+          <!-- Table-like Header Bar -->
+          <div
+            class="bg-bone-200/80 border-techgray-border text-techgray-muted flex items-center justify-between border-b px-3 py-2 font-mono text-[10px] font-bold tracking-wider uppercase"
+          >
+            <div class="flex items-center space-x-2">
+              <span>NODE STRUCTURE</span>
+            </div>
+            <div class="flex items-center space-x-7 pr-2">
+              <span>SORT</span>
+              <span>ACTION</span>
+            </div>
+          </div>
+          <!-- Tree List Items -->
+          <div class="divide-techgray-subtle divide-y font-mono text-xs">
+            <!-- NODE 1: Outerwear (Expanded Parent) -->
+            <div class="bg-white">
+              <!-- Parent Row -->
+              <div
+                class="hover:bg-bone-100 flex items-center justify-between p-2.5 transition-colors"
+              >
+                <div class="flex min-w-0 flex-1 items-center space-x-2.5 pr-2">
+                  <!-- Drag Grip Dots -->
+                  <div
+                    class="flex cursor-grab flex-col space-y-[2px] px-0.5 opacity-40"
+                  >
+                    <div class="flex space-x-[2px]">
+                      <span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span
+                      ><span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span>
+                    </div>
+                    <div class="flex space-x-[2px]">
+                      <span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span
+                      ><span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span>
+                    </div>
+                    <div class="flex space-x-[2px]">
+                      <span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span
+                      ><span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span>
+                    </div>
+                  </div>
+                  <!-- Expand Chevron (Open) -->
+                  <button
+                    class="text-obsidian flex h-4 w-4 items-center justify-center text-[10px] font-bold"
+                  >
+                    <svg
+                      class="h-3 w-3 rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      viewbox="0 0 24 24"
+                    >
+                      <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                  </button>
+                  <span
+                    class="text-obsidian truncate font-bold tracking-tight uppercase"
+                    >Outerwear</span
+                  >
+                </div>
+                <!-- Controls -->
+                <div class="flex shrink-0 items-center space-x-3">
+                  <!-- Numeric Sort Pill -->
+                  <div
+                    class="border-techgray-border bg-bone-100 flex items-center space-x-1.5 rounded border px-1.5 py-0.5 text-[10px]"
+                  >
+                    <span class="w-2.5 text-center font-bold">1</span>
+                    <div
+                      class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                    >
+                      <span>▲</span>
+                      <span>▼</span>
+                    </div>
+                  </div>
+                  <!-- Row Actions -->
+                  <div
+                    class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                  >
+                    <button
+                      class="text-techgray-muted hover:text-obsidian underline-offset-2 hover:underline"
+                    >
+                      EDIT
+                    </button>
+                    <button class="text-techgray-muted hover:text-red-600">
+                      DEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Sub-Level 1: Jackets (Currently Selected / Highlighted) -->
+              <div
+                class="bg-bone-200/50 border-techgray-border border-l-lime-accent relative flex items-center justify-between border-t border-l-4 border-dashed py-2 pr-2.5 pl-7"
+              >
+                <!-- Left connector branch graphic -->
+                <span
+                  class="text-techgray-dim absolute top-1/2 left-4 -translate-y-1/2 font-mono text-xs leading-none"
+                  >└</span
+                >
+                <div
+                  class="flex min-w-0 flex-1 items-center space-x-2 pr-2 pl-2"
+                >
+                  <svg
+                    class="text-techgray-muted h-2.5 w-2.5 rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                  <span
+                    class="text-obsidian bg-lime-soft/40 truncate rounded px-1 py-0.5 font-bold tracking-tight uppercase"
+                    >Jackets</span
+                  >
+                </div>
+                <!-- Controls -->
+                <div class="flex shrink-0 items-center space-x-3">
+                  <div
+                    class="border-techgray-border flex items-center space-x-1.5 rounded border bg-white px-1.5 py-0.5 text-[10px]"
+                  >
+                    <span class="w-2.5 text-center font-bold">1</span>
+                    <div
+                      class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                    >
+                      <span>▲</span>
+                      <span>▼</span>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                  >
+                    <button class="text-obsidian underline underline-offset-2">
+                      EDIT
+                    </button>
+                    <button class="text-techgray-muted hover:text-red-600">
+                      DEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Sub-Level 2: Vests -->
+              <div
+                class="bg-bone-100 border-techgray-subtle relative flex items-center justify-between border-t py-2 pr-2.5 pl-7"
+              >
+                <span
+                  class="text-techgray-dim absolute top-1/2 left-4 -translate-y-1/2 font-mono text-xs leading-none"
+                  >└</span
+                >
+                <div
+                  class="flex min-w-0 flex-1 items-center space-x-2 pr-2 pl-2"
+                >
+                  <svg
+                    class="text-techgray-muted h-2.5 w-2.5 -rotate-90"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                  <span
+                    class="text-obsidian truncate font-medium tracking-tight uppercase"
+                    >Vests</span
+                  >
+                </div>
+                <!-- Controls -->
+                <div class="flex shrink-0 items-center space-x-3">
+                  <div
+                    class="border-techgray-border flex items-center space-x-1.5 rounded border bg-white px-1.5 py-0.5 text-[10px]"
+                  >
+                    <span class="w-2.5 text-center font-bold">2</span>
+                    <div
+                      class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                    >
+                      <span>▲</span>
+                      <span>▼</span>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                  >
+                    <button class="text-techgray-muted hover:text-obsidian">
+                      EDIT
+                    </button>
+                    <button class="text-techgray-muted hover:text-red-600">
+                      DEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- NODE 2: Footwear (Collapsed Parent) -->
+            <div
+              class="hover:bg-bone-100 flex items-center justify-between bg-white p-2.5 transition-colors"
+            >
+              <div class="flex min-w-0 flex-1 items-center space-x-2.5 pr-2">
+                <div
+                  class="flex cursor-grab flex-col space-y-[2px] px-0.5 opacity-40"
+                >
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                </div>
+                <button
+                  class="text-obsidian flex h-4 w-4 items-center justify-center"
+                >
+                  <svg
+                    class="text-obsidian h-3 w-3 -rotate-90"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                </button>
+                <span
+                  class="text-obsidian truncate font-bold tracking-tight uppercase"
+                  >Footwear</span
+                >
+              </div>
+              <div class="flex shrink-0 items-center space-x-3">
+                <div
+                  class="border-techgray-border bg-bone-100 flex items-center space-x-1.5 rounded border px-1.5 py-0.5 text-[10px]"
+                >
+                  <span class="w-2.5 text-center font-bold">2</span>
+                  <div
+                    class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                  >
+                    <span>▲</span>
+                    <span>▼</span>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                >
+                  <button class="text-techgray-muted hover:text-obsidian">
+                    EDIT
+                  </button>
+                  <button class="text-techgray-muted hover:text-red-600">
+                    DEL
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- NODE 3: Carry (Expanded Parent) -->
+            <div class="bg-white">
+              <div
+                class="hover:bg-bone-100 flex items-center justify-between p-2.5 transition-colors"
+              >
+                <div class="flex min-w-0 flex-1 items-center space-x-2.5 pr-2">
+                  <div
+                    class="flex cursor-grab flex-col space-y-[2px] px-0.5 opacity-40"
+                  >
+                    <div class="flex space-x-[2px]">
+                      <span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span
+                      ><span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span>
+                    </div>
+                    <div class="flex space-x-[2px]">
+                      <span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span
+                      ><span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span>
+                    </div>
+                    <div class="flex space-x-[2px]">
+                      <span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span
+                      ><span
+                        class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                      ></span>
+                    </div>
+                  </div>
+                  <button
+                    class="text-obsidian flex h-4 w-4 items-center justify-center"
+                  >
+                    <svg
+                      class="h-3 w-3 rotate-180"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      viewbox="0 0 24 24"
+                    >
+                      <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                  </button>
+                  <span
+                    class="text-obsidian truncate font-bold tracking-tight uppercase"
+                    >Carry</span
+                  >
+                </div>
+                <div class="flex shrink-0 items-center space-x-3">
+                  <div
+                    class="border-techgray-border bg-bone-100 flex items-center space-x-1.5 rounded border px-1.5 py-0.5 text-[10px]"
+                  >
+                    <span class="w-2.5 text-center font-bold">3</span>
+                    <div
+                      class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                    >
+                      <span>▲</span>
+                      <span>▼</span>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                  >
+                    <button class="text-techgray-muted hover:text-obsidian">
+                      EDIT
+                    </button>
+                    <button class="text-techgray-muted hover:text-red-600">
+                      DEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Sub-Carry Items -->
+              <div
+                class="bg-bone-100 border-techgray-subtle relative flex items-center justify-between border-t py-2 pr-2.5 pl-7"
+              >
+                <span
+                  class="text-techgray-dim absolute top-1/2 left-4 -translate-y-1/2 font-mono text-xs leading-none"
+                  >└</span
+                >
+                <div
+                  class="flex min-w-0 flex-1 items-center space-x-2 pr-2 pl-2"
+                >
+                  <svg
+                    class="text-techgray-muted h-2.5 w-2.5 rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                  <span
+                    class="text-obsidian truncate font-medium tracking-tight uppercase"
+                    >Bags</span
+                  >
+                </div>
+                <div class="flex shrink-0 items-center space-x-3">
+                  <div
+                    class="border-techgray-border flex items-center space-x-1.5 rounded border bg-white px-1.5 py-0.5 text-[10px]"
+                  >
+                    <span class="w-2.5 text-center font-bold">1</span>
+                    <div
+                      class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                    >
+                      <span>▲</span>
+                      <span>▼</span>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                  >
+                    <button class="text-techgray-muted hover:text-obsidian">
+                      EDIT
+                    </button>
+                    <button class="text-techgray-muted hover:text-red-600">
+                      DEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-bone-100 border-techgray-subtle relative flex items-center justify-between border-t py-2 pr-2.5 pl-7"
+              >
+                <span
+                  class="text-techgray-dim absolute top-1/2 left-4 -translate-y-1/2 font-mono text-xs leading-none"
+                  >└</span
+                >
+                <div
+                  class="flex min-w-0 flex-1 items-center space-x-2 pr-2 pl-2"
+                >
+                  <svg
+                    class="text-techgray-muted h-2.5 w-2.5 -rotate-90"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                  <span
+                    class="text-obsidian truncate font-medium tracking-tight uppercase"
+                    >Slings</span
+                  >
+                </div>
+                <div class="flex shrink-0 items-center space-x-3">
+                  <div
+                    class="border-techgray-border flex items-center space-x-1.5 rounded border bg-white px-1.5 py-0.5 text-[10px]"
+                  >
+                    <span class="w-2.5 text-center font-bold">2</span>
+                    <div
+                      class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                    >
+                      <span>▲</span>
+                      <span>▼</span>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                  >
+                    <button class="text-techgray-muted hover:text-obsidian">
+                      EDIT
+                    </button>
+                    <button class="text-techgray-muted hover:text-red-600">
+                      DEL
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- NODE 4: Accessories (Collapsed Summary in mobile to preserve scan) -->
+            <div
+              class="hover:bg-bone-100 flex items-center justify-between bg-white p-2.5 transition-colors"
+            >
+              <div class="flex min-w-0 flex-1 items-center space-x-2.5 pr-2">
+                <div
+                  class="flex cursor-grab flex-col space-y-[2px] px-0.5 opacity-40"
+                >
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                </div>
+                <button
+                  class="text-obsidian flex h-4 w-4 items-center justify-center"
+                >
+                  <svg
+                    class="h-3 w-3 rotate-180"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                </button>
+                <span
+                  class="text-obsidian truncate font-bold tracking-tight uppercase"
+                  >Accessories</span
+                >
+              </div>
+              <div class="flex shrink-0 items-center space-x-3">
+                <div
+                  class="border-techgray-border bg-bone-100 flex items-center space-x-1.5 rounded border px-1.5 py-0.5 text-[10px]"
+                >
+                  <span class="w-2.5 text-center font-bold">4</span>
+                  <div
+                    class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                  >
+                    <span>▲</span>
+                    <span>▼</span>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                >
+                  <button class="text-techgray-muted hover:text-obsidian">
+                    EDIT
+                  </button>
+                  <button class="text-techgray-muted hover:text-red-600">
+                    DEL
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- NODE 5: Objects -->
+            <div
+              class="hover:bg-bone-100 flex items-center justify-between bg-white p-2.5 transition-colors"
+            >
+              <div class="flex min-w-0 flex-1 items-center space-x-2.5 pr-2">
+                <div
+                  class="flex cursor-grab flex-col space-y-[2px] px-0.5 opacity-40"
+                >
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                  <div class="flex space-x-[2px]">
+                    <span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span
+                    ><span
+                      class="bg-obsidian h-[2px] w-[2px] rounded-full"
+                    ></span>
+                  </div>
+                </div>
+                <button
+                  class="text-obsidian flex h-4 w-4 items-center justify-center"
+                >
+                  <svg
+                    class="text-obsidian h-3 w-3 -rotate-90"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                </button>
+                <span
+                  class="text-obsidian truncate font-bold tracking-tight uppercase"
+                  >Objects</span
+                >
+              </div>
+              <div class="flex shrink-0 items-center space-x-3">
+                <div
+                  class="border-techgray-border bg-bone-100 flex items-center space-x-1.5 rounded border px-1.5 py-0.5 text-[10px]"
+                >
+                  <span class="w-2.5 text-center font-bold">5</span>
+                  <div
+                    class="text-techgray-muted flex flex-col -space-y-1 text-[7px] leading-none"
+                  >
+                    <span>▲</span>
+                    <span>▼</span>
+                  </div>
+                </div>
+                <div
+                  class="flex items-center space-x-2 text-[10px] font-bold tracking-wider uppercase"
+                >
+                  <button class="text-techgray-muted hover:text-obsidian">
+                    EDIT
+                  </button>
+                  <button class="text-techgray-muted hover:text-red-600">
+                    DEL
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- END: CategoryTreeCard -->
+        <!-- BEGIN: EditCategoryFormMobileSheet -->
+        <section
+          class="border-techgray-border relative rounded-lg border bg-white p-4 shadow-sm"
+          data-purpose="edit-category-panel"
+        >
+          <!-- Form Header with active status indicator -->
+          <div
+            class="border-techgray-subtle mb-4 flex items-center justify-between border-b pb-3"
+          >
+            <div class="flex items-center space-x-2">
+              <span
+                class="bg-lime-accent border-obsidian h-2.5 w-2.5 rounded-sm border"
+              ></span>
+              <h3
+                class="font-display text-obsidian text-xl tracking-tight uppercase"
+              >
+                EDIT CATEGORY
+              </h3>
+            </div>
+            <span
+              class="bg-bone-200 border-techgray-border text-techgray-muted rounded border px-2 py-0.5 font-mono text-[9px] font-bold uppercase"
+            >
+              TARGET: JACKETS
+            </span>
+          </div>
+          <form
+            action="#"
+            class="space-y-3.5"
+            method="POST"
+            onsubmit="event.preventDefault()"
+          >
+            <!-- NAME FIELD -->
+            <div class="space-y-1">
+              <label
+                class="text-obsidian block font-mono text-[10px] font-bold tracking-wider uppercase"
+              >
+                NAME
+              </label>
+              <input
+                class="bg-bone-100/60 border-techgray-border text-obsidian focus:border-obsidian focus:ring-obsidian h-10 w-full rounded border px-3 font-mono text-xs font-bold transition-all outline-none focus:bg-white focus:ring-1"
+                type="text"
+                value="Jackets"
+              />
+            </div>
+            <!-- SLUG FIELD -->
+            <div class="space-y-1">
+              <label
+                class="text-obsidian block font-mono text-[10px] font-bold tracking-wider uppercase"
+              >
+                SLUG
+              </label>
+              <div class="relative">
+                <input
+                  class="bg-bone-100/60 border-techgray-border text-obsidian focus:border-obsidian focus:ring-obsidian h-10 w-full rounded border px-3 font-mono text-xs transition-all outline-none focus:bg-white focus:ring-1"
+                  type="text"
+                  value="jackets"
+                />
+                <span
+                  class="text-techgray-muted absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[9px] uppercase"
+                  >/root</span
+                >
+              </div>
+            </div>
+            <!-- DESCRIPTION FIELD -->
+            <div class="space-y-1">
+              <label
+                class="text-obsidian block font-mono text-[10px] font-bold tracking-wider uppercase"
+              >
+                DESCRIPTION
+              </label>
+              <textarea
+                class="bg-bone-100/60 border-techgray-border text-obsidian focus:border-obsidian focus:ring-obsidian w-full resize-none rounded border p-2.5 font-mono text-xs leading-relaxed transition-all outline-none focus:bg-white focus:ring-1"
+                rows="3"
+              >
+Technical jackets and outer shells built for performance and everyday protection.</textarea>
+            </div>
+            <!-- PARENT CATEGORY SELECT -->
+            <div class="space-y-1">
+              <label
+                class="text-obsidian block font-mono text-[10px] font-bold tracking-wider uppercase"
+              >
+                PARENT CATEGORY
+              </label>
+              <div class="relative">
+                <select
+                  class="bg-bone-100/60 border-techgray-border text-obsidian focus:border-obsidian focus:ring-obsidian h-10 w-full appearance-none rounded border px-3 pr-8 font-mono text-xs font-bold transition-all focus:bg-white focus:ring-1"
+                >
+                  <option selected="">Outerwear</option>
+                  <option>Carry</option>
+                  <option>Accessories</option>
+                  <option>Footwear</option>
+                  <option>Objects</option>
+                  <option>-- NONE (ROOT) --</option>
+                </select>
+                <div
+                  class="text-obsidian pointer-events-none absolute top-1/2 right-3 -translate-y-1/2"
+                >
+                  <svg
+                    class="h-3.5 w-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewbox="0 0 24 24"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <!-- SORT ORDER STEPPER -->
+            <div class="space-y-1">
+              <label
+                class="text-obsidian block font-mono text-[10px] font-bold tracking-wider uppercase"
+              >
+                SORT ORDER
+              </label>
+              <div
+                class="bg-bone-100/60 border-techgray-border flex h-10 items-center justify-between rounded border px-3"
+              >
+                <span class="text-obsidian font-mono text-xs font-bold">1</span>
+                <div class="flex items-center space-x-1">
+                  <button
+                    class="border-techgray-border text-obsidian hover:bg-bone-200 flex h-6 w-6 items-center justify-center rounded border bg-white text-[10px] active:scale-95"
+                    type="button"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    class="border-techgray-border text-obsidian hover:bg-bone-200 flex h-6 w-6 items-center justify-center rounded border bg-white text-[10px] active:scale-95"
+                    type="button"
+                  >
+                    ▼
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Primary Submit Action -->
+            <div class="pt-2">
+              <button
+                class="bg-obsidian text-bone-100 font-display tracking-ultra border-obsidian flex h-11 w-full items-center justify-center space-x-2 rounded border text-lg uppercase shadow-sm transition-all hover:bg-black hover:shadow active:scale-[0.99]"
+                type="submit"
+              >
+                <span>SAVE CHANGES</span>
+                <span class="text-lime-accent text-sm">→</span>
+              </button>
+            </div>
+          </form>
+        </section>
+        <!-- END: EditCategoryFormMobileSheet -->
+        <!-- BEGIN: WarningNoticeBanner -->
+        <aside
+          class="bg-bone-200/90 border-techgray-border flex items-start space-x-3 rounded-lg border p-3"
+          data-purpose="safety-notice-banner"
+        >
+          <!-- Lime Warning Badge -->
+          <div
+            class="bg-lime-soft border-obsidian text-obsidian flex h-8 w-8 shrink-0 items-center justify-center rounded border font-mono font-bold shadow-xs"
+          >
+            <svg
+              class="text-obsidian h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"
+              ></path>
+              <line x1="12" x2="12" y1="9" y2="13"></line>
+              <line x1="12" x2="12.01" y1="17" y2="17"></line>
+            </svg>
+          </div>
+          <!-- Warning Copy -->
+          <div
+            class="text-obsidian/90 pt-0.5 font-mono text-[10.5px] leading-tight tracking-tight uppercase"
+          >
+            <span class="text-obsidian font-bold">SYSTEM CONSTRAINT:</span> A
+            CATEGORY MUST HAVE NO ACTIVE CHILDREN OR PRODUCTS BEFORE DELETION.
+          </div>
+        </aside>
+        <!-- END: WarningNoticeBanner -->
+      </main>
+      <!-- END: MainContent -->
+      <!-- BEGIN: AdminMobileFooter -->
+      <footer
+        class="border-techgray-border bg-bone-200 text-techgray-muted flex items-center justify-between border-t px-4 py-3 font-mono text-[10px]"
+      >
+        <button
+          class="text-obsidian flex items-center space-x-1.5 font-bold tracking-wider uppercase transition-colors hover:text-red-700"
+          data-purpose="logout-btn"
+        >
+          <span>[→</span>
+          <span>LOGOUT</span>
+        </button>
+        <div class="flex items-center space-x-2">
+          <span class="bg-lime-muted h-1.5 w-1.5 rounded-full"></span>
+          <span class="text-[9px] tracking-widest uppercase"
+            >SYS: OPTIMAL // V2.4</span
+          >
+        </div>
+      </footer>
+      <!-- END: AdminMobileFooter -->
+    </div>
+    <!-- END: MobileDeviceFrame -->
+  </body>
+</html>

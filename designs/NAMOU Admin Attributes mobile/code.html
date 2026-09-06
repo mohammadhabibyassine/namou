@@ -1,0 +1,650 @@
+<!doctype html>
+
+<html class="bg-[#F6F5F2]" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
+    <title>NAMOU Admin - Attributes</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                lime: "#D4FF00",
+                limeHover: "#BCE500",
+                bg: "#F6F5F2",
+                card: "#FFFFFF",
+                border: "#E5E2DA",
+                subtle: "#8C8980",
+                dark: "#111111",
+              },
+            },
+            fontFamily: {
+              mono: [
+                "SF Mono",
+                "ui-monospace",
+                "Menlo",
+                "Monaco",
+                "Courier New",
+                "monospace",
+              ],
+              headline: [
+                "Impact",
+                "Haettenschweiler",
+                "Arial Narrow Bold",
+                "sans-serif",
+              ],
+              sans: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "Inter",
+                "Segoe UI",
+                "sans-serif",
+              ],
+            },
+          },
+        },
+      };
+    </script>
+    <style data-purpose="custom-enhancements">
+      /* Hide scrollbars on horizontal scroll tabs */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      /* Touch target feedback */
+      .tap-highlight-none {
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-brand-bg text-brand-dark flex min-h-screen justify-center pb-10 font-sans antialiased"
+  >
+    <!-- Mobile Viewport Simulation Shell (max width 420px for high-fidelity iOS experience) -->
+    <div
+      class="bg-brand-bg border-brand-border/60 relative flex min-h-screen w-full max-w-md flex-col border-x shadow-2xl"
+    >
+      <!-- BEGIN: iOS System Status Bar -->
+      <header
+        class="bg-brand-bg/95 border-brand-border/40 sticky top-0 z-50 flex items-center justify-between border-b px-6 pt-3 pb-2 backdrop-blur-md"
+      >
+        <!-- Time -->
+        <span class="text-brand-dark font-mono text-xs font-bold tracking-tight"
+          >09:41</span
+        >
+        <!-- Dynamic Island / Speaker Pill Notch Simulation -->
+        <div class="bg-brand-dark h-4 w-24 rounded-full"></div>
+        <!-- Telemetry Icons -->
+        <div class="text-brand-dark flex items-center space-x-1.5">
+          <!-- Cellular Signal -->
+          <svg class="h-3.5 w-3.5 fill-current" viewbox="0 0 24 24">
+            <path
+              d="M2 17h3v4H2v-4zm5-4h3v8H7v-8zm5-5h3v13h-3V8zm5-5h3v18h-3V3z"
+            ></path>
+          </svg>
+          <!-- Wifi -->
+          <svg class="h-3.5 w-3.5 fill-current" viewbox="0 0 24 24">
+            <path
+              d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.55 0 6.8 1.45 9.17 3.82L12 19.35 2.83 11.32C5.2 8.95 8.45 7.5 12 7.5z"
+            ></path>
+          </svg>
+          <!-- Battery Pill -->
+          <div
+            class="border-brand-dark flex h-2.5 w-5 items-center rounded-[3px] border p-0.5"
+          >
+            <div class="bg-brand-dark h-full w-full rounded-[1px]"></div>
+          </div>
+        </div>
+      </header>
+      <!-- END: iOS System Status Bar -->
+      <!-- BEGIN: Brand Navigation Header -->
+      <nav class="bg-brand-bg border-brand-border border-b px-5 pt-4 pb-3">
+        <div class="flex items-center justify-between">
+          <!-- Brand Title with Utilitarian Status Pulse -->
+          <div class="flex items-center space-x-2">
+            <span
+              class="bg-brand-lime ring-brand-dark/20 inline-block h-2.5 w-2.5 animate-pulse rounded-full ring-2"
+            ></span>
+            <span
+              class="font-headline text-xl font-black tracking-wider uppercase"
+              >NAMOU ADMIN</span
+            >
+            <span
+              class="bg-brand-dark text-brand-lime rounded px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider uppercase"
+              >v2.4</span
+            >
+          </div>
+          <!-- Quick Action / Drawer Menu Toggle -->
+          <button
+            aria-label="System Menu"
+            class="border-brand-border tap-highlight-none rounded border bg-white p-1.5 transition hover:bg-zinc-100"
+          >
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M4 6h16M4 12h16M4 18h7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.2"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <!-- Horizontal Navigation Tabs -->
+        <div
+          class="no-scrollbar mt-4 flex space-x-2 overflow-x-auto py-0.5"
+          role="tablist"
+        >
+          <a
+            class="text-brand-subtle hover:text-brand-dark px-3.5 py-1.5 font-mono text-xs font-semibold whitespace-nowrap uppercase transition-colors"
+            href="#orders"
+            >ORDERS</a
+          >
+          <a
+            class="text-brand-subtle hover:text-brand-dark px-3.5 py-1.5 font-mono text-xs font-semibold whitespace-nowrap uppercase transition-colors"
+            href="#products"
+            >PRODUCTS</a
+          >
+          <a
+            class="text-brand-subtle hover:text-brand-dark px-3.5 py-1.5 font-mono text-xs font-semibold whitespace-nowrap uppercase transition-colors"
+            href="#categories"
+            >CATEGORIES</a
+          >
+          <!-- Active Tab: Attributes -->
+          <a
+            class="text-brand-dark border-brand-lime border-brand-border flex items-center gap-1.5 rounded-md border-y border-r border-l-4 bg-white px-3.5 py-1.5 font-mono text-xs font-bold whitespace-nowrap uppercase shadow-xs"
+            href="#attributes"
+          >
+            ATTRIBUTES
+          </a>
+          <a
+            class="text-brand-subtle px-3.5 py-1.5 font-mono text-xs font-semibold whitespace-nowrap uppercase transition-colors hover:text-red-600"
+            href="#logout"
+            >LOGOUT</a
+          >
+        </div>
+      </nav>
+      <!-- END: Brand Navigation Header -->
+      <!-- BEGIN: Main Content Area -->
+      <main class="flex-1 space-y-6 px-4 py-5">
+        <!-- Page Title & Primary Creation Action -->
+        <section class="space-y-3.5" data-purpose="page-hero">
+          <div class="flex items-center justify-between gap-2">
+            <h1
+              class="font-headline text-3xl leading-none font-black tracking-tight uppercase"
+            >
+              ATTRIBUTES
+            </h1>
+            <span class="text-brand-subtle font-mono text-[11px]"
+              >CONFIG // ATTR_TYPES</span
+            >
+          </div>
+          <!-- Primary Action Button with Electric Lime Accent -->
+          <button
+            class="bg-brand-lime hover:bg-brand-limeHover text-brand-dark border-brand-dark tap-highlight-none flex w-full items-center justify-center gap-2 rounded-md border px-4 py-3.5 font-mono text-xs font-extrabold uppercase shadow-[2px_2px_0px_#111111] transition-all active:scale-[0.99]"
+            type="button"
+          >
+            <svg
+              class="h-4 w-4 stroke-[3]"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M12 4v16m8-8H4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span>CREATE ATTRIBUTE TYPE</span>
+          </button>
+        </section>
+        <!-- BEGIN: Attribute Types Section -->
+        <section class="space-y-2.5" data-purpose="attribute-types-list">
+          <div class="flex items-center justify-between px-1">
+            <h2
+              class="text-brand-subtle font-mono text-xs font-bold tracking-wider uppercase"
+            >
+              AVAILABLE TYPES (3)
+            </h2>
+            <span class="text-brand-subtle font-mono text-[10px]"
+              >SORT / COUNT</span
+            >
+          </div>
+          <!-- Master List Container -->
+          <div
+            class="border-brand-border divide-brand-border divide-y overflow-hidden rounded-lg border bg-white shadow-sm"
+          >
+            <!-- Item 1: COLOR (Selected State) -->
+            <div
+              class="border-l-brand-lime relative flex flex-col gap-2 border-l-4 bg-zinc-50/80 p-3.5 transition-all"
+            >
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="text-brand-dark font-mono text-sm font-bold tracking-tight uppercase"
+                      >COLOR</span
+                    >
+                    <span
+                      class="py-0.2 bg-brand-lime text-brand-dark inline-block rounded px-1.5 font-mono text-[10px] font-black"
+                      >ACTIVE</span
+                    >
+                  </div>
+                  <div class="text-brand-subtle mt-0.5 font-mono text-xs">
+                    slug: <code class="text-brand-dark font-medium">color</code>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-brand-subtle font-mono text-[11px]">
+                    Order <span class="text-brand-dark font-bold">1</span>
+                  </div>
+                  <div class="text-brand-subtle font-mono text-[11px]">
+                    Count <span class="text-brand-dark font-bold">3</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="border-brand-border mt-1 flex items-center justify-between border-t border-dashed pt-1"
+              >
+                <span class="text-brand-subtle font-mono text-[10px] uppercase"
+                  >CURRENTLY MANAGING</span
+                >
+                <div
+                  class="flex items-center space-x-3 font-mono text-xs font-semibold"
+                >
+                  <button
+                    class="text-brand-dark tap-highlight-none underline-offset-2 hover:underline"
+                    type="button"
+                  >
+                    EDIT
+                  </button>
+                  <span class="text-brand-border">/</span>
+                  <button
+                    class="text-brand-dark tap-highlight-none hover:text-red-600"
+                    type="button"
+                  >
+                    DELETE
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Item 2: SIZE -->
+            <div
+              class="flex flex-col gap-2 p-3.5 transition-colors hover:bg-zinc-50"
+            >
+              <div class="flex items-start justify-between">
+                <div>
+                  <span
+                    class="text-brand-dark font-mono text-sm font-bold tracking-tight uppercase"
+                    >SIZE</span
+                  >
+                  <div class="text-brand-subtle mt-0.5 font-mono text-xs">
+                    slug: <code class="text-brand-dark font-medium">size</code>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-brand-subtle font-mono text-[11px]">
+                    Order <span class="text-brand-dark font-bold">2</span>
+                  </div>
+                  <div class="text-brand-subtle font-mono text-[11px]">
+                    Count <span class="text-brand-dark font-bold">6</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="border-brand-border/40 flex items-center justify-end space-x-3 border-t pt-1 font-mono text-xs font-semibold"
+              >
+                <button
+                  class="text-brand-dark tap-highlight-none underline-offset-2 hover:underline"
+                  type="button"
+                >
+                  SELECT
+                </button>
+                <span class="text-brand-border">/</span>
+                <button
+                  class="text-brand-dark tap-highlight-none underline-offset-2 hover:underline"
+                  type="button"
+                >
+                  EDIT
+                </button>
+                <span class="text-brand-border">/</span>
+                <button
+                  class="text-brand-dark tap-highlight-none hover:text-red-600"
+                  type="button"
+                >
+                  DELETE
+                </button>
+              </div>
+            </div>
+            <!-- Item 3: MATERIAL -->
+            <div
+              class="flex flex-col gap-2 p-3.5 transition-colors hover:bg-zinc-50"
+            >
+              <div class="flex items-start justify-between">
+                <div>
+                  <span
+                    class="text-brand-dark font-mono text-sm font-bold tracking-tight uppercase"
+                    >MATERIAL</span
+                  >
+                  <div class="text-brand-subtle mt-0.5 font-mono text-xs">
+                    slug:
+                    <code class="text-brand-dark font-medium">material</code>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-brand-subtle font-mono text-[11px]">
+                    Order <span class="text-brand-dark font-bold">3</span>
+                  </div>
+                  <div class="text-brand-subtle font-mono text-[11px]">
+                    Count <span class="text-brand-dark font-bold">4</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="border-brand-border/40 flex items-center justify-end space-x-3 border-t pt-1 font-mono text-xs font-semibold"
+              >
+                <button
+                  class="text-brand-dark tap-highlight-none underline-offset-2 hover:underline"
+                  type="button"
+                >
+                  SELECT
+                </button>
+                <span class="text-brand-border">/</span>
+                <button
+                  class="text-brand-dark tap-highlight-none underline-offset-2 hover:underline"
+                  type="button"
+                >
+                  EDIT
+                </button>
+                <span class="text-brand-border">/</span>
+                <button
+                  class="text-brand-dark tap-highlight-none hover:text-red-600"
+                  type="button"
+                >
+                  DELETE
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- END: Attribute Types Section -->
+        <!-- BEGIN: Values Detail Card (COLOR / VALUES) -->
+        <section
+          class="border-brand-border space-y-4 rounded-xl border bg-white p-4 shadow-sm"
+          data-purpose="attribute-values-inspector"
+        >
+          <!-- Section Header -->
+          <div
+            class="border-brand-border flex items-center justify-between border-b pb-2"
+          >
+            <div class="flex items-center space-x-2">
+              <span class="bg-brand-dark h-2 w-2 rounded-full"></span>
+              <h2 class="font-headline text-lg tracking-wide uppercase">
+                COLOR / VALUES
+              </h2>
+            </div>
+            <span
+              class="border-brand-border rounded border bg-zinc-100 px-2 py-0.5 font-mono text-[11px] font-medium"
+              >3 ENTRIES</span
+            >
+          </div>
+          <!-- Warning Callout Banner -->
+          <div
+            class="text-brand-dark flex items-start gap-2.5 rounded-lg border border-[#F0E68C] bg-[#FFFDE7] p-3 font-mono text-xs"
+            role="alert"
+          >
+            <svg
+              class="mt-0.5 h-4 w-4 shrink-0 text-amber-700"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+            </svg>
+            <p class="text-[11px] leading-tight tracking-tight uppercase">
+              Values used by products cannot be deleted.
+            </p>
+          </div>
+          <!-- Values Data Table -->
+          <div class="space-y-1">
+            <!-- Table Subheaders -->
+            <div
+              class="text-brand-subtle border-brand-border grid grid-cols-12 border-b px-2 pb-1 font-mono text-[10px] uppercase"
+            >
+              <span class="col-span-5">VALUE</span>
+              <span class="col-span-3 text-center">ORDER</span>
+              <span class="col-span-4 text-right">ACTION</span>
+            </div>
+            <!-- Value Row 1: BLACK -->
+            <div
+              class="grid grid-cols-12 items-center rounded-md border-b border-zinc-100 px-2 py-2.5 hover:bg-zinc-50"
+            >
+              <div class="col-span-5 flex items-center space-x-2">
+                <span
+                  class="inline-block h-3 w-3 rounded-full border border-zinc-300 bg-black"
+                ></span>
+                <span
+                  class="font-mono text-xs font-bold tracking-tight uppercase"
+                  >BLACK</span
+                >
+              </div>
+              <div
+                class="text-brand-subtle col-span-3 text-center font-mono text-xs"
+              >
+                1
+              </div>
+              <div
+                class="col-span-4 flex items-center justify-end space-x-2 font-mono text-[11px] font-semibold"
+              >
+                <button
+                  class="text-brand-dark underline-offset-2 hover:underline"
+                  type="button"
+                >
+                  EDIT
+                </button>
+                <span class="text-brand-border">/</span>
+                <button
+                  class="text-brand-dark hover:text-red-600"
+                  type="button"
+                >
+                  DELETE
+                </button>
+              </div>
+            </div>
+            <!-- Value Row 2: OLIVE -->
+            <div
+              class="grid grid-cols-12 items-center rounded-md border-b border-zinc-100 px-2 py-2.5 hover:bg-zinc-50"
+            >
+              <div class="col-span-5 flex items-center space-x-2">
+                <span
+                  class="inline-block h-3 w-3 rounded-full border border-zinc-300 bg-[#556B2F]"
+                ></span>
+                <span
+                  class="font-mono text-xs font-bold tracking-tight uppercase"
+                  >OLIVE</span
+                >
+              </div>
+              <div
+                class="text-brand-subtle col-span-3 text-center font-mono text-xs"
+              >
+                2
+              </div>
+              <div
+                class="col-span-4 flex items-center justify-end space-x-2 font-mono text-[11px] font-semibold"
+              >
+                <button
+                  class="text-brand-dark underline-offset-2 hover:underline"
+                  type="button"
+                >
+                  EDIT
+                </button>
+                <span class="text-brand-border">/</span>
+                <button
+                  class="text-brand-dark hover:text-red-600"
+                  type="button"
+                >
+                  DELETE
+                </button>
+              </div>
+            </div>
+            <!-- Value Row 3: STONE -->
+            <div
+              class="grid grid-cols-12 items-center rounded-md border-b border-zinc-100 px-2 py-2.5 hover:bg-zinc-50"
+            >
+              <div class="col-span-5 flex items-center space-x-2">
+                <span
+                  class="inline-block h-3 w-3 rounded-full border border-zinc-300 bg-[#D1C7BD]"
+                ></span>
+                <span
+                  class="font-mono text-xs font-bold tracking-tight uppercase"
+                  >STONE</span
+                >
+              </div>
+              <div
+                class="text-brand-subtle col-span-3 text-center font-mono text-xs"
+              >
+                3
+              </div>
+              <div
+                class="col-span-4 flex items-center justify-end space-x-2 font-mono text-[11px] font-semibold"
+              >
+                <button
+                  class="text-brand-dark underline-offset-2 hover:underline"
+                  type="button"
+                >
+                  EDIT
+                </button>
+                <span class="text-brand-border">/</span>
+                <button
+                  class="text-brand-dark hover:text-red-600"
+                  type="button"
+                >
+                  DELETE
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- BEGIN: Add Value Sub-Card Form -->
+          <div
+            class="border-brand-border mt-4 space-y-3.5 rounded-lg border bg-zinc-50/70 p-3.5"
+            data-purpose="add-value-form"
+          >
+            <div class="flex items-center justify-between">
+              <h3
+                class="text-brand-dark flex items-center gap-1.5 font-mono text-xs font-bold tracking-wider uppercase"
+              >
+                <svg
+                  class="text-brand-lime fill-brand-dark h-3.5 w-3.5"
+                  viewbox="0 0 24 24"
+                >
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                </svg>
+                ADD VALUE
+              </h3>
+              <span class="text-brand-subtle font-mono text-[10px]"
+                >COLOR ATTRIBUTE</span
+              >
+            </div>
+            <div class="space-y-3">
+              <!-- Value Input -->
+              <div class="space-y-1">
+                <label
+                  class="text-brand-subtle block font-mono text-[10px] font-semibold uppercase"
+                  for="new-value-input"
+                >
+                  VALUE
+                </label>
+                <input
+                  class="border-brand-border text-brand-dark focus:ring-brand-dark focus:border-brand-dark w-full rounded border bg-white px-3 py-2.5 font-mono text-xs outline-none placeholder:text-zinc-400 focus:ring-1"
+                  id="new-value-input"
+                  placeholder="Enter value"
+                  type="text"
+                />
+              </div>
+              <!-- Sort Order Input -->
+              <div class="space-y-1">
+                <label
+                  class="text-brand-subtle block font-mono text-[10px] font-semibold uppercase"
+                  for="new-order-input"
+                >
+                  SORT ORDER
+                </label>
+                <input
+                  class="border-brand-border text-brand-dark focus:ring-brand-dark focus:border-brand-dark w-full rounded border bg-white px-3 py-2.5 font-mono text-xs outline-none focus:ring-1"
+                  id="new-order-input"
+                  type="number"
+                  value="4"
+                />
+              </div>
+              <!-- Submit CTA -->
+              <button
+                class="bg-brand-lime hover:bg-brand-limeHover text-brand-dark border-brand-dark tap-highlight-none flex w-full items-center justify-center gap-1.5 rounded border px-4 py-3 font-mono text-xs font-black uppercase shadow-[1px_1px_0px_#111111] transition-all active:scale-[0.99]"
+                type="button"
+              >
+                <span>CREATE VALUE</span>
+                <svg
+                  class="h-3.5 w-3.5 stroke-[2.5]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <!-- END: Add Value Sub-Card Form -->
+        </section>
+        <!-- END: Values Detail Card -->
+      </main>
+      <!-- END: Main Content Area -->
+      <!-- BEGIN: System Telemetry Footer -->
+      <footer
+        class="border-brand-border bg-brand-bg mt-auto space-y-2 border-t px-5 py-4 text-center"
+      >
+        <div
+          class="text-brand-subtle flex items-center justify-center space-x-2 font-mono text-[10px] uppercase"
+        >
+          <span
+            class="inline-block h-1.5 w-1.5 rounded-full bg-green-500"
+          ></span>
+          <span>AUTH: ROOT_ADMIN</span>
+          <span>•</span>
+          <span>NODE: JP-TYO-01</span>
+        </div>
+        <p class="font-mono text-[9px] tracking-wider text-zinc-400 uppercase">
+          NAMOU LABS 2026 // ALL RIGHTS RESERVED
+        </p>
+      </footer>
+      <!-- END: System Telemetry Footer -->
+      <!-- iOS Home Indicator Pill -->
+      <div class="bg-brand-bg flex justify-center py-1.5">
+        <div class="bg-brand-dark/40 h-1 w-32 rounded-full"></div>
+      </div>
+    </div>
+  </body>
+</html>

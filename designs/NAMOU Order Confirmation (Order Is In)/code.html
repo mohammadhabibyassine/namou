@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NAMOU — Order Confirmation</title>
+    <!-- Tailwind CSS CDN with forms and container queries plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Bebas Neue for monumental condensed display, Space Mono & JetBrains Mono for technical typography -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              namou: {
+                bg: "#ece9e2",
+                card: "#f4f2ec",
+                surface: "#e2dfd8",
+                charcoal: "#0d0e10",
+                accent: "#bdf826", // Electric chartreuse/lime
+                muted: "#7a7b7d",
+                border: "#dbd8d0",
+              },
+            },
+            fontFamily: {
+              display: ['"Bebas Neue"', "Impact", "sans-serif"],
+              mono: ['"JetBrains Mono"', "monospace"],
+              sans: ['"Space Grotesk"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Typography styles and custom tweaks -->
+    <style data-purpose="typography">
+      .font-condensed {
+        font-family:
+          "Bebas Neue",
+          Impact,
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        letter-spacing: 0.02em;
+        line-height: 0.88;
+      }
+      .font-tech {
+        font-family: "JetBrains Mono", monospace;
+      }
+    </style>
+    <!-- Technical Reticle & Radar Styles -->
+    <style data-purpose="radar-hud">
+      .radar-canvas-container {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 58%;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .radar-circle {
+        position: absolute;
+        border-radius: 50%;
+        top: 50%;
+        left: 60%;
+        transform: translate(-50%, -50%);
+      }
+      .stipple-bg {
+        background-image: radial-gradient(
+          rgba(255, 255, 255, 0.08) 1px,
+          transparent 0
+        );
+        background-size: 24px 24px;
+      }
+    </style>
+  </head>
+  <body
+    class="flex min-h-screen flex-col justify-between bg-[#ebe8e1] p-4 text-[#0d0e10] antialiased selection:bg-[#bdf826] selection:text-black sm:p-6 lg:p-7"
+  >
+    <!-- BEGIN: TopNavigation -->
+    <header
+      class="mx-auto mb-3 flex w-full max-w-[1536px] items-center justify-between py-2"
+    >
+      <!-- Brand Logo -->
+      <div class="flex items-center">
+        <a
+          class="font-sans text-2xl font-black tracking-tight text-[#0d0e10] sm:text-3xl"
+          href="#"
+        >
+          NAMOU
+        </a>
+      </div>
+      <!-- Center Navigation Links -->
+      <nav class="hidden items-center space-x-12 md:flex">
+        <a
+          class="font-tech text-xs tracking-wider text-[#1a1b1e] uppercase transition-opacity hover:opacity-70"
+          href="#"
+          >SHOP</a
+        >
+        <a
+          class="font-tech text-xs tracking-wider text-[#1a1b1e] uppercase transition-opacity hover:opacity-70"
+          href="#"
+          >DROPS</a
+        >
+        <a
+          class="font-tech text-xs tracking-wider text-[#1a1b1e] uppercase transition-opacity hover:opacity-70"
+          href="#"
+          >CATEGORIES</a
+        >
+      </nav>
+      <!-- Right Utility Actions -->
+      <div class="flex items-center space-x-6">
+        <!-- Search -->
+        <button
+          class="flex items-center space-x-2 text-[#1a1b1e] transition-opacity hover:opacity-70"
+        >
+          <svg
+            class="h-3.5 w-3.5 stroke-[2.2]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="11" cy="11" r="7"></circle>
+            <path
+              d="M20 20l-4-4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+          <span class="font-tech text-xs tracking-wider uppercase">SEARCH</span>
+        </button>
+        <!-- Cart Button Badge -->
+        <a
+          class="font-tech flex items-center space-x-2 rounded-md bg-[#0f1013] px-4 py-2 text-xs tracking-wider text-white transition-colors hover:bg-black"
+          href="#"
+        >
+          <svg
+            class="h-3.5 w-3.5 stroke-[1.8]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+          <span class="">CART 02</span>
+        </a>
+      </div>
+    </header>
+    <!-- END: TopNavigation -->
+    <!-- BEGIN: MainContent -->
+    <main class="mx-auto flex w-full max-w-[1536px] flex-1 flex-col space-y-4">
+      <!-- BEGIN: HeroConfirmationBanner -->
+      <section
+        class="relative flex min-h-[460px] flex-col justify-between overflow-hidden rounded-xl border border-white/5 bg-[#101114] p-8 text-white shadow-2xl sm:p-12 lg:min-h-[510px] lg:p-14"
+      >
+        <!-- Four Corner Tactical Brackets -->
+        <div
+          class="font-tech pointer-events-none absolute top-5 left-6 text-base text-white/35 select-none"
+        >
+          ⌜
+        </div>
+        <div
+          class="font-tech pointer-events-none absolute top-5 right-6 text-base text-white/35 select-none"
+        >
+          ⌝
+        </div>
+        <div
+          class="font-tech pointer-events-none absolute bottom-5 left-6 text-lg text-[#bdf826] select-none"
+        >
+          +
+        </div>
+        <div
+          class="font-tech pointer-events-none absolute right-6 bottom-5 text-base text-white/35 select-none"
+        >
+          ⌟
+        </div>
+        <!-- Tactical Reticle / Radar HUD Graphic Overlay on Right -->
+        <div aria-hidden="true" class="radar-canvas-container">
+          <!-- SVG Graphic HUD Reticle -->
+          <svg
+            class="h-full w-full"
+            fill="none"
+            viewBox="0 0 800 600"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- Subtle scatter points / particles -->
+            <g opacity="0.35">
+              <circle cx="580" cy="180" fill="#bdf826" r="1"></circle>
+              <circle cx="620" cy="220" fill="#bdf826" r="1.5"></circle>
+              <circle cx="480" cy="130" fill="#fff" r="1"></circle>
+              <circle cx="690" cy="320" fill="#bdf826" r="1.2"></circle>
+              <circle cx="390" cy="360" fill="#fff" r="1"></circle>
+              <circle cx="670" cy="460" fill="#bdf826" r="1.5"></circle>
+              <circle cx="510" cy="470" fill="#fff" r="1"></circle>
+              <circle cx="560" cy="520" fill="#bdf826" r="1.2"></circle>
+              <circle cx="430" cy="240" fill="#bdf826" r="1"></circle>
+              <circle cx="720" cy="190" fill="#fff" r="1"></circle>
+              <circle cx="360" cy="420" fill="#fff" r="1"></circle>
+              <circle cx="640" cy="140" fill="#bdf826" r="1.5"></circle>
+            </g>
+            <!-- Reticle Center Anchor: (550, 300) -->
+            <!-- Crosshair axes -->
+            <line
+              stroke="#ffffff"
+              stroke-opacity="0.12"
+              stroke-width="1"
+              x1="280"
+              x2="790"
+              y1="300"
+              y2="300"
+            ></line>
+            <line
+              stroke="#ffffff"
+              stroke-opacity="0.12"
+              stroke-width="1"
+              x1="550"
+              x2="550"
+              y1="30"
+              y2="570"
+            ></line>
+            <!-- Outer circular rings -->
+            <circle
+              cx="550"
+              cy="300"
+              r="280"
+              stroke="#ffffff"
+              stroke-dasharray="3 7"
+              stroke-opacity="0.07"
+              stroke-width="1"
+            ></circle>
+            <circle
+              cx="550"
+              cy="300"
+              r="230"
+              stroke="#ffffff"
+              stroke-opacity="0.12"
+              stroke-width="1"
+            ></circle>
+            <circle
+              cx="550"
+              cy="300"
+              r="180"
+              stroke="#ffffff"
+              stroke-dasharray="2 6"
+              stroke-opacity="0.08"
+              stroke-width="1"
+            ></circle>
+            <circle
+              cx="550"
+              cy="300"
+              r="130"
+              stroke="#ffffff"
+              stroke-opacity="0.18"
+              stroke-width="1"
+            ></circle>
+            <circle
+              cx="550"
+              cy="300"
+              r="75"
+              stroke="#ffffff"
+              stroke-dasharray="4 4"
+              stroke-opacity="0.15"
+              stroke-width="1"
+            ></circle>
+            <circle
+              cx="550"
+              cy="300"
+              r="30"
+              stroke="#ffffff"
+              stroke-opacity="0.22"
+              stroke-width="1"
+            ></circle>
+            <!-- High-tech Radial Tick Ring (Neon Chartreuse Degree Ring) -->
+            <!-- Radiating calibrated tick lines -->
+            <g opacity="0.85" stroke="#bdf826" stroke-width="1.6">
+              <!-- 90 to 0 degrees calibrated arc ticks -->
+              <line x1="550" x2="550" y1="130" y2="155"></line>
+              <line x1="565" x2="563" y1="131" y2="155"></line>
+              <line x1="581" x2="576" y1="133" y2="157"></line>
+              <line x1="597" x2="589" y1="136" y2="159"></line>
+              <line x1="612" x2="602" y1="140" y2="162"></line>
+              <line x1="627" x2="614" y1="145" y2="167"></line>
+              <line x1="642" x2="626" y1="151" y2="171"></line>
+              <line x1="656" x2="637" y1="158" y2="177"></line>
+              <line x1="670" x2="648" y1="166" y2="184"></line>
+              <line x1="683" x2="658" y1="175" y2="191"></line>
+              <line x1="695" x2="667" y1="185" y2="199"></line>
+              <line x1="706" x2="676" y1="196" y2="208"></line>
+              <line x1="716" x2="683" y1="208" y2="218"></line>
+              <line x1="724" x2="690" y1="221" y2="228"></line>
+              <line x1="731" x2="696" y1="234" y2="239"></line>
+              <line x1="736" x2="700" y1="248" y2="251"></line>
+              <line x1="740" x2="703" y1="262" y2="263"></line>
+              <line x1="742" x2="704" y1="276" y2="276"></line>
+              <line x1="743" x2="705" y1="290" y2="288"></line>
+              <line x1="742" x2="705" y1="305" y2="301"></line>
+              <line x1="740" x2="703" y1="319" y2="313"></line>
+              <line x1="736" x2="700" y1="333" y2="325"></line>
+              <line x1="730" x2="695" y1="347" y2="337"></line>
+              <line x1="722" x2="689" y1="360" y2="348"></line>
+              <line x1="713" x2="681" y1="373" y2="359"></line>
+              <line x1="702" x2="673" y1="384" y2="368"></line>
+              <line x1="690" x2="663" y1="395" y2="377"></line>
+              <line x1="677" x2="652" y1="405" y2="385"></line>
+              <line x1="663" x2="640" y1="413" y2="392"></line>
+              <line x1="648" x2="628" y1="420" y2="398"></line>
+            </g>
+            <!-- Dimmer continuation tick marks -->
+            <g opacity="0.22" stroke="#ffffff" stroke-width="1.2">
+              <line x1="633" x2="616" y1="426" y2="403"></line>
+              <line x1="617" x2="603" y1="431" y2="407"></line>
+              <line x1="601" x2="589" y1="435" y2="410"></line>
+              <line x1="584" x2="575" y1="437" y2="412"></line>
+              <line x1="567" x2="561" y1="439" y2="413"></line>
+              <line x1="550" x2="550" y1="439" y2="413"></line>
+              <line x1="533" x2="538" y1="439" y2="413"></line>
+              <line x1="516" x2="524" y1="437" y2="412"></line>
+              <line x1="499" x2="510" y1="435" y2="410"></line>
+              <line x1="483" x2="496" y1="431" y2="407"></line>
+              <line x1="467" x2="483" y1="426" y2="403"></line>
+              <line x1="452" x2="471" y1="420" y2="398"></line>
+              <line x1="437" x2="459" y1="413" y2="392"></line>
+              <line x1="423" x2="447" y1="405" y2="385"></line>
+              <line x1="410" x2="436" y1="395" y2="377"></line>
+              <line x1="398" x2="426" y1="384" y2="368"></line>
+              <line x1="387" x2="418" y1="373" y2="359"></line>
+              <line x1="378" x2="410" y1="360" y2="348"></line>
+              <line x1="370" x2="404" y1="347" y2="337"></line>
+              <line x1="364" x2="399" y1="333" y2="325"></line>
+              <line x1="360" x2="396" y1="319" y2="313"></line>
+              <line x1="358" x2="394" y1="305" y2="301"></line>
+              <line x1="357" x2="394" y1="290" y2="288"></line>
+              <line x1="358" x2="395" y1="276" y2="276"></line>
+              <line x1="360" x2="396" y1="262" y2="263"></line>
+              <line x1="364" x2="399" y1="248" y2="251"></line>
+              <line x1="369" x2="403" y1="234" y2="239"></line>
+              <line x1="376" x2="409" y1="221" y2="228"></line>
+              <line x1="384" x2="416" y1="208" y2="218"></line>
+              <line x1="394" x2="423" y1="196" y2="208"></line>
+            </g>
+            <!-- Neon Green Center Cross Target -->
+            <line
+              stroke="#bdf826"
+              stroke-width="1.8"
+              x1="535"
+              x2="565"
+              y1="300"
+              y2="300"
+            ></line>
+            <line
+              stroke="#bdf826"
+              stroke-width="1.8"
+              x1="550"
+              x2="550"
+              y1="285"
+              y2="315"
+            ></line>
+            <circle cx="550" cy="300" fill="#bdf826" r="1.5"></circle>
+          </svg>
+        </div>
+        <!-- Hero Header & Identity Text (Left Stack) -->
+        <div class="relative z-10 mt-3 max-w-2xl sm:mt-4">
+          <!-- Monumental Brutalist Headline -->
+          <h1
+            class="font-condensed m-0 text-[5.8rem] leading-[0.83] tracking-[0.015em] text-white uppercase select-none sm:text-[7.8rem] lg:text-[8.9rem]"
+          >
+            YOUR ORDER IS IN.
+          </h1>
+          <!-- Order ID Reference Number -->
+          <p
+            class="font-tech mt-7 mb-7 text-base tracking-wide text-white/90 sm:text-lg lg:text-xl"
+          >
+            ORD-20260906-A1B2C3D4E5F6
+          </p>
+          <!-- Status Frame Container -->
+          <div
+            class="font-tech inline-flex items-center border border-white/25 bg-[#16171b]/40 px-5 py-2.5 text-xs tracking-wider uppercase backdrop-blur-xs sm:text-sm"
+          >
+            <span class="mr-2 text-white/70">STATUS:</span>
+            <span class="font-semibold text-[#bdf826]">PENDING</span>
+          </div>
+        </div>
+        <!-- Hero Footer Micro-status -->
+        <div
+          class="font-tech relative z-10 mt-12 flex items-center text-[10px] tracking-wider text-white/75 uppercase sm:mt-16 sm:text-xs"
+        >
+          <span class="mr-4 text-sm font-bold text-[#bdf826]">+</span>
+          <span class="">WE'LL KEEP YOU UPDATED AS IT MOVES.</span>
+        </div>
+      </section>
+      <!-- END: HeroConfirmationBanner -->
+      <!-- BEGIN: OrderDetailsGrid -->
+      <div
+        class="grid grid-cols-1 items-stretch gap-4 pt-1 md:grid-cols-2 lg:grid-cols-12"
+      >
+        <!-- Card 1: TOTAL (Cols: 3) -->
+        <section
+          class="flex flex-col justify-between rounded-xl border border-[#dbd8d1] bg-[#e4e1da] p-5 sm:p-6 lg:col-span-3"
+        >
+          <!-- Card Header Info -->
+          <div
+            class="font-tech flex items-start justify-between text-[11px] tracking-wider text-[#3d3f44] uppercase"
+          >
+            <span class="">TOTAL</span>
+            <div class="text-right leading-3">
+              <span class="block font-mono text-xs text-[#5c5d61]">⌝</span>
+              <span class="-mt-1 block font-mono text-xs text-[#5c5d61]"
+                >+</span
+              >
+            </div>
+          </div>
+          <!-- Big Condensed Price Value -->
+          <div class="my-6">
+            <div class="flex items-baseline gap-1">
+              <span
+                class="font-condensed text-[4.4rem] leading-none tracking-tight text-[#0d0e10] sm:text-[5.2rem] lg:text-[5.4rem]"
+              >
+                $860.00
+              </span>
+              <span
+                class="font-tech text-xs font-medium tracking-wider text-[#3d3f44] sm:text-sm"
+              >
+                USD
+              </span>
+            </div>
+          </div>
+          <!-- Subtle Dotted Underline Guideline -->
+          <div
+            class="w-full border-b border-dotted border-[#0d0e10]/20 pb-1"
+          ></div>
+        </section>
+        <!-- Card 2: SHIPPING DESTINATION (Cols: 3) -->
+        <section
+          class="flex flex-col justify-between rounded-xl border border-[#dbd8d1] bg-[#e4e1da] p-5 sm:p-6 lg:col-span-3"
+        >
+          <!-- Card Header Info -->
+          <div
+            class="font-tech flex items-start justify-between text-[11px] tracking-wider text-[#3d3f44] uppercase"
+          >
+            <span class="">SHIPPING DESTINATION</span>
+            <div class="text-right leading-3">
+              <span class="block font-mono text-xs text-[#5c5d61]">⌝</span>
+              <span class="-mt-1 block font-mono text-xs text-[#5c5d61]"
+                >+</span
+              >
+            </div>
+          </div>
+          <!-- Big Condensed City / Country Text -->
+          <div class="my-6">
+            <span
+              class="font-condensed block text-[4.4rem] leading-none tracking-tight text-[#0d0e10] sm:text-[5.2rem] lg:text-[5.4rem]"
+            >
+              BEIRUT, LB
+            </span>
+          </div>
+          <!-- Subtle Dotted Underline Guideline -->
+          <div
+            class="w-full border-b border-dotted border-[#0d0e10]/20 pb-1"
+          ></div>
+        </section>
+        <!-- Card 3: ITEMS (Cols: 4) -->
+        <section
+          class="flex flex-col justify-between rounded-xl border border-[#dbd8d1] bg-[#e4e1da] p-5 sm:p-6 lg:col-span-4"
+        >
+          <!-- Card Header Info -->
+          <div
+            class="font-tech mb-3 flex items-start justify-between text-[11px] tracking-wider text-[#3d3f44] uppercase"
+          >
+            <span class="">ITEMS</span>
+            <div class="text-right leading-3">
+              <span class="block font-mono text-xs text-[#5c5d61]">⌝</span>
+              <span class="-mt-1 block font-mono text-xs text-[#5c5d61]"
+                >+</span
+              >
+            </div>
+          </div>
+          <!-- Two Item Thumbnails Side by Side -->
+          <div class="grid flex-1 grid-cols-2 items-end gap-3">
+            <!-- Item 1: Technical Shell Jacket -->
+            <div class="flex flex-col">
+              <div
+                class="mb-2 flex aspect-square items-center justify-center overflow-hidden rounded-md bg-[#d9d5cd] p-2"
+              >
+                <svg
+                  class="h-full w-full text-[#141517] drop-shadow-sm"
+                  fill="none"
+                  viewBox="0 0 160 160"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <!-- Jacket Silhouette Vector Representation -->
+                  <path
+                    d="M50 35 L62 25 L80 32 L98 25 L110 35 L132 65 L118 75 L112 55 L114 140 L46 140 L48 55 L42 75 L28 65 Z"
+                    fill="#141518"
+                  ></path>
+                  <path
+                    d="M72 30 L80 34 L88 30 L88 140 L72 140 Z"
+                    fill="#1c1e22"
+                  ></path>
+                  <line
+                    stroke="#000000"
+                    stroke-width="1.5"
+                    x1="80"
+                    x2="80"
+                    y1="34"
+                    y2="140"
+                  ></line>
+                  <!-- Chest pockets / zips -->
+                  <line
+                    stroke="#2a2c30"
+                    stroke-width="1.8"
+                    x1="64"
+                    x2="64"
+                    y1="65"
+                    y2="92"
+                  ></line>
+                  <line
+                    stroke="#2a2c30"
+                    stroke-width="1.8"
+                    x1="96"
+                    x2="96"
+                    y1="65"
+                    y2="92"
+                  ></line>
+                  <!-- Collar / Hood outline -->
+                  <path
+                    d="M66 28 C74 20, 86 20, 94 28"
+                    stroke="#111"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                class="font-tech text-[10px] leading-tight tracking-tight sm:text-[11px]"
+              >
+                <span class="block font-medium text-[#111215] uppercase"
+                  >TECHNICAL SHELL 01</span
+                >
+                <span class="mt-0.5 block text-[#616266] uppercase"
+                  >BLACK / M — QTY 1</span
+                >
+              </div>
+            </div>
+            <!-- Item 2: Running Shoes Motion 01 -->
+            <div class="flex flex-col">
+              <div
+                class="mb-2 flex aspect-square items-center justify-center overflow-hidden rounded-md bg-[#d9d5cd] p-2"
+              >
+                <svg
+                  class="h-full w-full text-[#141517] drop-shadow-sm"
+                  fill="none"
+                  viewBox="0 0 160 160"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <!-- Sneaker Profile Vector Representation -->
+                  <path
+                    d="M18 108 C25 98, 40 92, 55 94 C65 85, 78 70, 95 68 C105 67, 114 74, 115 82 C125 84, 138 90, 145 98 C148 103, 146 112, 138 116 C120 125, 90 124, 60 124 C40 124, 25 122, 18 116 Z"
+                    fill="#141518"
+                  ></path>
+                  <path
+                    d="M20 114 C50 126, 115 125, 142 116 C143 120, 135 126, 120 127 C90 129, 45 128, 22 122 Z"
+                    fill="#202227"
+                  ></path>
+                  <!-- Mesh texture lines & overlays -->
+                  <path
+                    d="M68 85 Q82 92 98 84"
+                    stroke="#2e3138"
+                    stroke-width="1.8"
+                  ></path>
+                  <path
+                    d="M60 96 Q80 102 105 94"
+                    stroke="#2e3138"
+                    stroke-width="1.8"
+                  ></path>
+                  <circle cx="100" cy="85" fill="#26282e" r="3"></circle>
+                </svg>
+              </div>
+              <div
+                class="font-tech text-[10px] leading-tight tracking-tight sm:text-[11px]"
+              >
+                <span class="block font-medium text-[#111215] uppercase"
+                  >MOTION 01</span
+                >
+                <span class="mt-0.5 block text-[#616266] uppercase"
+                  >BLACK / 42 — QTY 2</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Card 4: Action Buttons (Cols: 2) -->
+        <section class="flex flex-col justify-end space-y-2.5 lg:col-span-2">
+          <!-- Primary Button: View Order -->
+          <a
+            class="font-tech group flex w-full items-center justify-between rounded-lg bg-[#101114] px-5 py-4 text-xs tracking-wider text-[#bdf826] uppercase transition-all duration-150 hover:bg-black"
+            href="#"
+          >
+            <span class="font-semibold">VIEW ORDER</span>
+            <svg
+              class="h-4 w-4 transform stroke-[2.2] transition-transform group-hover:translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </a>
+          <!-- Secondary Button: Continue Shopping -->
+          <a
+            class="font-tech group flex w-full items-center justify-between rounded-lg border border-[#cfccc3] bg-[#dedbd3] px-5 py-4 text-xs tracking-wider text-[#1a1b1e] uppercase transition-all duration-150 hover:bg-[#d6d3cb]"
+            href="#"
+          >
+            <span class="font-medium">CONTINUE SHOPPING</span>
+            <svg
+              class="h-4 w-4 transform stroke-[2.2] transition-transform group-hover:translate-x-0.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </a>
+        </section>
+      </div>
+      <!-- END: OrderDetailsGrid -->
+    </main>
+    <!-- END: MainContent -->
+  </body>
+</html>

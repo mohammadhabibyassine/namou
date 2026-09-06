@@ -1,0 +1,587 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
+    <title>NAMOU — Authentication</title>
+    <!-- Tailwind CSS v3 CDN with forms and container queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Bebas Neue (Condensed Display) & Space Mono (Technical Monospace) -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "brand-bone": "#ECECE6",
+              "brand-bone-subtle": "#E5E5DE",
+              "brand-input": "#E2E2DC",
+              "brand-border": "#D5D5CE",
+              "brand-charcoal": "#0D0D0D",
+              "brand-neon": "#CCFF00",
+              "brand-neon-hover": "#BCE600",
+              "brand-muted": "#787870",
+            },
+            fontFamily: {
+              display: ['"Bebas Neue"', "Impact", "sans-serif"],
+              mono: ['"Space Mono"', "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Base Layout & Mechanical Corner Styles -->
+    <style data-purpose="custom-decorations">
+      body {
+        background-color: #ecece6;
+        color: #0d0d0d;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Technical corner bracket styling */
+      .tech-bracket {
+        position: relative;
+      }
+      .tech-bracket::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        width: 10px;
+        height: 10px;
+        border-top: 1.5px solid #0d0d0d;
+        border-left: 1.5px solid #0d0d0d;
+        pointer-events: none;
+      }
+      .tech-bracket::after {
+        content: "";
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        width: 10px;
+        height: 10px;
+        border-top: 1.5px solid #0d0d0d;
+        border-right: 1.5px solid #0d0d0d;
+        pointer-events: none;
+      }
+      .bracket-bottom-left {
+        position: absolute;
+        bottom: -1px;
+        left: -1px;
+        width: 10px;
+        height: 10px;
+        border-bottom: 1.5px solid #0d0d0d;
+        border-left: 1.5px solid #0d0d0d;
+        pointer-events: none;
+      }
+      .bracket-bottom-right {
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        width: 10px;
+        height: 10px;
+        border-bottom: 1.5px solid #0d0d0d;
+        border-right: 1.5px solid #0d0d0d;
+        pointer-events: none;
+      }
+
+      /* Radar dial simulation */
+      .radar-circle {
+        border: 1px dashed rgba(255, 255, 255, 0.35);
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body
+    class="relative mx-auto flex min-h-screen max-w-md flex-col justify-between shadow-2xl select-none"
+  >
+    <!-- BEGIN: MobileStatusBar -->
+    <!-- Mimics standard iOS hardware status display -->
+    <div
+      class="text-brand-charcoal flex w-full items-center justify-between px-6 pt-3 pb-2 font-mono text-xs font-bold tracking-tight select-none"
+      data-purpose="ios-status-bar"
+    >
+      <span>09:41</span>
+      <div class="flex items-center space-x-2 text-[10px]">
+        <span>5G</span>
+        <div
+          class="bg-brand-charcoal inline-block h-2.5 w-2.5 rounded-full"
+        ></div>
+        <div
+          class="border-brand-charcoal flex h-2.5 w-5 items-center rounded-sm border p-[1px]"
+        >
+          <div class="bg-brand-charcoal rounded-2xs h-full w-full"></div>
+        </div>
+      </div>
+    </div>
+    <!-- END: MobileStatusBar -->
+    <!-- BEGIN: AppHeader -->
+    <header
+      class="border-brand-border bg-brand-bone/90 sticky top-0 z-30 flex items-center justify-between border-b px-5 py-3 backdrop-blur-sm"
+      data-purpose="app-navigation-header"
+    >
+      <!-- Brand Logo -->
+      <a
+        class="font-display text-brand-charcoal text-3xl tracking-wider transition-opacity hover:opacity-80"
+        href="#"
+      >
+        NAMOU
+      </a>
+      <!-- Quick Actions: Search & Cart -->
+      <div class="flex items-center space-x-3">
+        <button
+          aria-label="Search"
+          class="text-brand-charcoal p-2 transition-opacity hover:opacity-60"
+          type="button"
+        >
+          <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewbox="0 0 24 24"
+          >
+            <path
+              d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+            ></path>
+          </svg>
+        </button>
+        <!-- Tactical Bag Pill Indicator -->
+        <a
+          class="bg-brand-charcoal text-brand-bone flex items-center space-x-1.5 rounded-sm px-3 py-1.5 font-mono text-xs tracking-wider uppercase transition-colors hover:bg-neutral-800"
+          href="#"
+        >
+          <svg
+            class="text-brand-neon h-3.5 w-3.5"
+            fill="none"
+            stroke="currentColor"
+            viewbox="0 0 24 24"
+          >
+            <path
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            ></path>
+          </svg>
+          <span class="font-bold">CART</span>
+          <span class="text-brand-neon font-bold">02</span>
+        </a>
+      </div>
+    </header>
+    <!-- END: AppHeader -->
+    <!-- BEGIN: NavigationTabs -->
+    <!-- Tab navigation between Login (01) and Create Account (02) -->
+    <nav class="px-5 pt-4 pb-2" data-purpose="auth-view-switcher">
+      <div
+        class="bg-brand-bone-subtle border-brand-border grid grid-cols-2 rounded-sm border p-1 font-mono text-xs"
+      >
+        <button
+          class="bg-brand-charcoal text-brand-bone flex items-center justify-center space-x-1 py-2.5 text-center font-bold uppercase shadow-sm transition-all"
+          id="tab-login"
+          onclick="switchAuthTab('login')"
+        >
+          <span>LOGIN</span>
+          <span class="text-brand-neon ml-1 text-[10px]">/01</span>
+        </button>
+        <button
+          class="text-brand-muted hover:text-brand-charcoal flex items-center justify-center space-x-1 py-2.5 text-center font-bold uppercase transition-all"
+          id="tab-register"
+          onclick="switchAuthTab('register')"
+        >
+          <span>CREATE ACCOUNT</span>
+          <span class="text-brand-charcoal ml-1 text-[10px]">/02</span>
+        </button>
+      </div>
+    </nav>
+    <!-- END: NavigationTabs -->
+    <!-- BEGIN: MainContentArea -->
+    <main class="flex-1 space-y-4 px-5 py-3">
+      <!-- BEGIN: TechwearHeroTeaser -->
+      <!-- Utilitarian visual preview card with coordinates and modular banner -->
+      <section
+        class="bg-brand-charcoal text-brand-bone border-brand-charcoal relative overflow-hidden rounded-sm border p-4"
+        data-purpose="techwear-visual-manifesto"
+      >
+        <div
+          class="flex items-start justify-between font-mono text-[10px] tracking-wider text-neutral-400"
+        >
+          <div>
+            <p>37.5665° N</p>
+            <p>126.9780° E</p>
+          </div>
+          <div
+            class="radar-circle relative flex h-7 w-7 items-center justify-center"
+          >
+            <span
+              class="bg-brand-neon h-1.5 w-1.5 animate-ping rounded-full"
+            ></span>
+          </div>
+        </div>
+        <div class="mt-4 flex items-end justify-between">
+          <div>
+            <h2
+              class="font-display text-brand-bone text-4xl leading-none tracking-tight"
+            >
+              NAMOU
+            </h2>
+            <p
+              class="mt-1 font-mono text-[10px] tracking-wider text-neutral-400 uppercase"
+            >
+              MODULAR BY DESIGN. BUILT TO ADAPT.
+            </p>
+          </div>
+          <!-- Techwear Bag Asset Thumbnail -->
+          <div
+            class="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded border border-neutral-700 bg-neutral-900 shadow-inner"
+          >
+            <img
+              alt="NAMOU Tactical Hardware"
+              class="h-full w-full object-cover object-center contrast-125 grayscale"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHfeTO9hE6OAXNdhRemIpdy7BobQyyEHOaiV3mDpbKXb3871FMakXniDSoWs0_mYioiym72Cq3lC7WKTXSxLTEO9J8xS-WEWNzjygKSYf4aJgb9MNW7F4agYG3BkdUww4RqKDIe7LDCCxvFW4Tk42N8Qs-MiLXKhYDKzRlxcg-BC7pB4LILWJehxApQTzRZKGuyMoAGnHPjUJvsHz0-dYQHp6uYNjQ9BQexAc9OHtjQCH-tVwADzaZThadsc2rBvXwPQ"
+            />
+          </div>
+        </div>
+      </section>
+      <!-- END: TechwearHeroTeaser -->
+      <!-- BEGIN: LoginFormSection -->
+      <section
+        class="tech-bracket bg-brand-bone-subtle/70 border-brand-border relative rounded-sm border p-5 transition-all duration-300"
+        data-purpose="login-form-container"
+        id="auth-login-view"
+      >
+        <div class="bracket-bottom-left"></div>
+        <div class="bracket-bottom-right"></div>
+        <!-- Tactical Header Meta -->
+        <div class="mb-2 flex items-start justify-between">
+          <span class="font-mono text-sm leading-none text-neutral-400">+</span>
+          <div class="text-right">
+            <span
+              class="block font-mono text-[9px] tracking-widest text-neutral-500 uppercase"
+              >AUTH INDEX</span
+            >
+            <span
+              class="text-brand-charcoal font-mono text-xs font-bold tracking-tight"
+              >A/01</span
+            >
+          </div>
+        </div>
+        <!-- Main Headline -->
+        <h1
+          class="font-display text-brand-charcoal mb-5 text-6xl leading-none tracking-tight"
+        >
+          LOGIN
+        </h1>
+        <!-- Fields Form -->
+        <form class="space-y-4" onsubmit="event.preventDefault()">
+          <!-- Email Input -->
+          <div class="space-y-1.5">
+            <label
+              class="text-brand-charcoal block font-mono text-[11px] font-bold tracking-wider uppercase"
+              for="login-email"
+            >
+              EMAIL
+            </label>
+            <input
+              class="bg-brand-input border-brand-border text-brand-charcoal focus:border-brand-charcoal focus:ring-brand-charcoal w-full rounded-sm border px-3.5 py-3 font-mono text-xs placeholder-neutral-500 transition-all focus:ring-1 focus:outline-none"
+              id="login-email"
+              name="email"
+              placeholder="Enter your email"
+              required=""
+              type="email"
+            />
+          </div>
+          <!-- Password Input -->
+          <div class="space-y-1.5">
+            <label
+              class="text-brand-charcoal block font-mono text-[11px] font-bold tracking-wider uppercase"
+              for="login-password"
+            >
+              PASSWORD
+            </label>
+            <div class="relative">
+              <input
+                class="bg-brand-input border-brand-border text-brand-charcoal focus:border-brand-charcoal focus:ring-brand-charcoal w-full rounded-sm border px-3.5 py-3 pr-14 font-mono text-xs placeholder-neutral-500 transition-all focus:ring-1 focus:outline-none"
+                id="login-password"
+                name="password"
+                placeholder="Enter your password"
+                required=""
+                type="password"
+              />
+              <button
+                class="hover:text-brand-charcoal absolute top-1/2 right-3 -translate-y-1/2 px-1.5 py-1 font-mono text-[10px] font-bold tracking-wider text-neutral-600 uppercase"
+                onclick="togglePasswordVisibility('login-password', this)"
+                type="button"
+              >
+                SHOW
+              </button>
+            </div>
+          </div>
+          <!-- Action CTAs -->
+          <div class="space-y-2.5 pt-2">
+            <!-- Primary CTA: High Visibility Neon -->
+            <button
+              class="bg-brand-neon hover:bg-brand-neon-hover text-brand-charcoal flex w-full items-center justify-between rounded-sm px-4 py-3.5 font-mono text-xs font-bold tracking-wider uppercase shadow-sm transition-all duration-150 active:scale-[0.99]"
+              type="submit"
+            >
+              <span>LOGIN</span>
+              <span class="text-sm">→</span>
+            </button>
+            <!-- Secondary CTA: Switch to Register -->
+            <button
+              class="bg-brand-bone border-brand-border text-brand-charcoal flex w-full items-center justify-between rounded-sm border px-4 py-3.5 font-mono text-xs font-bold tracking-wider uppercase transition-all duration-150 hover:bg-white"
+              onclick="switchAuthTab('register')"
+              type="button"
+            >
+              <span>CREATE ACCOUNT</span>
+              <span class="text-sm">→</span>
+            </button>
+          </div>
+        </form>
+        <!-- Technical Footnote -->
+        <div class="border-brand-border/80 mt-6 border-t pt-4">
+          <div class="bg-brand-charcoal mb-2 h-[2px] w-8"></div>
+          <p
+            class="font-mono text-[9px] tracking-wider text-neutral-600 uppercase"
+          >
+            BROWSING DOESN'T REQUIRE AN ACCOUNT.
+          </p>
+        </div>
+      </section>
+      <!-- END: LoginFormSection -->
+      <!-- BEGIN: RegisterFormSection -->
+      <section
+        class="tech-bracket bg-brand-bone-subtle/70 border-brand-border relative hidden rounded-sm border p-5 transition-all duration-300"
+        data-purpose="registration-form-container"
+        id="auth-register-view"
+      >
+        <div class="bracket-bottom-left"></div>
+        <div class="bracket-bottom-right"></div>
+        <!-- Tactical Header Meta -->
+        <div class="mb-2 flex items-start justify-between">
+          <span class="font-mono text-sm leading-none text-neutral-400">+</span>
+          <div class="text-right">
+            <span
+              class="block font-mono text-[9px] tracking-widest text-neutral-500 uppercase"
+              >AUTH INDEX</span
+            >
+            <div
+              class="flex items-center space-x-1.5 font-mono text-xs font-bold"
+            >
+              <span class="text-brand-charcoal">A/02</span>
+              <span
+                class="bg-brand-neon inline-block h-1.5 w-1.5 rounded-full"
+              ></span>
+            </div>
+          </div>
+        </div>
+        <!-- Main Headline -->
+        <h1
+          class="font-display text-brand-charcoal mb-4 text-5xl leading-none tracking-tight"
+        >
+          CREATE ACCOUNT
+        </h1>
+        <!-- Fields Form -->
+        <form class="space-y-3.5" onsubmit="event.preventDefault()">
+          <!-- Email Field -->
+          <div class="space-y-1">
+            <label
+              class="text-brand-charcoal block font-mono text-[10px] font-bold tracking-wider uppercase"
+              for="reg-email"
+            >
+              EMAIL
+            </label>
+            <input
+              class="bg-brand-input border-brand-border text-brand-charcoal focus:border-brand-charcoal focus:ring-brand-charcoal w-full rounded-sm border px-3 py-2.5 font-mono text-xs placeholder-neutral-500 focus:ring-1 focus:outline-none"
+              id="reg-email"
+              placeholder="Enter your email"
+              required=""
+              type="email"
+            />
+          </div>
+          <!-- Password Field with requirements note -->
+          <div class="space-y-1">
+            <label
+              class="text-brand-charcoal block font-mono text-[10px] font-bold tracking-wider uppercase"
+              for="reg-password"
+            >
+              PASSWORD
+            </label>
+            <div class="relative">
+              <input
+                class="bg-brand-input border-brand-border text-brand-charcoal focus:border-brand-charcoal focus:ring-brand-charcoal w-full rounded-sm border px-3 py-2.5 pr-14 font-mono text-xs placeholder-neutral-500 focus:ring-1 focus:outline-none"
+                id="reg-password"
+                placeholder="Create a password"
+                required=""
+                type="password"
+              />
+              <button
+                class="hover:text-brand-charcoal absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[10px] font-bold tracking-wider text-neutral-600 uppercase"
+                onclick="togglePasswordVisibility('reg-password', this)"
+                type="button"
+              >
+                SHOW
+              </button>
+            </div>
+            <p
+              class="pt-0.5 font-mono text-[9px] tracking-wider text-neutral-500 uppercase"
+            >
+              15 CHARACTERS MINIMUM
+            </p>
+          </div>
+          <!-- Optional Name Fields Row -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="space-y-1">
+              <label
+                class="text-brand-charcoal block font-mono text-[9px] font-bold tracking-wider uppercase"
+                for="reg-fname"
+              >
+                FIRST NAME
+                <span class="font-normal text-neutral-500">- OPT</span>
+              </label>
+              <input
+                class="bg-brand-input border-brand-border text-brand-charcoal focus:border-brand-charcoal focus:ring-brand-charcoal w-full rounded-sm border px-2.5 py-2.5 font-mono text-xs placeholder-neutral-500 focus:ring-1 focus:outline-none"
+                id="reg-fname"
+                placeholder="First name"
+                type="text"
+              />
+            </div>
+            <div class="space-y-1">
+              <label
+                class="text-brand-charcoal block font-mono text-[9px] font-bold tracking-wider uppercase"
+                for="reg-lname"
+              >
+                LAST NAME
+                <span class="font-normal text-neutral-500">- OPT</span>
+              </label>
+              <input
+                class="bg-brand-input border-brand-border text-brand-charcoal focus:border-brand-charcoal focus:ring-brand-charcoal w-full rounded-sm border px-2.5 py-2.5 font-mono text-xs placeholder-neutral-500 focus:ring-1 focus:outline-none"
+                id="reg-lname"
+                placeholder="Last name"
+                type="text"
+              />
+            </div>
+          </div>
+          <!-- Phone Field -->
+          <div class="space-y-1">
+            <label
+              class="text-brand-charcoal block font-mono text-[10px] font-bold tracking-wider uppercase"
+              for="reg-phone"
+            >
+              PHONE <span class="font-normal text-neutral-500">— OPTIONAL</span>
+            </label>
+            <input
+              class="bg-brand-input border-brand-border text-brand-charcoal focus:border-brand-charcoal focus:ring-brand-charcoal w-full rounded-sm border px-3 py-2.5 font-mono text-xs placeholder-neutral-500 focus:ring-1 focus:outline-none"
+              id="reg-phone"
+              placeholder="Enter your phone number"
+              type="tel"
+            />
+          </div>
+          <!-- Register CTAs -->
+          <div class="space-y-2 pt-2">
+            <!-- Primary CTA: Create Account Neon -->
+            <button
+              class="bg-brand-neon hover:bg-brand-neon-hover text-brand-charcoal flex w-full items-center justify-between rounded-sm px-4 py-3.5 font-mono text-xs font-bold tracking-wider uppercase shadow-sm transition-all duration-150 active:scale-[0.99]"
+              type="submit"
+            >
+              <span>CREATE ACCOUNT</span>
+              <span class="text-sm">→</span>
+            </button>
+            <!-- Back to Login Button -->
+            <button
+              class="bg-brand-bone border-brand-border text-brand-charcoal flex w-full items-center justify-between rounded-sm border px-4 py-3 font-mono text-xs font-bold tracking-wider uppercase transition-all duration-150 hover:bg-white"
+              onclick="switchAuthTab('login')"
+              type="button"
+            >
+              <span>BACK TO LOGIN</span>
+              <span class="text-sm">←</span>
+            </button>
+          </div>
+        </form>
+      </section>
+      <!-- END: RegisterFormSection -->
+    </main>
+    <!-- END: MainContentArea -->
+    <!-- BEGIN: BottomStickyAction -->
+    <!-- Persistent Utilitarian Bottom Navigation / Continue Browsing Anchor -->
+    <footer
+      class="bg-brand-bone border-brand-border border-t p-5 pt-2 pb-6"
+      data-purpose="bottom-sticky-action"
+    >
+      <a
+        class="bg-brand-charcoal text-brand-bone flex w-full items-center justify-center space-x-2 rounded-sm px-5 py-3 font-mono text-xs font-bold tracking-widest uppercase transition-all hover:bg-neutral-800 active:scale-[0.99]"
+        href="#"
+      >
+        <span>CONTINUE SHOPPING</span>
+        <span class="text-brand-neon text-sm">→</span>
+      </a>
+      <!-- Tactical Index Pagination Status -->
+      <div
+        class="mt-3 flex items-center justify-center space-x-4 font-mono text-[10px] text-neutral-500"
+      >
+        <span class="text-brand-charcoal font-bold">01</span>
+        <span class="text-brand-neon bg-brand-charcoal px-1">02</span>
+        <span>03</span>
+        <span>04</span>
+      </div>
+    </footer>
+    <!-- END: BottomStickyAction -->
+    <!-- BEGIN: InteractiveHandlers -->
+    <script data-purpose="auth-view-tabs">
+      // Switches active state between Login view and Register view
+      function switchAuthTab(view) {
+        const loginView = document.getElementById("auth-login-view");
+        const registerView = document.getElementById("auth-register-view");
+        const tabLogin = document.getElementById("tab-login");
+        const tabRegister = document.getElementById("tab-register");
+
+        if (view === "login") {
+          loginView.classList.remove("hidden");
+          registerView.classList.add("hidden");
+
+          tabLogin.className =
+            "py-2.5 text-center font-bold uppercase transition-all bg-brand-charcoal text-brand-bone shadow-sm flex items-center justify-center space-x-1";
+          tabRegister.className =
+            "py-2.5 text-center font-bold uppercase transition-all text-brand-muted hover:text-brand-charcoal flex items-center justify-center space-x-1";
+        } else {
+          loginView.classList.add("hidden");
+          registerView.classList.remove("hidden");
+
+          tabRegister.className =
+            "py-2.5 text-center font-bold uppercase transition-all bg-brand-charcoal text-brand-bone shadow-sm flex items-center justify-center space-x-1";
+          tabLogin.className =
+            "py-2.5 text-center font-bold uppercase transition-all text-brand-muted hover:text-brand-charcoal flex items-center justify-center space-x-1";
+        }
+      }
+
+      // Toggle password mask visibility
+      function togglePasswordVisibility(inputId, buttonElement) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+
+        if (input.type === "password") {
+          input.type = "text";
+          buttonElement.innerText = "HIDE";
+          buttonElement.classList.add("text-brand-charcoal");
+        } else {
+          input.type = "password";
+          buttonElement.innerText = "SHOW";
+          buttonElement.classList.remove("text-brand-charcoal");
+        }
+      }
+    </script>
+    <!-- END: InteractiveHandlers -->
+  </body>
+</html>

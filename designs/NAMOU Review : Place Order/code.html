@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NAMOU — Review / Place Order</title>
+    <!-- Tailwind CSS v3 with forms and container plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: League Gothic (Display), Space Mono & JetBrains Mono (Technical/Monospace), Inter (Sans) -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                bg: "#f1eee7",
+                card: "#ece8e0",
+                border: "#d3cebe",
+                dark: "#111315",
+                darkCard: "#181a1b",
+                lime: "#ccff00",
+                limeGlow: "#d4ff1a",
+                muted: "#7a7d81",
+                mutedDark: "#35383c",
+              },
+            },
+            fontFamily: {
+              display: ['"Anton"', "Impact", "sans-serif"],
+              mono: ['"JetBrains Mono"', '"Space Mono"', "monospace"],
+              body: ['"JetBrains Mono"', "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Styles for custom layout specifics and typography polish -->
+    <style data-purpose="typography">
+      .display-title {
+        font-family: "Anton", Impact, sans-serif;
+        letter-spacing: -0.01em;
+        transform: scaleY(1.22);
+        transform-origin: top left;
+        line-height: 0.9;
+      }
+      .brand-logo {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+    </style>
+    <style data-purpose="custom-decorations">
+      .tech-border-lime {
+        box-shadow: 0 0 0 1.5px #ccff00;
+      }
+      .subtle-grip-textarea {
+        resize: vertical;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-[#f2efe9] font-mono text-[#111315] antialiased selection:bg-[#ccff00] selection:text-black"
+  >
+    <!-- BEGIN: MainHeader -->
+    <header
+      class="w-full border-b border-[#ded9cb]/80 px-6 py-5 lg:px-12"
+      data-purpose="site-header"
+    >
+      <div class="mx-auto flex max-w-[1560px] items-center justify-between">
+        <!-- Left: Brand Logo -->
+        <div class="flex items-center">
+          <a
+            class="brand-logo text-2xl font-black tracking-[0.14em] text-black"
+            href="#"
+            >NAMOU</a
+          >
+        </div>
+        <!-- Center: Navigation -->
+        <nav
+          class="hidden items-center space-x-12 text-[13px] font-medium tracking-wider text-black md:flex"
+        >
+          <a class="transition-opacity hover:opacity-60" href="#">SHOP</a>
+          <a class="transition-opacity hover:opacity-60" href="#">DROPS</a>
+          <a class="transition-opacity hover:opacity-60" href="#">CATEGORIES</a>
+        </nav>
+        <!-- Right: Search & Cart Action -->
+        <div class="flex items-center space-x-6">
+          <button
+            class="flex items-center space-x-2 text-[13px] font-medium tracking-wide text-black transition-opacity hover:opacity-60"
+            type="button"
+          >
+            <svg
+              class="h-4 w-4 stroke-[2.2]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="16.5" x2="21" y1="16.5" y2="21"></line>
+            </svg>
+            <span class="tracking-widest">SEARCH</span>
+          </button>
+          <a
+            class="flex items-center space-x-2.5 rounded-lg bg-[#111315] px-4 py-2 text-[13px] font-medium tracking-wide text-white transition-colors hover:bg-black"
+            href="#"
+          >
+            <svg
+              class="h-4 w-4 stroke-[1.8]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span class="tracking-wider">CART 02</span>
+          </a>
+        </div>
+      </div>
+    </header>
+    <!-- END: MainHeader -->
+    <!-- BEGIN: MainContent -->
+    <main class="mx-auto max-w-[1560px] px-6 pt-10 pb-24 lg:px-12">
+      <!-- Two Column Checkout Grid -->
+      <div
+        class="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-14"
+      >
+        <!-- BEGIN: LeftColumn (Shipping Details & Notes) -->
+        <section
+          class="lg:col-span-7 xl:col-span-7"
+          data-purpose="checkout-steps"
+        >
+          <!-- Monumental Title -->
+          <div class="mb-14 pb-2">
+            <h1
+              class="display-title text-7xl font-black text-black uppercase md:text-8xl lg:text-[106px]"
+            >
+              REVIEW / PLACE ORDER
+            </h1>
+          </div>
+          <!-- Shipping Address Section -->
+          <div class="mb-10" data-purpose="shipping-address-selection">
+            <h2
+              class="mb-4 text-xs font-bold tracking-[0.16em] text-black uppercase"
+            >
+              SHIPPING ADDRESS
+            </h2>
+            <!-- Address Cards Stack -->
+            <div class="space-y-3.5">
+              <!-- Card 1: Default / Selected Address -->
+              <div
+                class="tech-border-lime group relative flex cursor-pointer items-start justify-between rounded-xl bg-[#ece8e0]/60 p-6 transition-all"
+              >
+                <div class="flex items-start space-x-5">
+                  <!-- Custom Lime Radio Button -->
+                  <div class="pt-0.5">
+                    <div
+                      class="flex h-5 w-5 items-center justify-center rounded-full border border-black bg-transparent"
+                    >
+                      <div
+                        class="h-2.5 w-2.5 rounded-full bg-[#ccff00] ring-2 ring-black"
+                      ></div>
+                    </div>
+                  </div>
+                  <!-- Address Info -->
+                  <div class="space-y-3">
+                    <div class="flex items-center space-x-3">
+                      <span class="text-sm font-bold tracking-wider text-black"
+                        >HOME</span
+                      >
+                      <span
+                        class="rounded bg-[#ccff00] px-2 py-0.5 text-[10px] font-bold tracking-widest text-black uppercase"
+                        >DEFAULT</span
+                      >
+                    </div>
+                    <div
+                      class="font-mono text-[13px] leading-[1.65] text-black"
+                    >
+                      <p>Alex Morgan</p>
+                      <p>123 Mineral Rd, Apt 4B</p>
+                      <p>Brooklyn, NY 11201</p>
+                      <p>United States</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Right Arrow Button -->
+                <div
+                  class="self-center pr-2 text-black transition-transform group-hover:translate-x-1"
+                >
+                  <svg
+                    class="h-5 w-5 stroke-[1.8]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <!-- Card 2: Secondary Address -->
+              <div
+                class="group relative flex cursor-pointer items-start justify-between rounded-xl border border-[#d6d0c2] bg-[#ece8e0]/40 p-6 transition-all hover:border-black/30"
+              >
+                <div class="flex items-start space-x-5">
+                  <!-- Unchecked Radio Button -->
+                  <div class="pt-0.5">
+                    <div
+                      class="h-5 w-5 rounded-full border border-neutral-500/80 bg-transparent"
+                    ></div>
+                  </div>
+                  <!-- Address Info -->
+                  <div class="space-y-3">
+                    <div>
+                      <span class="text-sm font-bold tracking-wider text-black"
+                        >STUDIO</span
+                      >
+                    </div>
+                    <div
+                      class="font-mono text-[13px] leading-[1.65] text-black"
+                    >
+                      <p>Alex Morgan</p>
+                      <p>88 Bridge St, Studio 3</p>
+                      <p>Brooklyn, NY 11201</p>
+                      <p>United States</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Right Arrow Button -->
+                <div
+                  class="self-center pr-2 text-black transition-transform group-hover:translate-x-1"
+                >
+                  <svg
+                    class="h-5 w-5 stroke-[1.8]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <!-- Card 3: Add Address Button -->
+              <button
+                class="flex w-full items-center space-x-4 rounded-xl border border-[#d6d0c2] bg-[#ece8e0]/40 p-5 text-left transition-all hover:border-black/40 hover:bg-[#ece8e0]/70"
+                type="button"
+              >
+                <svg
+                  class="h-4 w-4 stroke-[2] text-black"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <line x1="12" x2="12" y1="5" y2="19"></line>
+                  <line x1="5" x2="19" y1="12" y2="12"></line>
+                </svg>
+                <span
+                  class="text-xs font-bold tracking-[0.14em] text-black uppercase"
+                  >ADD ADDRESS</span
+                >
+              </button>
+            </div>
+          </div>
+          <!-- Order Notes Section -->
+          <div class="mt-8" data-purpose="order-notes">
+            <h2
+              class="mb-3 text-xs font-bold tracking-[0.16em] text-black uppercase"
+            >
+              ORDER NOTES — OPTIONAL
+            </h2>
+            <div class="relative">
+              <textarea
+                class="subtle-grip-textarea w-full rounded-xl border border-[#d6d0c2] bg-[#ece8e0]/40 p-4 font-mono text-xs text-black placeholder-neutral-400 focus:border-black focus:ring-0 focus:outline-none"
+                placeholder=""
+                rows="6"
+              ></textarea>
+            </div>
+          </div>
+        </section>
+        <!-- END: LeftColumn -->
+        <!-- BEGIN: RightColumn (Order Summary Panel) -->
+        <section
+          class="lg:col-span-5 xl:col-span-5"
+          data-purpose="order-summary-panel"
+        >
+          <div
+            class="rounded-2xl bg-[#111315] p-7 text-white shadow-2xl lg:p-9"
+          >
+            <!-- Summary Header -->
+            <div class="mb-7 border-b border-[#25282c] pb-6">
+              <h2
+                class="text-xs font-bold tracking-[0.2em] text-neutral-300 uppercase"
+              >
+                ORDER SUMMARY
+              </h2>
+            </div>
+            <!-- Item List -->
+            <div class="space-y-6 border-b border-[#25282c] pb-6">
+              <!-- Item 1: Technical Shell 01 -->
+              <div class="flex items-center space-x-4">
+                <div
+                  class="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#dedad0] p-1"
+                >
+                  <img
+                    alt="Technical Shell 01"
+                    class="h-full w-full rounded object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsqCU9IMbciDUNn3Y7WueVrW1q8F32FpQoWmysyCS3arjRa--DQaYx2FF5GbgRS4jA0gaFyILIZZCaeaJGGUOg-v9k8s8AAiohn1-SwXiGwweAVSiyM6IeJk_Dw5BotRV4NJw9BZ8pkm-QQ1U4K4L3nOg-WdnzReVMSHT8VDxO9XgUgpP6LEBltqC_LrV4IngkL8rHWMsPCjZiHEKrgrdLax2K13RxXNfgIGZOZkc9MBdQ8WaWFCVwDa6ykpcxqlQO7Q"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <h3
+                    class="truncate text-xs font-bold tracking-wider text-white uppercase"
+                  >
+                    TECHNICAL SHELL 01
+                  </h3>
+                  <p class="mt-1 text-[11px] tracking-wider text-neutral-400">
+                    BLACK / M
+                  </p>
+                  <div class="mt-2.5 flex items-center justify-between">
+                    <span class="text-xs tracking-wider text-neutral-200"
+                      >QTY 1</span
+                    >
+                    <span class="text-xs font-medium tracking-wider text-white"
+                      >$420.00 USD</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Item 2: Motion 01 -->
+              <div class="flex items-center space-x-4">
+                <div
+                  class="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#dedad0] p-1"
+                >
+                  <!-- Using placeholder styled sneaker thumbnail matching Motion 01 -->
+                  <img
+                    alt="Motion 01 Running Shoe"
+                    class="h-full w-full rounded object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ2wCVWlqaAHXj0Xr5CLcs-jV6nNRy7c7JP59GugNaTA0wxao30IgbcUb8iL4UzGHjKNsxWlAI46aObId0cwL78frmkNEOi5718f06Vt_Gyb8JJK912e0idpJoP06ZzUAjfuLwXvw35I1riVJketjGRAo_iR5zCTi5Oxz2yXdfVEC_Zd7jSbSlP8M_GU5bE2bFdU0uAHuhzOHe51rUhXa5wPyXa_PsfaUUKJ7vY66p2b63IDXmqGhb"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <h3
+                    class="truncate text-xs font-bold tracking-wider text-white uppercase"
+                  >
+                    MOTION 01
+                  </h3>
+                  <div class="mt-1 flex items-center justify-between">
+                    <p class="text-[11px] tracking-wider text-neutral-400">
+                      BLACK / 42
+                    </p>
+                    <span class="text-xs font-medium tracking-wider text-white"
+                      >$440.00 USD</span
+                    >
+                  </div>
+                  <div class="mt-2 flex items-center justify-between">
+                    <span class="text-xs tracking-wider text-neutral-200"
+                      >QTY 2</span
+                    >
+                    <span class="text-[11px] tracking-wider text-neutral-400"
+                      >$220.00 USD EA</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Pricing Calculations -->
+            <div class="space-y-3 border-b border-[#25282c] py-6">
+              <div
+                class="flex items-center justify-between text-xs tracking-wider"
+              >
+                <span class="font-bold text-neutral-400 uppercase"
+                  >SUBTOTAL</span
+                >
+                <span class="font-medium text-white">$860.00 USD</span>
+              </div>
+            </div>
+            <!-- Final Total -->
+            <div class="flex items-baseline justify-between py-6">
+              <span
+                class="text-sm font-bold tracking-[0.14em] text-white uppercase"
+                >TOTAL</span
+              >
+              <span
+                class="font-mono text-2xl font-bold tracking-tight text-white"
+                >$860.00 USD</span
+              >
+            </div>
+            <!-- Place Order CTA Button -->
+            <div class="mt-2">
+              <button
+                class="w-full rounded-xl bg-[#ccff00] px-6 py-4 text-xs font-bold tracking-[0.14em] text-black uppercase shadow-sm transition-all hover:bg-[#d9ff26] active:scale-[0.99]"
+                type="button"
+              >
+                PLACE ORDER
+              </button>
+            </div>
+            <!-- Brutalist Footer Microcopy -->
+            <div
+              class="mt-8 flex items-start space-x-2 font-mono text-[11px] leading-tight text-neutral-400"
+            >
+              <!-- Tech corner mark -->
+              <span class="text-base leading-none text-[#ccff00] select-none"
+                >⌜</span
+              >
+              <span class="tracking-wider uppercase"
+                >STOCK IS CONFIRMED WHEN YOU PLACE THE ORDER.</span
+              >
+            </div>
+          </div>
+        </section>
+        <!-- END: RightColumn -->
+      </div>
+    </main>
+    <!-- END: MainContent -->
+  </body>
+</html>

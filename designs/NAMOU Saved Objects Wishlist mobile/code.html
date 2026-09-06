@@ -1,0 +1,703 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
+    <title>NAMOU — Saved Objects</title>
+    <!-- Google Fonts for Brutalist Condensed Headline & Precision Tech Monospace -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS CDN with forms & container queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                bg: "#EDECE7",
+                cardBg: "#E4E2DC",
+                cardInner: "#DAD8D1",
+                dark: "#111111",
+                darkCard: "#151515",
+                accent: "#CAFF04",
+                accentHover: "#b8e602",
+                muted: "#71716D",
+                border: "#D3D0C7",
+              },
+            },
+            fontFamily: {
+              headline: ["Anton", "sans-serif"],
+              mono: ['"Space Mono"', "monospace"],
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Typography and Custom UI Styles -->
+    <style data-purpose="typography">
+      .font-headline {
+        font-family: "Anton", sans-serif;
+        letter-spacing: 0.02em;
+        line-height: 0.88;
+      }
+      .font-tech {
+        font-family: "Space Mono", monospace;
+        letter-spacing: -0.01em;
+      }
+    </style>
+    <style data-purpose="layout">
+      /* Hide scrollbars for smooth mobile aesthetics */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-brand-bg text-brand-dark selection:bg-brand-accent flex min-h-screen justify-center antialiased selection:text-black"
+  >
+    <!-- Mobile Viewport Shell (iPhone Form Factor ~390px - 430px) -->
+    <div
+      class="bg-brand-bg relative flex min-h-screen w-full max-w-[420px] flex-col border-x border-[#dedad1] pb-24 shadow-2xl"
+    >
+      <!-- BEGIN: MobileStatusBar -->
+      <header
+        class="text-brand-dark flex w-full items-center justify-between px-6 pt-3 pb-2 text-xs font-semibold tracking-tight select-none"
+      >
+        <!-- Device Time -->
+        <span class="font-sans text-[15px] font-bold tracking-tight">9:41</span>
+        <!-- iOS Status Icons -->
+        <div class="text-brand-dark flex items-center space-x-2">
+          <!-- Cellular Signal -->
+          <svg class="h-3 w-4 fill-current" viewbox="0 0 17 12">
+            <rect height="4" rx="0.5" width="2.5" x="0" y="8"></rect>
+            <rect height="6.5" rx="0.5" width="2.5" x="4.5" y="5.5"></rect>
+            <rect height="9" rx="0.5" width="2.5" x="9" y="3"></rect>
+            <rect height="12" rx="0.5" width="2.5" x="13.5" y="0"></rect>
+          </svg>
+          <!-- Wifi Signal -->
+          <svg
+            class="h-3 w-4 stroke-current"
+            fill="none"
+            stroke-linecap="round"
+            stroke-width="1.8"
+            viewbox="0 0 16 12"
+          >
+            <path
+              d="M1 3.5C4.5 0.5 11.5 0.5 15 3.5M3 6.5C5.5 4.5 10.5 4.5 13 6.5M6 9.5C7 8.5 9 8.5 10 9.5M8 11.5h.01"
+            ></path>
+          </svg>
+          <!-- Battery Icon -->
+          <div class="flex items-center space-x-0.5">
+            <div
+              class="border-brand-dark flex h-2.5 w-5 items-center rounded-[3px] border p-0.5"
+            >
+              <div class="bg-brand-dark h-full w-full rounded-xs"></div>
+            </div>
+            <div class="bg-brand-dark h-1 w-0.5 rounded-r-[1px]"></div>
+          </div>
+        </div>
+      </header>
+      <!-- END: MobileStatusBar -->
+      <!-- BEGIN: BrandNavigation -->
+      <nav
+        class="border-brand-border/60 flex w-full items-center justify-between border-b px-5 py-3"
+        data-purpose="primary-navigation"
+      >
+        <!-- Brand Logo -->
+        <a
+          class="font-headline text-2xl tracking-wider text-black transition-opacity hover:opacity-80"
+          href="#"
+        >
+          NAMOU
+        </a>
+        <!-- Quick Action Controls -->
+        <div class="flex items-center space-x-3">
+          <!-- Search Button -->
+          <button
+            aria-label="Search"
+            class="text-brand-dark flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-black/5 active:scale-95"
+            type="button"
+          >
+            <svg
+              class="h-4 w-4 stroke-current"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.2"
+              viewbox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+            </svg>
+          </button>
+          <!-- Cart Indicator Badge -->
+          <button
+            class="bg-brand-dark flex h-8 items-center space-x-1.5 rounded-full px-3 text-white transition-transform active:scale-95"
+            type="button"
+          >
+            <svg
+              class="h-3.5 w-3.5 fill-none stroke-current"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+              <line x1="3" x2="21" y1="6" y2="6"></line>
+              <path d="M16 10a4 4 0 01-8 0"></path>
+            </svg>
+            <span class="font-tech text-[11px] font-bold tracking-tight"
+              >CART 02</span
+            >
+          </button>
+        </div>
+      </nav>
+      <!-- END: BrandNavigation -->
+      <!-- BEGIN: MainContent -->
+      <main class="flex flex-1 flex-col space-y-6 px-5 pt-5 pb-6">
+        <!-- Wishlist Title & Item Count Header -->
+        <section data-purpose="wishlist-header">
+          <div
+            class="border-brand-dark flex items-baseline justify-between border-b-2 pb-2"
+          >
+            <h1
+              class="font-headline text-[50px] leading-none tracking-normal text-black uppercase"
+            >
+              SAVED OBJECTS
+            </h1>
+            <span
+              class="font-tech text-brand-muted shrink-0 pl-2 text-xs font-semibold"
+            >
+              04 ITEMS
+            </span>
+          </div>
+          <!-- Tech Info Banner -->
+          <aside
+            class="bg-brand-darkCard mt-4 flex items-start space-x-3.5 rounded-xl p-4 text-white shadow-sm"
+            data-purpose="info-card"
+          >
+            <div
+              class="text-brand-accent mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-800/90"
+            >
+              <svg class="h-4 w-4 fill-current" viewbox="0 0 24 24">
+                <path d="M5 3a2 2 0 00-2 2v16l9-4 9 4V5a2 2 0 00-2-2H5z"></path>
+              </svg>
+            </div>
+            <div>
+              <h2
+                class="font-tech text-xs font-bold tracking-wider text-white uppercase"
+              >
+                YOUR SAVED ITEMS
+              </h2>
+              <p
+                class="font-tech mt-1 text-[11px] leading-relaxed text-zinc-400"
+              >
+                Items saved to your wishlist are stored here and sync across
+                your mobile &amp; desktop devices.
+              </p>
+            </div>
+          </aside>
+        </section>
+        <!-- Wishlist Product Cards Grid/Stack -->
+        <section class="space-y-5" data-purpose="wishlist-cards-list">
+          <!-- Card 1: Technical Shell 01 (In Stock, Highlight CTA) -->
+          <article
+            class="bg-brand-cardBg border-brand-border flex flex-col overflow-hidden rounded-2xl border shadow-sm"
+          >
+            <!-- Card Image Viewport -->
+            <div
+              class="bg-brand-cardInner relative flex aspect-[4/3] items-center justify-center overflow-hidden"
+            >
+              <!-- Dismiss / Remove Button -->
+              <button
+                aria-label="Remove item"
+                class="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur-sm transition-transform hover:bg-white active:scale-90"
+                type="button"
+              >
+                <svg
+                  class="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.2"
+                  viewbox="0 0 24 24"
+                >
+                  <line x1="18" x2="6" y1="6" y2="18"></line>
+                  <line x1="6" x2="18" y1="6" y2="18"></line>
+                </svg>
+              </button>
+              <img
+                alt="Technical Shell 01"
+                class="h-full w-full transform object-cover object-center transition-transform duration-300 hover:scale-105"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7mgt48jN0spgWzMKmm4xUJPMRzyS1H7piYeGRXASRGCnpxXj9gVPi-u4dxN5iPWdyafJCqRxj7Fq1Pu8DntKOMiS-M6fDHYsgA8ZIzgV05elWeIXL_7Zk8O92mb2ZArBt3Ah3-5TkXIU50tAfoTYBWIhq8Wj-FRaQAnzduyEH9uOl2L095Pos3dyLEIhKKM1AeWk3rCmiDu5uTLS4QnI3-O5iiIPSzbOFNmiA2Wk3OlQvluuUXtQ73x3oqU1ZtTcM_g"
+              />
+            </div>
+            <!-- Card Content Body -->
+            <div class="flex flex-1 flex-col justify-between p-4">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3
+                    class="font-tech text-brand-dark text-sm font-bold uppercase"
+                  >
+                    TECHNICAL SHELL 01
+                  </h3>
+                  <span
+                    class="font-tech text-brand-muted mt-0.5 block text-[11px]"
+                    >NMU-JK-2401</span
+                  >
+                </div>
+                <span class="font-tech text-brand-dark text-sm font-bold"
+                  >$420.00 USD</span
+                >
+              </div>
+              <!-- Stock Status Pill -->
+              <div class="mt-3 mb-4 flex items-center space-x-1.5">
+                <span
+                  class="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-500"
+                ></span>
+                <span
+                  class="font-tech text-brand-dark text-[10px] font-bold tracking-wider uppercase"
+                  >IN STOCK</span
+                >
+              </div>
+              <!-- Accent Button: CHOOSE OPTIONS -->
+              <button
+                class="bg-brand-accent hover:bg-brand-accentHover text-brand-dark font-tech flex w-full items-center justify-center space-x-2 rounded-xl px-4 py-3.5 text-xs font-bold shadow-sm transition-all active:scale-[0.98]"
+                type="button"
+              >
+                <span>CHOOSE OPTIONS</span>
+                <svg
+                  class="h-4 w-4 stroke-current"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  viewbox="0 0 24 24"
+                >
+                  <line x1="5" x2="19" y1="12" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </article>
+          <!-- Card 2: Motion 01 (In Stock, Standard CTA) -->
+          <article
+            class="bg-brand-cardBg border-brand-border flex flex-col overflow-hidden rounded-2xl border shadow-sm"
+          >
+            <div
+              class="bg-brand-cardInner relative flex aspect-[4/3] items-center justify-center overflow-hidden"
+            >
+              <button
+                aria-label="Remove item"
+                class="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur-sm transition-transform hover:bg-white active:scale-90"
+                type="button"
+              >
+                <svg
+                  class="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.2"
+                  viewbox="0 0 24 24"
+                >
+                  <line x1="18" x2="6" y1="6" y2="18"></line>
+                  <line x1="6" x2="18" y1="6" y2="18"></line>
+                </svg>
+              </button>
+              <img
+                alt="Motion 01"
+                class="h-full w-full transform object-cover object-center transition-transform duration-300 hover:scale-105"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn8akRjD6r-Dc20vsukjlyAd85BcSVTVZ5O1SWsRp4dlcSMr--XQq4rtY7fPSO3neNjG10_xqE48LaBncHZWNv5tgH8a7anCrbu8nXjbALAL7JGZlFjq3ZExkXuLpmvpk39duCMPSZNb8cPh58BeoTQxpmOd2e5M5H920OBnn04K3-t_s88FafDNZu-l3UBrR3Z0YmL59uJi_BfY4peh09AkUEyPKbK3S5vQ78rJLvpEF1nhi41Jgv5iGdeGcX7A0plA"
+              />
+            </div>
+            <div class="flex flex-1 flex-col justify-between p-4">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3
+                    class="font-tech text-brand-dark text-sm font-bold uppercase"
+                  >
+                    MOTION 01
+                  </h3>
+                  <span
+                    class="font-tech text-brand-muted mt-0.5 block text-[11px]"
+                    >NMU-FT-0101</span
+                  >
+                </div>
+                <span class="font-tech text-brand-dark text-sm font-bold"
+                  >$220.00 USD</span
+                >
+              </div>
+              <div class="mt-3 mb-4 flex items-center space-x-1.5">
+                <span
+                  class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+                ></span>
+                <span
+                  class="font-tech text-brand-dark text-[10px] font-bold tracking-wider uppercase"
+                  >IN STOCK</span
+                >
+              </div>
+              <!-- Standard Dark CTA: MOVE TO CART -->
+              <button
+                class="bg-brand-dark font-tech flex w-full items-center justify-center space-x-2 rounded-xl px-4 py-3.5 text-xs font-bold text-white transition-all hover:bg-black active:scale-[0.98]"
+                type="button"
+              >
+                <span>MOVE TO CART</span>
+                <svg
+                  class="h-4 w-4 stroke-current"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  viewbox="0 0 24 24"
+                >
+                  <line x1="5" x2="19" y1="12" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </article>
+          <!-- Card 3: Modular Bag (In Stock, Standard CTA) -->
+          <article
+            class="bg-brand-cardBg border-brand-border flex flex-col overflow-hidden rounded-2xl border shadow-sm"
+          >
+            <div
+              class="bg-brand-cardInner relative flex aspect-[4/3] items-center justify-center overflow-hidden"
+            >
+              <button
+                aria-label="Remove item"
+                class="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur-sm transition-transform hover:bg-white active:scale-90"
+                type="button"
+              >
+                <svg
+                  class="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.2"
+                  viewbox="0 0 24 24"
+                >
+                  <line x1="18" x2="6" y1="6" y2="18"></line>
+                  <line x1="6" x2="18" y1="6" y2="18"></line>
+                </svg>
+              </button>
+              <img
+                alt="Modular Bag"
+                class="h-full w-full transform object-cover object-center transition-transform duration-300 hover:scale-105"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU8AP-hYPYketahH51cjFzXF_yyE0E-7x4gtW3YVgpg0jZu1DNfLZuolaZxIljnSJZvoOWSPR8ZlRwwIa0YXyiLPvW_1x_ov25-U9iXfVNllijot4uzlYAmW7-H3FLFoASFZRWouUVQHdP17fopkp5fwraak2UW4NdboEYDq3Yv9T75u_5zY-nRPKw8hVP8ibXmysarDyWVqmbu9lHJ91kPsaC2XyT5RKiWFhQG3D4DdA7jGj-2Wj79ApVn6t27LYSQg"
+              />
+            </div>
+            <div class="flex flex-1 flex-col justify-between p-4">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3
+                    class="font-tech text-brand-dark text-sm font-bold uppercase"
+                  >
+                    MODULAR BAG
+                  </h3>
+                  <span
+                    class="font-tech text-brand-muted mt-0.5 block text-[11px]"
+                    >NMU-BG-0202</span
+                  >
+                </div>
+                <span class="font-tech text-brand-dark text-sm font-bold"
+                  >$280.00 USD</span
+                >
+              </div>
+              <div class="mt-3 mb-4 flex items-center space-x-1.5">
+                <span
+                  class="inline-block h-2 w-2 rounded-full bg-emerald-500"
+                ></span>
+                <span
+                  class="font-tech text-brand-dark text-[10px] font-bold tracking-wider uppercase"
+                  >IN STOCK</span
+                >
+              </div>
+              <button
+                class="bg-brand-dark font-tech flex w-full items-center justify-center space-x-2 rounded-xl px-4 py-3.5 text-xs font-bold text-white transition-all hover:bg-black active:scale-[0.98]"
+                type="button"
+              >
+                <span>MOVE TO CART</span>
+                <svg
+                  class="h-4 w-4 stroke-current"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  viewbox="0 0 24 24"
+                >
+                  <line x1="5" x2="19" y1="12" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          </article>
+          <!-- Card 4: Wearable Object (Unavailable, Out of stock state) -->
+          <article
+            class="bg-brand-cardBg/80 border-brand-border flex flex-col overflow-hidden rounded-2xl border opacity-95 shadow-sm"
+          >
+            <div
+              class="bg-brand-cardInner relative flex aspect-[4/3] items-center justify-center overflow-hidden"
+            >
+              <button
+                aria-label="Remove item"
+                class="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-black shadow-sm backdrop-blur-sm transition-transform hover:bg-white active:scale-90"
+                type="button"
+              >
+                <svg
+                  class="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.2"
+                  viewbox="0 0 24 24"
+                >
+                  <line x1="18" x2="6" y1="6" y2="18"></line>
+                  <line x1="6" x2="18" y1="6" y2="18"></line>
+                </svg>
+              </button>
+              <img
+                alt="Wearable Object"
+                class="h-full w-full object-cover object-center contrast-125 grayscale"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNbPF-jVFjPpRdbelv5q6qYx6FzNXPHlxG_1lQ3kxFsJnhgSMPqaJ3nxE6FW7XIo7D2X70lV5Ve9dK_vkBLVkF-gneKnRyek9elWkOgBxpa_pJfk5z2W6cMH1UB4Hhgrv3AjHJk0p-zVCcrNhW9CLjXwVzfH1MJXRplvkBqcdx-9qUXE47mbWn4vOGeOTXWlB5LoZq8FqrkGWox5_UoLQ_DqtqnCc0OCq_PhaxdL4MI-TnDZw68qM2l7ZIEepoHevKcw"
+              />
+            </div>
+            <div class="flex flex-1 flex-col justify-between p-4">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3
+                    class="font-tech text-brand-dark text-sm font-bold uppercase"
+                  >
+                    WEARABLE OBJECT
+                  </h3>
+                  <span
+                    class="font-tech text-brand-muted mt-0.5 block text-[11px]"
+                    >NMU-AC-0003</span
+                  >
+                </div>
+                <span class="font-tech text-brand-dark text-sm font-bold"
+                  >$160.00 USD</span
+                >
+              </div>
+              <div class="mt-3 mb-4 flex items-center space-x-1.5">
+                <span
+                  class="inline-block h-2 w-2 rounded-full bg-stone-400"
+                ></span>
+                <span
+                  class="font-tech text-brand-muted text-[10px] font-bold tracking-wider uppercase"
+                  >UNAVAILABLE</span
+                >
+              </div>
+              <!-- Disabled State & Inline Action Button -->
+              <div class="flex items-center space-x-2">
+                <button
+                  class="font-tech flex-1 cursor-not-allowed rounded-xl bg-stone-300/60 px-3 py-3 text-xs font-bold text-stone-500 uppercase"
+                  disabled=""
+                  type="button"
+                >
+                  UNAVAILABLE
+                </button>
+                <button
+                  class="text-brand-dark font-tech rounded-xl border border-stone-400 px-4 py-3 text-xs font-bold uppercase transition-colors hover:bg-black hover:text-white"
+                  type="button"
+                >
+                  REMOVE
+                </button>
+              </div>
+            </div>
+          </article>
+        </section>
+        <!-- BEGIN: CloudSyncNotice -->
+        <section
+          class="bg-brand-cardBg border-brand-border mt-4 flex items-start space-x-3.5 rounded-xl border p-4"
+          data-purpose="cloud-sync-footer"
+        >
+          <div
+            class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black text-white"
+          >
+            <svg
+              class="h-4 w-4 fill-none stroke-current"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <p class="font-tech text-brand-dark text-xs font-bold">
+              Wishlist syncing is active
+            </p>
+            <p
+              class="font-tech text-brand-muted mt-0.5 text-[11px] leading-snug"
+            >
+              Your saved items are backed up to your account and available
+              across all your devices.
+            </p>
+          </div>
+        </section>
+        <!-- END: CloudSyncNotice -->
+        <!-- Action Button: Return / Continue Shopping -->
+        <div class="pt-2">
+          <a
+            class="border-brand-border bg-brand-cardBg/60 hover:bg-brand-cardBg text-brand-dark font-tech flex w-full items-center justify-center space-x-2 rounded-xl border px-4 py-3.5 text-xs font-bold transition-all active:scale-98"
+            href="#"
+          >
+            <svg
+              class="h-4 w-4 stroke-current"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <line x1="19" x2="5" y1="12" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span class="tracking-wider uppercase">CONTINUE SHOPPING</span>
+          </a>
+        </div>
+      </main>
+      <!-- END: MainContent -->
+      <!-- BEGIN: BottomNavigationDock -->
+      <nav
+        class="bg-brand-darkCard/95 fixed right-0 bottom-0 left-0 z-50 mx-auto flex max-w-[420px] items-center justify-around border-t border-zinc-800 px-3 py-2 text-zinc-400 backdrop-blur-md"
+        data-purpose="bottom-tab-bar"
+      >
+        <!-- Shop Tab -->
+        <a
+          class="flex flex-col items-center px-3 py-1 text-zinc-400 transition-colors hover:text-white"
+          href="#"
+        >
+          <svg
+            class="h-5 w-5 stroke-current"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewbox="0 0 24 24"
+          >
+            <rect height="7" width="7" x="3" y="3"></rect>
+            <rect height="7" width="7" x="14" y="3"></rect>
+            <rect height="7" width="7" x="14" y="14"></rect>
+            <rect height="7" width="7" x="3" y="14"></rect>
+          </svg>
+          <span class="font-tech mt-1 text-[9px] tracking-wider uppercase"
+            >Shop</span
+          >
+        </a>
+        <!-- Drops Tab -->
+        <a
+          class="flex flex-col items-center px-3 py-1 text-zinc-400 transition-colors hover:text-white"
+          href="#"
+        >
+          <svg
+            class="h-5 w-5 stroke-current"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewbox="0 0 24 24"
+          >
+            <path
+              d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+            ></path>
+          </svg>
+          <span class="font-tech mt-1 text-[9px] tracking-wider uppercase"
+            >Drops</span
+          >
+        </a>
+        <!-- Saved / Wishlist Tab (Active) -->
+        <a
+          class="text-brand-accent relative flex flex-col items-center px-3 py-1"
+          href="#"
+        >
+          <div class="relative">
+            <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
+              <path
+                d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+              ></path>
+            </svg>
+            <span
+              class="bg-brand-accent ring-brand-dark absolute -top-1 -right-1.5 h-2 w-2 rounded-full ring-2"
+            ></span>
+          </div>
+          <span
+            class="font-tech mt-1 text-[9px] font-bold tracking-wider text-white uppercase"
+            >Wishlist</span
+          >
+        </a>
+        <!-- Bag / Cart Tab -->
+        <a
+          class="flex flex-col items-center px-3 py-1 text-zinc-400 transition-colors hover:text-white"
+          href="#"
+        >
+          <div class="relative">
+            <svg
+              class="h-5 w-5 stroke-current"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+              <line x1="3" x2="21" y1="6" y2="6"></line>
+              <path d="M16 10a4 4 0 01-8 0"></path>
+            </svg>
+            <span
+              class="font-tech absolute -top-1 -right-2 rounded-full bg-white px-1 text-[8px] font-bold text-black"
+              >2</span
+            >
+          </div>
+          <span class="font-tech mt-1 text-[9px] tracking-wider uppercase"
+            >Cart</span
+          >
+        </a>
+        <!-- Account Tab -->
+        <a
+          class="flex flex-col items-center px-3 py-1 text-zinc-400 transition-colors hover:text-white"
+          href="#"
+        >
+          <svg
+            class="h-5 w-5 stroke-current"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewbox="0 0 24 24"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="font-tech mt-1 text-[9px] tracking-wider uppercase"
+            >Account</span
+          >
+        </a>
+      </nav>
+      <!-- END: BottomNavigationDock -->
+    </div>
+  </body>
+</html>

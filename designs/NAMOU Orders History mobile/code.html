@@ -1,0 +1,618 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+      name="viewport"
+    />
+    <title>NAMOU — Orders</title>
+    <!-- Google Fonts for Techwear / Brutalist aesthetic -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS v3 with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              sand: "#F7F4EC",
+              "sand-card": "#F2EFE7",
+              "sand-border": "#E4DFD3",
+              "sand-subtle": "#ECE8DC",
+              charcoal: "#111111",
+              lime: "#D4FF00",
+              "lime-bright": "#CBFF00",
+              "muted-txt": "#7C7971",
+              "dim-txt": "#9E9A8E",
+            },
+            fontFamily: {
+              display: ["Anton", "sans-serif"],
+              mono: ['"Space Mono"', "monospace"],
+              sans: [
+                "Inter",
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "sans-serif",
+              ],
+            },
+            letterSpacing: {
+              tighter: "-0.04em",
+              tightest: "-0.06em",
+              widest: "0.12em",
+              ultra: "0.18em",
+            },
+          },
+        },
+      };
+    </script>
+    <style data-purpose="base-typography">
+      body {
+        background-color: #f7f4ec;
+        color: #111111;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+      }
+      .font-condensed {
+        font-family: "Anton", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+        line-height: 0.88;
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-sand text-charcoal selection:bg-lime flex min-h-screen flex-col justify-between selection:text-black"
+  >
+    <!-- BEGIN: MobileContainerWrapper -->
+    <div
+      class="bg-sand relative mx-auto flex min-h-screen w-full max-w-md flex-col pb-28 shadow-2xl"
+    >
+      <!-- BEGIN: iOSStatusBar -->
+      <div
+        class="bg-sand/90 text-charcoal sticky top-0 z-50 flex items-center justify-between px-6 pt-3 pb-1 text-xs font-semibold tracking-tight backdrop-blur-md"
+      >
+        <span class="font-mono text-[13px] font-bold">9:41</span>
+        <!-- Right Status Icons: Cell Signal, Wifi, Battery -->
+        <div class="flex items-center space-x-1.5">
+          <!-- Cellular bars -->
+          <svg class="h-3.5 w-4" fill="currentColor" viewbox="0 0 17 12">
+            <rect height="4" rx="0.5" width="2.5" x="0" y="8"></rect>
+            <rect height="7" rx="0.5" width="2.5" x="4.5" y="5"></rect>
+            <rect height="9.5" rx="0.5" width="2.5" x="9" y="2.5"></rect>
+            <rect height="12" rx="0.5" width="2.5" x="13.5" y="0"></rect>
+          </svg>
+          <!-- Wifi icon -->
+          <svg class="h-3.5 w-3.5" fill="currentColor" viewbox="0 0 16 12">
+            <path
+              d="M8 2.5C10.6 2.5 13 3.6 14.7 5.3L16 3.9C13.9 1.8 11.1 0.5 8 0.5C4.9 0.5 2.1 1.8 0 3.9L1.3 5.3C3 3.6 5.4 2.5 8 2.5ZM8 6.5C9.7 6.5 11.2 7.2 12.3 8.3L13.6 6.9C12.2 5.5 10.2 4.5 8 4.5C5.8 4.5 3.8 5.5 2.4 6.9L3.7 8.3C4.8 7.2 6.3 6.5 8 6.5ZM8 10.5C8.8 10.5 9.5 11.2 9.5 12H6.5C6.5 11.2 7.2 10.5 8 10.5Z"
+            ></path>
+          </svg>
+          <!-- Battery icon -->
+          <div
+            class="border-charcoal flex h-2.5 w-5 items-center rounded-[3px] border p-0.5"
+          >
+            <div class="bg-charcoal h-full w-full rounded-[1px]"></div>
+          </div>
+        </div>
+      </div>
+      <!-- END: iOSStatusBar -->
+      <!-- BEGIN: TopNavigationBar -->
+      <header
+        class="bg-sand/90 border-sand-border sticky top-7 z-40 flex items-center justify-between border-b px-5 py-3 backdrop-blur-md"
+      >
+        <!-- NAMOU Brand Title -->
+        <a
+          class="tracking-tightest font-sans text-2xl font-black tracking-tight"
+          href="#"
+        >
+          NAMOU
+        </a>
+        <!-- Header Action Controls -->
+        <div class="flex items-center space-x-3">
+          <!-- Search Button -->
+          <button
+            aria-label="Search"
+            class="text-charcoal flex items-center gap-1 px-2 py-1 font-mono text-[11px] font-bold tracking-widest uppercase transition-opacity hover:opacity-75"
+            type="button"
+          >
+            <svg
+              class="h-3.5 w-3.5 stroke-[2.5]"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+            </svg>
+            <span class="hidden text-[11px] sm:inline">SEARCH</span>
+          </button>
+          <!-- Cart Badge Button -->
+          <button
+            class="bg-charcoal flex items-center space-x-1.5 rounded-full px-3 py-1.5 text-white transition-transform active:scale-95"
+            type="button"
+          >
+            <svg
+              class="h-3 w-3 text-white"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span
+              class="font-mono text-[10px] font-bold tracking-widest uppercase"
+              >CART</span
+            >
+            <span class="text-lime font-mono text-[10px] font-black">02</span>
+          </button>
+        </div>
+      </header>
+      <!-- END: TopNavigationBar -->
+      <!-- BEGIN: MainContent -->
+      <main class="flex-1 px-4 pt-4">
+        <!-- BEGIN: SectionHeader -->
+        <section class="mb-4">
+          <h1
+            class="font-condensed text-charcoal m-0 text-[64px] leading-[0.88] tracking-tight select-none"
+          >
+            ORDERS
+          </h1>
+          <!-- Sub Navigation Tabs for Account -->
+          <div
+            class="border-sand-border hide-scrollbar tracking-ultra mt-4 flex items-center justify-start space-x-6 overflow-x-auto border-b py-2 font-mono text-[11px] font-bold uppercase"
+          >
+            <a
+              class="text-muted-txt hover:text-charcoal whitespace-nowrap transition-colors"
+              href="#"
+              >PROFILE</a
+            >
+            <a
+              class="text-muted-txt hover:text-charcoal whitespace-nowrap transition-colors"
+              href="#"
+              >ADDRESSES</a
+            >
+            <a class="text-charcoal relative py-1 whitespace-nowrap" href="#">
+              <span>ORDERS</span>
+              <span
+                class="bg-lime absolute right-0 bottom-[-9px] left-0 h-[2px] rounded-full"
+              ></span>
+            </a>
+            <a
+              class="text-muted-txt hover:text-charcoal whitespace-nowrap transition-colors"
+              href="#"
+              >WISHLIST</a
+            >
+          </div>
+        </section>
+        <!-- END: SectionHeader -->
+        <!-- BEGIN: StatusFilterChips -->
+        <section class="mb-5 overflow-hidden" data-purpose="status-filters">
+          <div
+            class="hide-scrollbar flex items-center space-x-2 overflow-x-auto py-1"
+          >
+            <!-- Active 'ALL' Filter -->
+            <button
+              class="bg-lime text-charcoal border-lime rounded-lg border px-4 py-2 font-mono text-[10px] font-bold tracking-widest whitespace-nowrap shadow-sm transition-all hover:brightness-105 active:scale-95"
+            >
+              ALL
+            </button>
+            <!-- Inactive Filters -->
+            <button
+              class="bg-sand-subtle text-charcoal/80 border-sand-border hover:bg-sand-border rounded-lg border px-3.5 py-2 font-mono text-[10px] font-bold tracking-widest whitespace-nowrap transition-all active:scale-95"
+            >
+              PENDING
+            </button>
+            <button
+              class="bg-sand-subtle text-charcoal/80 border-sand-border hover:bg-sand-border rounded-lg border px-3.5 py-2 font-mono text-[10px] font-bold tracking-widest whitespace-nowrap transition-all active:scale-95"
+            >
+              CONFIRMED
+            </button>
+            <button
+              class="bg-sand-subtle text-charcoal/80 border-sand-border hover:bg-sand-border rounded-lg border px-3.5 py-2 font-mono text-[10px] font-bold tracking-widest whitespace-nowrap transition-all active:scale-95"
+            >
+              SHIPPED
+            </button>
+            <button
+              class="bg-sand-subtle text-charcoal/80 border-sand-border hover:bg-sand-border rounded-lg border px-3.5 py-2 font-mono text-[10px] font-bold tracking-widest whitespace-nowrap transition-all active:scale-95"
+            >
+              DELIVERED
+            </button>
+            <button
+              class="bg-sand-subtle text-charcoal/80 border-sand-border hover:bg-sand-border rounded-lg border px-3.5 py-2 font-mono text-[10px] font-bold tracking-widest whitespace-nowrap transition-all active:scale-95"
+            >
+              CANCELLED
+            </button>
+          </div>
+        </section>
+        <!-- END: StatusFilterChips -->
+        <!-- BEGIN: OrdersList -->
+        <section class="space-y-3" data-purpose="orders-card-list">
+          <!-- Order Card 1: PENDING -->
+          <article
+            class="bg-sand-card/70 border-sand-border hover:border-charcoal/30 rounded-xl border p-4 shadow-sm transition-colors"
+          >
+            <!-- Card Top Bar: Order ID and Status -->
+            <div
+              class="border-sand-border/70 mb-2.5 flex items-start justify-between border-b pb-2.5"
+            >
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] font-bold tracking-wider uppercase"
+                  >ORDER</span
+                >
+                <span
+                  class="text-charcoal block font-mono text-[11px] font-semibold tracking-tight break-all"
+                  >ORD-20260906-A1B2C3D4E5F6</span
+                >
+              </div>
+              <!-- Status Badge -->
+              <div class="flex shrink-0 items-center space-x-1.5 pl-2">
+                <span
+                  class="bg-lime h-2 w-2 animate-pulse rounded-full border border-black/20"
+                ></span>
+                <span
+                  class="text-charcoal font-mono text-[10px] font-bold tracking-wider uppercase"
+                  >PENDING</span
+                >
+              </div>
+            </div>
+            <!-- Card Details: Date & Price -->
+            <div class="mb-3 grid grid-cols-2 gap-2 font-mono text-xs">
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >CREATED</span
+                >
+                <span class="text-charcoal text-[11px] font-medium"
+                  >2026-09-06</span
+                >
+              </div>
+              <div class="text-right">
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >TOTAL</span
+                >
+                <span class="text-charcoal text-[13px] font-bold tracking-tight"
+                  >$860.00 USD</span
+                >
+              </div>
+            </div>
+            <!-- Card Action Button -->
+            <button
+              class="bg-charcoal flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2.5 font-mono text-[10px] font-bold tracking-widest text-white uppercase transition-transform hover:bg-black active:scale-[0.99]"
+              type="button"
+            >
+              <span>VIEW ORDER</span>
+              <span class="text-xs">→</span>
+            </button>
+          </article>
+          <!-- Order Card 2: SHIPPED -->
+          <article
+            class="bg-sand-card/70 border-sand-border hover:border-charcoal/30 rounded-xl border p-4 shadow-sm transition-colors"
+          >
+            <!-- Card Top Bar: Order ID and Status -->
+            <div
+              class="border-sand-border/70 mb-2.5 flex items-start justify-between border-b pb-2.5"
+            >
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] font-bold tracking-wider uppercase"
+                  >ORDER</span
+                >
+                <span
+                  class="text-charcoal block font-mono text-[11px] font-semibold tracking-tight break-all"
+                  >ORD-20260818-F7E8D9C0B1A2</span
+                >
+              </div>
+              <!-- Status Badge -->
+              <div class="flex shrink-0 items-center space-x-1.5 pl-2">
+                <span
+                  class="bg-lime h-2 w-2 rounded-full border border-black/20"
+                ></span>
+                <span
+                  class="text-charcoal font-mono text-[10px] font-bold tracking-wider uppercase"
+                  >SHIPPED</span
+                >
+              </div>
+            </div>
+            <!-- Card Details: Date & Price -->
+            <div class="mb-3 grid grid-cols-2 gap-2 font-mono text-xs">
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >CREATED</span
+                >
+                <span class="text-charcoal text-[11px] font-medium"
+                  >2026-08-18</span
+                >
+              </div>
+              <div class="text-right">
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >TOTAL</span
+                >
+                <span class="text-charcoal text-[13px] font-bold tracking-tight"
+                  >$280.00 USD</span
+                >
+              </div>
+            </div>
+            <!-- Card Action Button -->
+            <button
+              class="bg-charcoal flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2.5 font-mono text-[10px] font-bold tracking-widest text-white uppercase transition-transform hover:bg-black active:scale-[0.99]"
+              type="button"
+            >
+              <span>VIEW ORDER</span>
+              <span class="text-xs">→</span>
+            </button>
+          </article>
+          <!-- Order Card 3: DELIVERED -->
+          <article
+            class="bg-sand-card/70 border-sand-border hover:border-charcoal/30 rounded-xl border p-4 shadow-sm transition-colors"
+          >
+            <!-- Card Top Bar: Order ID and Status -->
+            <div
+              class="border-sand-border/70 mb-2.5 flex items-start justify-between border-b pb-2.5"
+            >
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] font-bold tracking-wider uppercase"
+                  >ORDER</span
+                >
+                <span
+                  class="text-charcoal block font-mono text-[11px] font-semibold tracking-tight break-all"
+                  >ORD-20260702-C3D4E5F6A7B8</span
+                >
+              </div>
+              <!-- Status Badge -->
+              <div class="flex shrink-0 items-center space-x-1.5 pl-2">
+                <span class="bg-charcoal h-2 w-2 rounded-full"></span>
+                <span
+                  class="text-charcoal font-mono text-[10px] font-bold tracking-wider uppercase"
+                  >DELIVERED</span
+                >
+              </div>
+            </div>
+            <!-- Card Details: Date & Price -->
+            <div class="mb-3 grid grid-cols-2 gap-2 font-mono text-xs">
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >CREATED</span
+                >
+                <span class="text-charcoal text-[11px] font-medium"
+                  >2026-07-02</span
+                >
+              </div>
+              <div class="text-right">
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >TOTAL</span
+                >
+                <span class="text-charcoal text-[13px] font-bold tracking-tight"
+                  >$420.00 USD</span
+                >
+              </div>
+            </div>
+            <!-- Card Action Button -->
+            <button
+              class="bg-charcoal flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2.5 font-mono text-[10px] font-bold tracking-widest text-white uppercase transition-transform hover:bg-black active:scale-[0.99]"
+              type="button"
+            >
+              <span>VIEW ORDER</span>
+              <span class="text-xs">→</span>
+            </button>
+          </article>
+          <!-- Order Card 4: CANCELLED -->
+          <article
+            class="bg-sand-card/70 border-sand-border hover:border-charcoal/30 rounded-xl border p-4 shadow-sm transition-colors"
+          >
+            <!-- Card Top Bar: Order ID and Status -->
+            <div
+              class="border-sand-border/70 mb-2.5 flex items-start justify-between border-b pb-2.5"
+            >
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] font-bold tracking-wider uppercase"
+                  >ORDER</span
+                >
+                <span
+                  class="text-charcoal block font-mono text-[11px] font-semibold tracking-tight break-all"
+                  >ORD-20260614-D4E5F6A7B8C9</span
+                >
+              </div>
+              <!-- Status Badge -->
+              <div class="flex shrink-0 items-center space-x-1.5 pl-2">
+                <span class="bg-dim-txt h-2 w-2 rounded-full"></span>
+                <span
+                  class="text-muted-txt font-mono text-[10px] font-bold tracking-wider uppercase"
+                  >CANCELLED</span
+                >
+              </div>
+            </div>
+            <!-- Card Details: Date & Price -->
+            <div class="mb-3 grid grid-cols-2 gap-2 font-mono text-xs">
+              <div>
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >CREATED</span
+                >
+                <span class="text-charcoal text-[11px] font-medium"
+                  >2026-06-14</span
+                >
+              </div>
+              <div class="text-right">
+                <span
+                  class="text-muted-txt block font-mono text-[9px] tracking-wider uppercase"
+                  >TOTAL</span
+                >
+                <span class="text-charcoal text-[13px] font-bold tracking-tight"
+                  >$160.00 USD</span
+                >
+              </div>
+            </div>
+            <!-- Card Action Button -->
+            <button
+              class="bg-charcoal flex w-full items-center justify-center space-x-2 rounded-lg px-4 py-2.5 font-mono text-[10px] font-bold tracking-widest text-white uppercase transition-transform hover:bg-black active:scale-[0.99]"
+              type="button"
+            >
+              <span>VIEW ORDER</span>
+              <span class="text-xs">→</span>
+            </button>
+          </article>
+        </section>
+        <!-- END: OrdersList -->
+        <!-- BEGIN: LoadMoreAction -->
+        <div class="mt-6 mb-8 text-center" data-purpose="load-more">
+          <button
+            class="border-sand-border text-charcoal hover:bg-sand-subtle inline-flex items-center space-x-1.5 rounded-md border px-4 py-2 font-mono text-[10px] font-bold tracking-widest uppercase transition-all active:scale-95"
+            type="button"
+          >
+            <span>LOAD MORE</span>
+            <span>↓</span>
+          </button>
+        </div>
+        <!-- END: LoadMoreAction -->
+        <!-- Technical Footer Details -->
+        <footer
+          class="text-muted-txt border-sand-border/50 border-t pt-2 pb-4 text-center font-mono text-[9px]"
+        >
+          <div class="mb-1 flex items-center justify-center gap-2">
+            <svg
+              class="h-2.5 w-2.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewbox="0 0 24 24"
+            >
+              <rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span>256-BIT ENCRYPTION</span>
+            <span>•</span>
+            <span>DISPATCH IN 24H</span>
+          </div>
+          <p class="tracking-wider">NAMOU LABS © 2026 // ALL RIGHTS RESERVED</p>
+        </footer>
+      </main>
+      <!-- END: MainContent -->
+      <!-- BEGIN: BottomNavigationDock -->
+      <nav
+        class="bg-sand/95 border-sand-border fixed right-0 bottom-0 left-0 z-50 mx-auto flex max-w-md items-center justify-around border-t px-6 py-2 backdrop-blur-lg"
+      >
+        <!-- Shop Tab -->
+        <a
+          class="group flex flex-col items-center justify-center py-1"
+          href="#"
+        >
+          <svg
+            class="text-muted-txt group-hover:text-charcoal h-5 w-5 transition-colors"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewbox="0 0 24 24"
+          >
+            <line x1="3" x2="21" y1="6" y2="6"></line>
+            <line x1="3" x2="21" y1="12" y2="12"></line>
+            <line x1="3" x2="21" y1="18" y2="18"></line>
+          </svg>
+          <span
+            class="text-muted-txt group-hover:text-charcoal mt-1 font-mono text-[9px] font-bold tracking-widest uppercase"
+            >SHOP</span
+          >
+        </a>
+        <!-- Drops Tab -->
+        <a
+          class="group flex flex-col items-center justify-center py-1"
+          href="#"
+        >
+          <svg
+            class="text-muted-txt group-hover:text-charcoal h-5 w-5 transition-colors"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewbox="0 0 24 24"
+          >
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span
+            class="text-muted-txt group-hover:text-charcoal mt-1 font-mono text-[9px] font-bold tracking-widest uppercase"
+            >DROPS</span
+          >
+        </a>
+        <!-- Saved / Wishlist Tab -->
+        <a
+          class="group flex flex-col items-center justify-center py-1"
+          href="#"
+        >
+          <svg
+            class="text-muted-txt group-hover:text-charcoal h-5 w-5 transition-colors"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewbox="0 0 24 24"
+          >
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+            ></path>
+          </svg>
+          <span
+            class="text-muted-txt group-hover:text-charcoal mt-1 font-mono text-[9px] font-bold tracking-widest uppercase"
+            >SAVED</span
+          >
+        </a>
+        <!-- Account Tab (Active) -->
+        <a
+          class="relative flex flex-col items-center justify-center py-1"
+          href="#"
+        >
+          <svg
+            class="text-charcoal h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            viewbox="0 0 24 24"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span
+            class="text-charcoal mt-1 font-mono text-[9px] font-black tracking-widest uppercase"
+            >ACCOUNT</span
+          >
+          <!-- Neon Lime Active Indicator Dot -->
+          <span
+            class="bg-lime absolute -bottom-0.5 h-1.5 w-1.5 rounded-full"
+          ></span>
+        </a>
+      </nav>
+      <!-- END: BottomNavigationDock -->
+      <!-- iOS Home Indicator Bar -->
+      <div
+        class="pointer-events-none fixed right-0 bottom-0 left-0 z-50 mx-auto flex max-w-md justify-center pb-1"
+      >
+        <div class="bg-charcoal/20 h-1 w-32 rounded-full"></div>
+      </div>
+    </div>
+    <!-- END: MobileContainerWrapper -->
+  </body>
+</html>
