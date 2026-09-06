@@ -167,6 +167,7 @@ export function CheckoutView() {
                 <ProductMedia
                   src={item.product.imageUrl}
                   alt={item.product.title}
+                  slug={item.product.slug}
                   className="aspect-square rounded-lg"
                   sizes="72px"
                 />

@@ -120,6 +120,7 @@ export function OrderConfirmationView({ orderId }: { orderId: string }) {
                 <ProductMedia
                   src={item.imageUrl}
                   alt={item.productTitle}
+                  slug={item.productTitle}
                   className="aspect-square rounded-lg"
                   sizes="56px"
                 />

@@ -135,13 +135,6 @@ export interface CreateProductVariantDto {
   options?: ProductVariantOptionDto[];
 }
 
-export interface CreateProductImageDto {
-  imageUrl: string;
-  altText?: string | null;
-  sortOrder: number;
-  variantSku?: string;
-}
-
 export interface CreateProductDto {
   categoryId: string;
   title: string;
@@ -152,7 +145,6 @@ export interface CreateProductDto {
   isActive?: boolean;
   attributes?: ConfiguredProductAttributeDto[];
   variants: CreateProductVariantDto[];
-  images?: CreateProductImageDto[];
 }
 
 export interface UpdateProductDto {

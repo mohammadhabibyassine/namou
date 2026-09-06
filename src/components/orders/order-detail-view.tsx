@@ -69,6 +69,7 @@ export function OrderDetailView({ orderId }: { orderId: string }) {
                 <ProductMedia
                   src={item.imageUrl}
                   alt={item.productTitle}
+                  slug={item.productTitle}
                   className="aspect-square rounded-lg"
                   sizes="96px"
                 />

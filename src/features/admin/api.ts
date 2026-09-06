@@ -15,6 +15,7 @@ import {
   deleteAttributeType,
   deleteAttributeValue,
   getAttributeTypes,
+  getProductImages,
   getVariantConfiguration,
   replaceProductImages,
   replaceVariantConfiguration,
@@ -22,6 +23,7 @@ import {
   updateAttributeValue,
 } from "@/services/api/v1/variants.api";
 import type { ProductCreateInput, ProductMetadataInput } from "@/types/api";
+import type { ReplaceProductImagesDto } from "@/types/models/variant.model";
 
 /** View-friendly facade over the existing v1 service modules. */
 export const adminApi = {
@@ -43,9 +45,10 @@ export const adminApi = {
     updateProduct(id, input),
   deleteProduct,
   variantConfiguration: getVariantConfiguration,
+  images: getProductImages,
   replaceVariantConfiguration,
   replaceImages: (
     productId: string,
-    images: NonNullable<ProductCreateInput["images"]>,
-  ) => replaceProductImages(productId, { images }),
+    input: ReplaceProductImagesDto,
+  ) => replaceProductImages(productId, input),
 };

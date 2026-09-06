@@ -67,22 +67,32 @@ apiClient.interceptors.response.use(
     return response;
   },
   async (error: AxiosError) => {
-    logger.error(`[API Error] ${error.config?.url}`, {
-      status: error.response?.status,
-      data: error.response?.data,
-    });
-
     const request = error.config as RetriableRequestConfig | undefined;
     if (error.response?.status === 401 && request && !request._authRetry) {
       request._authRetry = true;
 
       try {
         await refreshBrowserSession();
-        return apiClient(request);
       } catch (refreshError) {
+        logger.error(`[API Authentication Error] ${error.config?.url}`, {
+          status: error.response?.status,
+          data: error.response?.data,
+          refreshError,
+        });
         await handleAuthError(error);
         return Promise.reject(refreshError);
       }
+
+      return apiClient(request);
+    }
+
+    logger.error(`[API Error] ${error.config?.url}`, {
+      status: error.response?.status,
+      data: error.response?.data,
+    });
+
+    if (error.response?.status === 401) {
+      await handleAuthError(error);
     }
 
     return Promise.reject(error);

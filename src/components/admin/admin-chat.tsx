@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { Archive, Check, Send, UserRound } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Archive, ArrowUp, Check, Loader2, Send, UserRound } from "lucide-react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { chatApi } from "@/features/chat/api";
 import { formatDateTime } from "@/lib/format/date";
 import { queryKeys } from "@/lib/query/keys";
@@ -11,11 +15,15 @@ import { useChatSocket } from "@/providers/socket-provider";
 import type { ChatConversationStatus } from "@/types/api";
 import { cn } from "@/lib/utils/cn";
 
+const CONVERSATIONS_PAGE_SIZE = 25;
+const MESSAGES_PAGE_SIZE = 50;
+
 export function AdminChat() {
   const [status, setStatus] = useState<ChatConversationStatus>("open");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [content, setContent] = useState("");
   const queryClient = useQueryClient();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const {
     state: socketState,
     connect,
@@ -23,42 +31,80 @@ export function AdminChat() {
     leaveConversation,
     subscribeToMessages,
   } = useChatSocket();
-  const conversations = useQuery({
-    queryKey: ["admin", "chat", status],
-    queryFn: () => chatApi.adminConversations({ status, pageSize: 50 }),
+
+  // ── Conversations (infinite) ──────────────────────────────────────────
+  const conversations = useInfiniteQuery({
+    queryKey: queryKeys.admin.chat.conversations({ status }),
+    initialPageParam: "",
+    queryFn: ({ pageParam }) =>
+      chatApi.adminConversations({
+        status,
+        pageSize: CONVERSATIONS_PAGE_SIZE,
+        ...(pageParam ? { cursor: pageParam } : {}),
+      }),
+    getNextPageParam: (page) =>
+      page.pageInfo.hasNextPage
+        ? (page.pageInfo.endCursor ?? undefined)
+        : undefined,
   });
+
+  const allConversations =
+    conversations.data?.pages.flatMap((page) => page.items) ?? [];
+
   const active =
-    conversations.data?.items.find((item) => item.id === selectedId) ??
-    conversations.data?.items[0] ??
+    allConversations.find((item) => item.id === selectedId) ??
+    allConversations[0] ??
     null;
-  const messages = useQuery({
-    queryKey: queryKeys.chat.messages(active?.id ?? "idle"),
-    queryFn: () => chatApi.adminMessages(active!.id, { pageSize: 100 }),
+
+  // ── Messages (infinite — reverse chronological, load older) ───────────
+  const messages = useInfiniteQuery({
+    queryKey: queryKeys.admin.chat.messages(active?.id ?? "idle"),
+    initialPageParam: "",
+    queryFn: ({ pageParam }) =>
+      chatApi.adminMessages(active!.id, {
+        pageSize: MESSAGES_PAGE_SIZE,
+        ...(pageParam ? { cursor: pageParam } : {}),
+      }),
+    getNextPageParam: (page) =>
+      page.pageInfo.hasNextPage
+        ? (page.pageInfo.endCursor ?? undefined)
+        : undefined,
     enabled: Boolean(active),
   });
+
+  const allMessages =
+    messages.data?.pages.flatMap((page) => page.items) ?? [];
+
+  // ── Mutations ─────────────────────────────────────────────────────────
   const send = useMutation({
     mutationFn: (message: string) =>
       chatApi.adminSendMessage(active!.id, message),
     onSuccess: async () => {
       setContent("");
       await queryClient.invalidateQueries({
-        queryKey: queryKeys.chat.messages(active!.id),
+        queryKey: queryKeys.admin.chat.messages(active!.id),
       });
     },
   });
   const assign = useMutation({
     mutationFn: () => chatApi.adminAssign(active!.id),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["admin", "chat"] }),
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.chat.conversations({ status }),
+      }),
   });
   const updateStatus = useMutation({
     mutationFn: (next: ChatConversationStatus) =>
       chatApi.adminUpdateStatus(active!.id, next),
     onSuccess: async () => {
       setSelectedId(null);
-      await queryClient.invalidateQueries({ queryKey: ["admin", "chat"] });
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.admin.chat.conversations({ status }),
+      });
     },
   });
+
+  // ── Socket integration ────────────────────────────────────────────────
   useEffect(() => {
     if (!active) return;
     let mounted = true;
@@ -70,7 +116,7 @@ export function AdminChat() {
     const unsubscribe = subscribeToMessages((message) => {
       if (message.conversationId === active.id)
         void queryClient.invalidateQueries({
-          queryKey: queryKeys.chat.messages(active.id),
+          queryKey: queryKeys.admin.chat.messages(active.id),
         });
     });
     return () => {
@@ -86,10 +132,17 @@ export function AdminChat() {
     queryClient,
     subscribeToMessages,
   ]);
+
+  // Auto-scroll to bottom on new messages (first page load or new message sent)
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [allMessages.length]);
+
   function submit(event: FormEvent) {
     event.preventDefault();
     if (content.trim() && active) send.mutate(content.trim());
   }
+
   return (
     <div className="p-4 sm:p-7">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -115,39 +168,59 @@ export function AdminChat() {
         </label>
       </div>
       <div className="border-line bg-surface mt-7 grid min-h-[38rem] overflow-hidden rounded-xl border lg:grid-cols-[20rem_1fr]">
+        {/* ── Conversation sidebar ─────────────────────────────────────── */}
         <aside className="border-line border-b lg:border-r lg:border-b-0">
           <div className="border-line text-subtle border-b p-4 font-mono text-[8px] uppercase">
-            Conversations / {conversations.data?.items.length ?? 0}
+            Conversations / {allConversations.length}
           </div>
           <div className="max-h-72 overflow-y-auto lg:max-h-[34rem]">
             {conversations.isPending ? (
               <div className="bg-muted m-3 h-56 animate-pulse rounded-lg" />
             ) : (
-              conversations.data?.items.map((conversation) => (
-                <button
-                  key={conversation.id}
-                  onClick={() => setSelectedId(conversation.id)}
-                  className={cn(
-                    "border-line w-full border-b p-4 text-left",
-                    active?.id === conversation.id
-                      ? "bg-acid"
-                      : "hover:bg-muted",
-                  )}
-                >
-                  <p className="truncate font-mono text-[10px] uppercase">
-                    {conversation.subject ?? "General support"}
-                  </p>
-                  <p className="text-subtle mt-2 truncate text-xs">
-                    {conversation.user.firstName ?? conversation.user.email}
-                  </p>
-                  <p className="text-subtle mt-2 font-mono text-[8px] uppercase">
-                    {formatDateTime(conversation.updatedAt)}
-                  </p>
-                </button>
-              ))
+              <>
+                {allConversations.map((conversation) => (
+                  <button
+                    key={conversation.id}
+                    onClick={() => setSelectedId(conversation.id)}
+                    className={cn(
+                      "border-line w-full border-b p-4 text-left",
+                      active?.id === conversation.id
+                        ? "bg-acid"
+                        : "hover:bg-muted",
+                    )}
+                  >
+                    <p className="truncate font-mono text-[10px] uppercase">
+                      {conversation.subject ?? "General support"}
+                    </p>
+                    <p className="text-subtle mt-2 truncate text-xs">
+                      {conversation.user.firstName ?? conversation.user.email}
+                    </p>
+                    <p className="text-subtle mt-2 font-mono text-[8px] uppercase">
+                      {formatDateTime(conversation.updatedAt)}
+                    </p>
+                  </button>
+                ))}
+                {conversations.hasNextPage ? (
+                  <button
+                    onClick={() => conversations.fetchNextPage()}
+                    disabled={conversations.isFetchingNextPage}
+                    className="text-subtle flex w-full items-center justify-center gap-2 p-4 font-mono text-[8px] uppercase hover:bg-muted disabled:opacity-50"
+                  >
+                    {conversations.isFetchingNextPage ? (
+                      <>
+                        Loading <Loader2 size={11} className="animate-spin" />
+                      </>
+                    ) : (
+                      "Load older conversations"
+                    )}
+                  </button>
+                ) : null}
+              </>
             )}
           </div>
         </aside>
+
+        {/* ── Active conversation ──────────────────────────────────────── */}
         {active ? (
           <section className="flex min-h-[36rem] flex-col">
             <header className="border-line flex flex-wrap items-center justify-between gap-3 border-b p-4">
@@ -186,8 +259,26 @@ export function AdminChat() {
               </div>
             </header>
             <div className="flex-1 space-y-3 overflow-y-auto p-4">
-              {messages.data?.items.length ? (
-                [...messages.data.items].reverse().map((message) => (
+              {/* Load older messages button */}
+              {messages.hasNextPage ? (
+                <button
+                  onClick={() => messages.fetchNextPage()}
+                  disabled={messages.isFetchingNextPage}
+                  className="text-subtle mx-auto flex items-center gap-2 rounded-lg px-4 py-2 font-mono text-[8px] uppercase hover:bg-muted disabled:opacity-50"
+                >
+                  {messages.isFetchingNextPage ? (
+                    <>
+                      Loading <Loader2 size={11} className="animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      <ArrowUp size={11} /> Load older messages
+                    </>
+                  )}
+                </button>
+              ) : null}
+              {allMessages.length ? (
+                [...allMessages].reverse().map((message) => (
                   <div
                     key={message.id}
                     className={
@@ -207,6 +298,7 @@ export function AdminChat() {
                   No messages in this channel.
                 </p>
               )}
+              <div ref={messagesEndRef} />
             </div>
             <form
               onSubmit={submit}

@@ -15,6 +15,7 @@ import {
   useGuestCommerceHydrated,
 } from "@/providers/guest-commerce-provider";
 import { useSession } from "@/providers/session-provider";
+import { announceCommerceFeedback } from "@/lib/commerce/feedback";
 
 export function WishlistView() {
   const { authenticated, status } = useSession();
@@ -93,15 +94,26 @@ export function WishlistView() {
                 <ProductMedia
                   src={item.imageUrl}
                   alt={item.title}
-                  className="aspect-[4/3]"
+                  slug={item.slug}
+                  className="aspect-[4/3.55]"
                 />
               </Link>
               <button
-                onClick={() =>
-                  authenticated
-                    ? removeMutation.mutate(item.id)
-                    : toggleGuest(item)
-                }
+                onClick={() => {
+                  const notify = () =>
+                    announceCommerceFeedback({
+                      message: "Removed from saved",
+                      detail: item.title,
+                      tone: "success",
+                      target: "wishlist",
+                    });
+                  if (authenticated) {
+                    removeMutation.mutate(item.id, { onSuccess: notify });
+                  } else {
+                    toggleGuest(item);
+                    notify();
+                  }
+                }}
                 className="bg-surface/80 absolute top-3 right-3 grid size-8 place-items-center rounded-full"
                 aria-label={`Remove ${item.title}`}
               >
@@ -124,27 +136,41 @@ export function WishlistView() {
               </div>
               {item.variantId ? (
                 <button
-                  onClick={() =>
-                    authenticated
-                      ? moveMutation.mutate({
+                  onClick={() => {
+                    const notify = () =>
+                      announceCommerceFeedback({
+                        message: "Moved to cart",
+                        detail: item.title,
+                        tone: "success",
+                        target: "cart",
+                      });
+                    if (authenticated) {
+                      moveMutation.mutate(
+                        {
                           variantId: item.variantId!,
                           wishlistItemId: item.id,
-                        })
-                      : addGuestCart(
-                          {
-                            variantId: item.variantId!,
-                            productId: item.productId,
-                            title: item.title,
-                            slug: item.slug,
-                            imageUrl: item.imageUrl,
-                            sku: item.sku ?? "Saved variant",
-                            options: [],
-                            unitPrice: item.price,
-                            currencyCode: item.currencyCode,
-                          },
-                          1,
-                        )
-                  }
+                        },
+                        { onSuccess: notify },
+                      );
+                    } else {
+                      addGuestCart(
+                        {
+                          variantId: item.variantId!,
+                          productId: item.productId,
+                          title: item.title,
+                          slug: item.slug,
+                          imageUrl: item.imageUrl,
+                          sku: item.sku ?? "Saved variant",
+                          options: [],
+                          unitPrice: item.price,
+                          currencyCode: item.currencyCode,
+                        },
+                        1,
+                      );
+                      toggleGuest(item);
+                      notify();
+                    }
+                  }}
                   disabled={!item.available || moveMutation.isPending}
                   className="bg-ink mt-4 flex min-h-11 w-full items-center justify-between rounded-lg px-4 font-mono text-[10px] text-white uppercase disabled:opacity-40"
                 >

@@ -8,12 +8,14 @@ import {
   useEffect,
   useMemo,
 } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/features/auth/api";
 import { queryKeys } from "@/lib/query/keys";
 import type { Permission, SessionUser } from "@/types/api";
 import { useAuthStore } from "@/store";
 import { setOnUnauthorized } from "@/utils/errorHandler";
+import { protectedRoutePrefixes } from "@/lib/auth/constants";
 
 interface SessionContextValue {
   user: SessionUser | null;
@@ -33,6 +35,8 @@ export function SessionProvider({
   initialUser: SessionUser | null;
 }) {
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const pathname = usePathname();
   const storeSetUser = useAuthStore((state) => state.setUser);
   const sessionQuery = useQuery({
     queryKey: queryKeys.session,
@@ -55,9 +59,17 @@ export function SessionProvider({
     setOnUnauthorized(() => {
       setUser(null);
       queryClient.removeQueries();
+      if (
+        protectedRoutePrefixes.some(
+          (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+        )
+      ) {
+        router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+        router.refresh();
+      }
     });
     return () => setOnUnauthorized(null);
-  }, [queryClient, setUser]);
+  }, [pathname, queryClient, router, setUser]);
   const hasPermission = useCallback(
     (permission: Permission) => Boolean(user?.permissions.includes(permission)),
     [user],

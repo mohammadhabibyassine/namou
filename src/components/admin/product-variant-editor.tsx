@@ -5,6 +5,7 @@ import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/features/admin/api";
+import { ProductImageManager } from "@/components/admin/product-image-manager";
 import { queryKeys } from "@/lib/query/keys";
 import type { AdminVariant, AttributeTypeRecord } from "@/types/api";
 
@@ -120,7 +121,7 @@ export function ProductVariantEditor({ productId }: { productId: string }) {
         <div>
           <p className="technical-label text-subtle">Product / {productId}</p>
           <h1 className="display-title mt-2 text-6xl sm:text-8xl">
-            Variant matrix
+            Product workspace
           </h1>
         </div>
         <button
@@ -144,9 +145,8 @@ export function ProductVariantEditor({ productId }: { productId: string }) {
         </button>
       </div>
       <div className="mt-6 rounded-xl border border-[#ded3a7] bg-[#f6f0d8] p-3 font-mono text-[8px] text-[#765b00] uppercase">
-        Metadata and existing image reads require a backend admin product detail
-        endpoint. This editor only replaces the variant configuration exposed by
-        the current API.
+        Variant changes and product media are saved independently so an upload
+        failure never corrupts inventory configuration.
       </div>
       <form
         onSubmit={(event) => {
@@ -306,6 +306,7 @@ export function ProductVariantEditor({ productId }: { productId: string }) {
           </button>
         </div>
       </form>
+      <ProductImageManager productId={productId} />
     </div>
   );
 }

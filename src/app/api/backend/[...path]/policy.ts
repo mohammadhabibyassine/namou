@@ -45,6 +45,16 @@ const policies: readonly RoutePolicy[] = [
     requiresAuth: true,
   },
   {
+    methods: ["POST"],
+    pattern: new RegExp(`^/uploads/products/${UUID}/presigned-url$`),
+    requiresAuth: true,
+  },
+  {
+    methods: ["DELETE"],
+    pattern: new RegExp(`^/uploads/products/${UUID}$`),
+    requiresAuth: true,
+  },
+  {
     methods: ["GET", "POST"],
     pattern: /^\/attribute-types$/,
     requiresAuth: true,

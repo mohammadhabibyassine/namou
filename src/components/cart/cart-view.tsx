@@ -12,6 +12,7 @@ import {
   useSetCartItemQuantity,
 } from "@/hooks/cart";
 import { multiplyMoney, sumMoney } from "@/lib/format/money";
+import { announceCommerceFeedback } from "@/lib/commerce/feedback";
 import {
   useGuestCommerce,
   useGuestCommerceHydrated,
@@ -95,13 +96,37 @@ export function CartView() {
   }
 
   function updateQuantity(variantId: string, quantity: number) {
-    if (authenticated)
-      quantityMutation.mutate({ variantId, input: { quantity } });
-    else setGuestQuantity(variantId, quantity);
+    if (authenticated) {
+      quantityMutation.mutate(
+        { variantId, input: { quantity } },
+        {
+          onSuccess: () =>
+            announceCommerceFeedback({
+              message: "Cart quantity synchronized",
+              tone: "success",
+              target: "cart",
+            }),
+        },
+      );
+    } else {
+      setGuestQuantity(variantId, quantity);
+    }
   }
   function remove(variantId: string) {
-    if (authenticated) removeMutation.mutate(variantId);
-    else removeGuestItem(variantId);
+    const item = items.find((candidate) => candidate.variantId === variantId);
+    const notify = () =>
+      announceCommerceFeedback({
+        message: "Removed from cart",
+        detail: item?.title,
+        tone: "success",
+        target: "cart",
+      });
+    if (authenticated) {
+      removeMutation.mutate(variantId, { onSuccess: notify });
+    } else {
+      removeGuestItem(variantId);
+      notify();
+    }
   }
 
   return (
@@ -125,6 +150,7 @@ export function CartView() {
                   <ProductMedia
                     src={item.imageUrl}
                     alt={item.title}
+                    slug={item.slug}
                     className="aspect-square"
                     sizes="150px"
                   />

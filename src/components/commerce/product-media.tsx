@@ -1,4 +1,8 @@
 import Image from "next/image";
+import {
+  isDemoEditorialImage,
+  ProductArtwork,
+} from "@/components/commerce/product-artwork";
 import { publicEnvironment } from "@/config/env.client";
 import { cn } from "@/lib/utils/cn";
 
@@ -7,7 +11,14 @@ function isAllowedSource(src: string | null): src is string {
   if (src.startsWith("/") && !src.startsWith("//")) return true;
   if (!publicEnvironment.productImageOrigin) return false;
   try {
-    return new URL(src).origin === publicEnvironment.productImageOrigin;
+    const source = new URL(src);
+    return (
+      source.origin === publicEnvironment.productImageOrigin &&
+      source.pathname.startsWith("/products/") &&
+      !source.search &&
+      !source.username &&
+      !source.password
+    );
   } catch {
     return false;
   }
@@ -19,13 +30,31 @@ export function ProductMedia({
   className,
   priority = false,
   sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw",
+  slug,
+  category,
+  detailed = false,
 }: {
   src: string | null;
   alt: string;
   className?: string;
   priority?: boolean;
   sizes?: string;
+  slug?: string;
+  category?: string;
+  detailed?: boolean;
 }) {
+  if (slug && isDemoEditorialImage(src)) {
+    return (
+      <ProductArtwork
+        slug={slug}
+        title={alt}
+        category={category}
+        detailed={detailed}
+        className={className}
+      />
+    );
+  }
+
   return (
     <div
       className={cn("relative isolate overflow-hidden bg-[#deddd9]", className)}

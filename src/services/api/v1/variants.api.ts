@@ -68,6 +68,15 @@ export const replaceProductImages = async (
   return response.data;
 };
 
+export const getProductImages = async (
+  productId: string,
+): Promise<ProductImageAdminView[]> => {
+  const response = await apiClient.get<ProductImageAdminView[]>(
+    API_ENDPOINTS.VARIANTS.IMAGES(productId),
+  );
+  return response.data;
+};
+
 // Global Attribute Types & Values
 export const getAttributeTypes = async (): Promise<AttributeTypeRecord[]> => {
   const response = await apiClient.get<AttributeTypeRecord[]>(

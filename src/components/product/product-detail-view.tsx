@@ -13,7 +13,12 @@ import {
 import { ProductMedia } from "@/components/commerce/product-media";
 import { Price } from "@/components/commerce/price";
 import { useAddToCart } from "@/hooks/cart";
-import { useAddToWishlist } from "@/hooks/wishlist";
+import {
+  useAddToWishlist,
+  useRemoveFromWishlist,
+  useWishlist,
+} from "@/hooks/wishlist";
+import { announceCommerceFeedback } from "@/lib/commerce/feedback";
 import { useGuestCommerce } from "@/providers/guest-commerce-provider";
 import { useSession } from "@/providers/session-provider";
 import type { ProductDetail, ProductVariant } from "@/types/api";
@@ -43,7 +48,10 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
   const { authenticated } = useSession();
   const addToServerCart = useAddToCart();
   const addToServerWishlist = useAddToWishlist();
+  const removeFromServerWishlist = useRemoveFromWishlist();
+  const wishlist = useWishlist({ pageSize: 100 });
   const addGuestCartItem = useGuestCommerce((state) => state.addCartItem);
+  const guestWishlistItems = useGuestCommerce((state) => state.wishlistItems);
   const toggleGuestWishlistItem = useGuestCommerce(
     (state) => state.toggleWishlistItem,
   );
@@ -74,6 +82,12 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
   function confirmCartAddition() {
     setFlying(true);
     setNotice("Added to your cart");
+    announceCommerceFeedback({
+      message: "Added to cart",
+      detail: `${product.title} · ${quantity} unit${quantity === 1 ? "" : "s"}`,
+      tone: "success",
+      target: "cart",
+    });
     window.setTimeout(() => setFlying(false), 700);
   }
 
@@ -84,8 +98,15 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
         { variantId: variant.id, quantity },
         {
           onSuccess: confirmCartAddition,
-          onError: () =>
-            setNotice("This object could not be added. Please try again."),
+          onError: () => {
+            setNotice("This object could not be added. Please try again.");
+            announceCommerceFeedback({
+              message: "Cart link interrupted",
+              detail: "The object was not added. Please try again.",
+              tone: "error",
+              target: "cart",
+            });
+          },
         },
       );
       return;
@@ -111,15 +132,52 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
   }
 
   function addToWishlist() {
-    if (authenticated) {
-      addToServerWishlist.mutate(
-        { productId: product.id, variantId: variant?.id ?? null },
-        {
-          onSuccess: () => setNotice("Saved to your objects"),
-          onError: () =>
-            setNotice("This object could not be saved. Please try again."),
-        },
+    const serverItem = wishlist.data?.items.find(
+      (item) =>
+        item.productId === product.id &&
+        item.variantId === (variant?.id ?? null),
+    );
+    const guestItem = guestWishlistItems.find(
+      (item) =>
+        item.productId === product.id &&
+        item.variantId === (variant?.id ?? null),
+    );
+    const currentlySaved = authenticated
+      ? Boolean(serverItem)
+      : Boolean(guestItem);
+    const nextSaved = !currentlySaved;
+    const success = () => {
+      setNotice(
+        nextSaved ? "Saved to your objects" : "Removed from saved objects",
       );
+      announceCommerceFeedback({
+        message: nextSaved ? "Saved object" : "Removed from saved",
+        detail: product.title,
+        tone: "success",
+        target: "wishlist",
+      });
+    };
+    const failure = () => {
+      setNotice("This object could not be saved. Please try again.");
+      announceCommerceFeedback({
+        message: "Saved objects interrupted",
+        detail: "Please try that action again.",
+        tone: "error",
+        target: "wishlist",
+      });
+    };
+    if (authenticated) {
+      if (serverItem) {
+        removeFromServerWishlist.mutate(serverItem.id, {
+          onSuccess: success,
+          onError: failure,
+        });
+      } else {
+        addToServerWishlist.mutate(
+          { productId: product.id, variantId: variant?.id ?? null },
+          { onSuccess: success, onError: failure },
+        );
+      }
       return;
     }
     toggleGuestWishlistItem({
@@ -131,7 +189,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
       price: variant?.effectivePrice ?? product.basePrice,
       currencyCode: product.currencyCode,
     });
-    setNotice("Saved objects updated");
+    success();
   }
 
   function selectOption(attributeTypeId: string, attributeValueId: string) {
@@ -178,6 +236,9 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
               src={activeImage?.imageUrl ?? null}
               alt={activeImage?.altText ?? product.title}
               priority
+              slug={product.slug}
+              category={product.category.name}
+              detailed
               className="h-full min-h-[32rem]"
               sizes="(max-width: 1024px) 100vw, 55vw"
             />
@@ -223,6 +284,9 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                     alt={
                       image?.altText ?? `${product.title} detail ${index + 2}`
                     }
+                    slug={product.slug}
+                    category={product.category.name}
+                    detailed
                     className="h-full min-h-0"
                     sizes="24vw"
                   />
@@ -232,7 +296,10 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
           </div>
         </section>
 
-        <section className="hairline-panel flex flex-col p-5 sm:p-7">
+        <section
+          id="product-buy-box"
+          className="hairline-panel flex flex-col p-5 sm:p-7"
+        >
           <p className="technical-label text-subtle">
             {product.category.name} / {variant?.sku ?? "Unconfigured"}
           </p>
@@ -345,10 +412,47 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
               type="button"
               id="wishlist"
               onClick={addToWishlist}
-              disabled={addToServerWishlist.isPending}
-              className="border-line mt-2 flex min-h-11 w-full items-center justify-center gap-3 rounded-lg border font-mono text-[10px] uppercase"
+              disabled={
+                addToServerWishlist.isPending ||
+                removeFromServerWishlist.isPending
+              }
+              className="border-line hover:bg-muted mt-2 flex min-h-11 w-full items-center justify-center gap-3 rounded-lg border font-mono text-[10px] uppercase transition-colors"
             >
-              <Heart size={15} /> Add to wishlist
+              <Heart
+                size={15}
+                fill={
+                  (
+                    authenticated
+                      ? wishlist.data?.items.some(
+                          (item) =>
+                            item.productId === product.id &&
+                            item.variantId === (variant?.id ?? null),
+                        )
+                      : guestWishlistItems.some(
+                          (item) =>
+                            item.productId === product.id &&
+                            item.variantId === (variant?.id ?? null),
+                        )
+                  )
+                    ? "currentColor"
+                    : "none"
+                }
+              />{" "}
+              {(
+                authenticated
+                  ? wishlist.data?.items.some(
+                      (item) =>
+                        item.productId === product.id &&
+                        item.variantId === (variant?.id ?? null),
+                    )
+                  : guestWishlistItems.some(
+                      (item) =>
+                        item.productId === product.id &&
+                        item.variantId === (variant?.id ?? null),
+                    )
+              )
+                ? "Saved object"
+                : "Add to wishlist"}
             </button>
             {notice ? (
               <p
@@ -369,6 +473,28 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
             </p>
           </details>
         </section>
+      </div>
+      <div className="bg-background/95 border-line fixed inset-x-0 bottom-0 z-[60] grid grid-cols-[auto_1fr] items-center gap-4 border-t p-3 pb-[calc(.75rem+env(safe-area-inset-bottom))] backdrop-blur-lg md:hidden">
+        <div className="pl-1">
+          <Price
+            amount={variant?.effectivePrice ?? product.basePrice}
+            currencyCode={product.currencyCode}
+            className="font-mono text-sm font-semibold"
+          />
+          <p className="text-subtle mt-1 max-w-24 truncate font-mono text-[8px] uppercase">
+            {variant?.options.map((option) => option.value).join(" / ") ||
+              "Standard"}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={addToCart}
+          disabled={outOfStock || addToServerCart.isPending}
+          className="bg-acid flex min-h-12 items-center justify-between rounded-lg px-5 font-mono text-[10px] uppercase disabled:opacity-40"
+        >
+          {addToServerCart.isPending ? "Adding…" : "Add to cart"}
+          <ArrowRight size={16} />
+        </button>
       </div>
     </div>
   );

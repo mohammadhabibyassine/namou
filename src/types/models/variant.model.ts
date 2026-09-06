@@ -77,7 +77,7 @@ export interface UpdateVariantDto {
 
 export interface ReplacementProductImageDto {
   id?: string;
-  imageUrl: string;
+  objectKey?: string;
   altText?: string | null;
   sortOrder: number;
   variantId?: string | null;

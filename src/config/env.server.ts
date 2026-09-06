@@ -18,6 +18,10 @@ export const serverEnvironment = serverEnvironmentSchema.parse({
   SITE_URL: process.env.SITE_URL,
   BACKEND_API_URL: process.env.BACKEND_API_URL,
   BACKEND_REQUEST_TIMEOUT_MS: process.env.BACKEND_REQUEST_TIMEOUT_MS,
-  AUTH_SESSION_SECRET: process.env.AUTH_SESSION_SECRET,
+  AUTH_SESSION_SECRET:
+    process.env.AUTH_SESSION_SECRET ??
+    (process.env.NODE_ENV !== "production"
+      ? "namou-dev-auth-session-secret-fallback-at-least-32-chars"
+      : undefined),
   AUTH_REFRESH_TTL_DAYS: process.env.AUTH_REFRESH_TTL_DAYS,
 });

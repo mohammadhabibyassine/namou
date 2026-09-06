@@ -39,7 +39,15 @@ export const queryKeys = {
     products: ["admin", "products"] as const,
     variantConfiguration: (productId: string) =>
       ["admin", "products", productId, "variants"] as const,
+    productImages: (productId: string) =>
+      ["admin", "products", productId, "images"] as const,
     orders: (filters: unknown) => ["admin", "orders", filters] as const,
     order: (id: string) => ["admin", "orders", id] as const,
+    chat: {
+      conversations: (filters: unknown) =>
+        ["admin", "chat", "conversations", filters] as const,
+      messages: (conversationId: string) =>
+        ["admin", "chat", "messages", conversationId] as const,
+    },
   },
 } as const;

@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowDown, ArrowRight, Plus } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { ProductMedia } from "@/components/commerce/product-media";
 import { Price } from "@/components/commerce/price";
+import { CursorPagination } from "@/components/ui/cursor-pagination";
 import { catalogClientApi } from "@/features/catalog/api.client";
 import { queryKeys } from "@/lib/query/keys";
 
@@ -15,7 +16,7 @@ export function AdminProducts() {
     queryFn: ({ pageParam }) =>
       catalogClientApi.products({
         sort: "newest",
-        pageSize: 25,
+        pageSize: 10,
         ...(pageParam ? { cursor: pageParam } : {}),
       }),
     getNextPageParam: (page) =>
@@ -62,6 +63,8 @@ export function AdminProducts() {
                 <ProductMedia
                   src={product.primaryImageUrl}
                   alt={product.title}
+                  slug={product.slug}
+                  category={product.category.name}
                   className="aspect-square rounded-lg"
                   sizes="64px"
                 />
@@ -101,14 +104,13 @@ export function AdminProducts() {
           </p>
         )}
       </section>
-      {query.hasNextPage ? (
-        <button
-          onClick={() => query.fetchNextPage()}
-          className="border-line mx-auto mt-5 flex min-h-10 items-center gap-4 rounded-lg border px-6 font-mono text-[9px] uppercase"
-        >
-          Load more <ArrowDown size={13} />
-        </button>
-      ) : null}
+      <CursorPagination
+        totalLoaded={products.length}
+        hasNextPage={query.hasNextPage}
+        isFetchingNextPage={query.isFetchingNextPage}
+        onLoadMore={() => query.fetchNextPage()}
+        noun="products"
+      />
     </div>
   );
 }

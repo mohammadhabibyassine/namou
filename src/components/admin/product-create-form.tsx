@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ImagePlus, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { adminApi } from "@/features/admin/api";
 import { queryKeys } from "@/lib/query/keys";
@@ -19,12 +19,6 @@ interface VariantDraft {
   stockQuantity: string;
   isDefault: boolean;
   options: Record<string, string>;
-}
-interface ImageDraft {
-  key: number;
-  imageUrl: string;
-  altText: string;
-  variantSku: string;
 }
 let rowKey = 1;
 const nextKey = () => rowKey++;
@@ -242,7 +236,6 @@ export function ProductCreateForm() {
       options: {},
     },
   ]);
-  const [images, setImages] = useState<ImageDraft[]>([]);
   const flatCategories = useMemo(
     () => flatten(categories.data ?? []),
     [categories.data],
@@ -277,12 +270,6 @@ export function ProductCreateForm() {
           attributeTypeId,
           attributeValueId: variant.options[attributeTypeId] ?? "",
         })),
-      })),
-      images: images.map((image, sortOrder) => ({
-        imageUrl: image.imageUrl,
-        ...(image.altText ? { altText: image.altText } : {}),
-        sortOrder,
-        ...(image.variantSku ? { variantSku: image.variantSku } : {}),
       })),
     };
     create.mutate(input);
@@ -414,100 +401,16 @@ export function ProductCreateForm() {
           variants={variants}
           onChange={setVariants}
         />
-        <section className="hairline-panel p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="technical-label">Image URLs / {images.length}</h2>
-              <p className="text-subtle mt-1 text-xs">
-                Product media is URL-based in the current backend.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() =>
-                setImages((rows) => [
-                  ...rows,
-                  { key: nextKey(), imageUrl: "", altText: "", variantSku: "" },
-                ])
-              }
-              className="border-line inline-flex min-h-9 items-center gap-2 rounded-lg border px-3 font-mono text-[8px] uppercase"
-            >
-              <ImagePlus size={13} /> Image
-            </button>
+        <section className="hairline-panel flex flex-col justify-between gap-3 p-5 sm:flex-row sm:items-center">
+          <div>
+            <h2 className="technical-label">Cloudflare product media</h2>
+            <p className="text-subtle mt-1 text-xs">
+              Images are uploaded securely after the product receives its ID.
+            </p>
           </div>
-          <div className="mt-4 space-y-2">
-            {images.map((image, index) => (
-              <div
-                key={image.key}
-                className="border-line grid gap-2 rounded-lg border p-2 sm:grid-cols-[1.4fr_.8fr_.6fr_auto]"
-              >
-                <input
-                  required
-                  type="url"
-                  placeholder="https://…"
-                  value={image.imageUrl}
-                  onChange={(event) =>
-                    setImages((rows) =>
-                      rows.map((row) =>
-                        row.key === image.key
-                          ? { ...row, imageUrl: event.target.value }
-                          : row,
-                      ),
-                    )
-                  }
-                  className="border-line bg-surface h-10 rounded-lg border px-3 text-xs"
-                />
-                <input
-                  placeholder="Alt text"
-                  value={image.altText}
-                  onChange={(event) =>
-                    setImages((rows) =>
-                      rows.map((row) =>
-                        row.key === image.key
-                          ? { ...row, altText: event.target.value }
-                          : row,
-                      ),
-                    )
-                  }
-                  className="border-line bg-surface h-10 rounded-lg border px-3 text-xs"
-                />
-                <select
-                  value={image.variantSku}
-                  onChange={(event) =>
-                    setImages((rows) =>
-                      rows.map((row) =>
-                        row.key === image.key
-                          ? { ...row, variantSku: event.target.value }
-                          : row,
-                      ),
-                    )
-                  }
-                  className="border-line bg-surface h-10 rounded-lg border px-2 font-mono text-[8px] uppercase"
-                >
-                  <option value="">All variants</option>
-                  {variants
-                    .filter((variant) => variant.sku)
-                    .map((variant) => (
-                      <option key={variant.key} value={variant.sku}>
-                        {variant.sku}
-                      </option>
-                    ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setImages((rows) =>
-                      rows.filter((row) => row.key !== image.key),
-                    )
-                  }
-                  className="text-danger grid size-10 place-items-center"
-                  aria-label={`Remove image ${index + 1}`}
-                >
-                  <Trash2 size={13} />
-                </button>
-              </div>
-            ))}
-          </div>
+          <span className="bg-muted rounded-full px-3 py-2 font-mono text-[8px] uppercase">
+            Next step / Media
+          </span>
         </section>
         {create.error ? (
           <p
@@ -524,7 +427,7 @@ export function ProductCreateForm() {
             }
             className="bg-acid min-h-12 min-w-64 rounded-lg px-6 font-mono text-[10px] uppercase disabled:opacity-40"
           >
-            {create.isPending ? "Creating product…" : "Save configuration"}
+            {create.isPending ? "Creating product…" : "Create product & add media"}
           </button>
         </div>
       </form>

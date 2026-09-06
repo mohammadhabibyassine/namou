@@ -4,7 +4,7 @@ import { requirePermission } from "@/lib/auth/dal";
 import { permissions } from "@/types/api";
 
 export const metadata: Metadata = {
-  title: "Variant matrix / Admin",
+  title: "Product workspace / Admin",
   robots: { index: false, follow: false },
 };
 

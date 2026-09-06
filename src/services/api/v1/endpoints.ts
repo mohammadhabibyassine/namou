@@ -33,6 +33,12 @@ export const API_ENDPOINTS = {
     BY_ID: (id: string) => `/products/${id}`,
   },
 
+  UPLOADS: {
+    PRODUCT_PRESIGN: (productId: string) =>
+      `/uploads/products/${productId}/presigned-url`,
+    PRODUCT: (productId: string) => `/uploads/products/${productId}`,
+  },
+
   // Variants & Attributes
   VARIANTS: {
     CONFIGURATION: (productId: string) =>

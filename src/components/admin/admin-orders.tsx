@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Price } from "@/components/commerce/price";
+import { CursorPagination } from "@/components/ui/cursor-pagination";
 import { StatusBadge } from "@/components/orders/order-status";
 import { ordersApi } from "@/features/orders/api";
 import { formatDate } from "@/lib/format/date";
@@ -20,7 +21,7 @@ export function AdminOrders() {
       ordersApi.adminList({
         ...(status ? { status } : {}),
         ...(pageParam ? { cursor: pageParam } : {}),
-        pageSize: 25,
+        pageSize: 10,
       }),
     getNextPageParam: (page) =>
       page.pageInfo.hasNextPage
@@ -108,14 +109,13 @@ export function AdminOrders() {
           </div>
         )}
       </section>
-      {query.hasNextPage ? (
-        <button
-          onClick={() => query.fetchNextPage()}
-          className="border-line mx-auto mt-5 flex min-h-10 items-center gap-4 rounded-lg border px-6 font-mono text-[9px] uppercase"
-        >
-          Load more <ArrowDown size={13} />
-        </button>
-      ) : null}
+      <CursorPagination
+        totalLoaded={orders.length}
+        hasNextPage={query.hasNextPage}
+        isFetchingNextPage={query.isFetchingNextPage}
+        onLoadMore={() => query.fetchNextPage()}
+        noun="orders"
+      />
     </div>
   );
 }
