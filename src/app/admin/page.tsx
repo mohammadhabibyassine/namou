@@ -75,21 +75,24 @@ export default async function AdminPage() {
           <Link
             key={area.href}
             href={area.href}
-            className="group hairline-panel hover:bg-ink flex min-h-56 flex-col justify-between p-5 transition-colors hover:text-white"
+            className="group hairline-panel hover:border-ink hover:bg-ink flex min-h-56 flex-col justify-between p-5 transition-all duration-200 hover:-translate-y-0.5 hover:text-white hover:shadow-xl"
           >
             <div className="flex items-start justify-between">
-              <area.icon size={20} />
-              <span className="text-subtle font-mono text-[9px]">
+              <area.icon
+                size={20}
+                className="group-hover:text-acid transition-colors duration-200"
+              />
+              <span className="text-subtle font-mono text-[9px] transition-colors duration-200 group-hover:text-white/60">
                 0{index + 1}
               </span>
             </div>
             <div>
               <p className="display-title text-4xl">{area.title}</p>
-              <p className="mt-2 font-mono text-[9px] uppercase opacity-55">
+              <p className="text-subtle mt-2 font-mono text-[9px] uppercase transition-colors duration-200 group-hover:text-white/60">
                 {area.label}
               </p>
               <ArrowRight
-                className="mt-5 transition-transform group-hover:translate-x-2"
+                className="group-hover:text-acid mt-5 transition-all duration-200 group-hover:translate-x-2"
                 size={17}
               />
             </div>

@@ -107,10 +107,12 @@ button,
     opacity: 1;
     transform: translate(0, 0) scale(1);
   }
+
   65% {
     opacity: 1;
     transform: translate(calc(50vw - 3rem), calc(-50vh + 3rem)) scale(0.55);
   }
+
   100% {
     opacity: 0;
     transform: translate(calc(50vw - 3rem), calc(-50vh + 3rem)) scale(0.15);
@@ -122,9 +124,11 @@ button,
     opacity: 0;
     transform: translate3d(0, -15vh, 0) rotate(0);
   }
+
   10% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
     transform: translate3d(var(--drift, 0), 95vh, 0) rotate(720deg);
@@ -156,6 +160,59 @@ button,
 }
 
 @media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -15vh, 0) rotate(0);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift, 0), 95vh, 0) rotate(720deg);
+  }
+}
+
+.confetti-piece {
+  animation: confetti-fall var(--duration, 3s) var(--delay, 0s) ease-in forwards;
+}
+
+.fly-to-cart {
+  animation: fly-to-cart 650ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+::selection {
+  background: var(--acid);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .namou-container {
+    width: min(100% - 1rem, 96rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
