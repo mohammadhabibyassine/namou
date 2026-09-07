@@ -22,6 +22,7 @@ import {
 } from "@/hooks/cart";
 import { announceCommerceFeedback } from "@/lib/commerce/feedback";
 import { objectName } from "@/lib/commerce/object-name";
+import { formatCount } from "@/lib/format/count";
 import { multiplyMoney, sumMoney } from "@/lib/format/money";
 import {
   useGuestCommerce,
@@ -183,7 +184,7 @@ export function CartView() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="technical-label text-subtle">Cart / Your selection</p>
           <p className="technical-label text-subtle">
-            {String(unitCount).padStart(2, "0")} units / {items.length} objects
+            {formatCount(unitCount)} units / {items.length} objects
           </p>
         </div>
         <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">

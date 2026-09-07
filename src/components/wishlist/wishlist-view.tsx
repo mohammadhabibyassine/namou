@@ -18,6 +18,7 @@ import {
 import { useSession } from "@/providers/session-provider";
 import { announceCommerceFeedback } from "@/lib/commerce/feedback";
 import { objectName } from "@/lib/commerce/object-name";
+import { formatCount } from "@/lib/format/count";
 
 export function WishlistView() {
   const { authenticated, status } = useSession();
@@ -99,7 +100,7 @@ export function WishlistView() {
       <div className="border-line flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-end">
         <div>
           <p className="technical-label text-subtle">
-            Personal archive / {String(items.length).padStart(2, "0")}
+            Personal archive / {formatCount(items.length)}
           </p>
           <h1 className="display-title mt-2 text-7xl sm:text-9xl">
             Saved objects

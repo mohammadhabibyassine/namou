@@ -12,6 +12,7 @@ import { useWishlist } from "@/hooks/wishlist";
 import { useGuestCommerce } from "@/providers/guest-commerce-provider";
 import { useSession } from "@/providers/session-provider";
 import { cn } from "@/lib/utils/cn";
+import { formatCount } from "@/lib/format/count";
 
 const links = [
   { href: "/shop", label: "Shop" },
@@ -108,7 +109,7 @@ export function StoreHeader() {
             >
               <ShoppingBag aria-hidden="true" size={17} strokeWidth={1.6} />
               <span className="bg-acid text-ink absolute top-1.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 font-mono text-[9px] leading-none font-bold shadow-sm">
-                {cartCount > 99 ? "99+" : String(cartCount).padStart(2, "0")}
+                {cartCount > 99 ? "99+" : formatCount(cartCount)}
               </span>
             </Link>
             <button
@@ -143,7 +144,7 @@ export function StoreHeader() {
               ...links,
               {
                 href: "/wishlist",
-                label: `Wishlist / ${String(wishlistCount).padStart(2, "0")}`,
+                label: `Wishlist / ${formatCount(wishlistCount)}`,
               },
               {
                 href: authenticated ? "/account" : "/login",
