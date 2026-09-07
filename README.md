@@ -51,6 +51,7 @@ cp .env.example .env.local
 
 Set the local values in `.env.local`:
 
+
 ```dotenv
 BACKEND_API_URL="http://localhost:3000"
 BACKEND_REQUEST_TIMEOUT_MS="10000"
