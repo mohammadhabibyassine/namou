@@ -42,6 +42,7 @@ const ACK_TIMEOUT_MS = 10_000;
 export function SocketProvider({ children }: { children: ReactNode }) {
   const { authenticated } = useSession();
   const socketRef = useRef<ChatSocket | null>(null);
+  const joinedConversationIdsRef = useRef(new Set<string>());
   const listenersRef = useRef(new Set<(message: ChatMessage) => void>());
   const connectingRef = useRef<Promise<void> | null>(null);
   const [state, setState] = useState<SocketConnectionState>(
@@ -60,6 +61,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const disconnect = useCallback(() => {
+    joinedConversationIdsRef.current.clear();
     destroySocket();
     setError(null);
     setState(publicEnvironment.chatEnabled ? "idle" : "disabled");
@@ -97,6 +99,24 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         authRetryUsed = false;
         setState("connected");
         setError(null);
+
+        // Socket.IO room membership belongs to an individual connection and is
+        // lost whenever that connection drops. Restore every active room after
+        // a reconnect so the UI does not appear connected while silently
+        // missing new messages.
+        for (const conversationId of joinedConversationIdsRef.current) {
+          void socket
+            .timeout(ACK_TIMEOUT_MS)
+            .emitWithAck("conversation:join", { conversationId })
+            .catch((joinError: unknown) => {
+              setState("error");
+              setError(
+                joinError instanceof Error
+                  ? joinError.message
+                  : "Unable to restore the live chat channel",
+              );
+            });
+        }
       });
       socket.on("disconnect", () => setState("disconnected"));
       socket.on("message:created", (message) => {
@@ -136,10 +156,19 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   }, [authenticated]);
 
   useEffect(() => {
-    if (!authenticated) destroySocket();
+    if (!authenticated) {
+      joinedConversationIdsRef.current.clear();
+      destroySocket();
+    }
   }, [authenticated, destroySocket]);
 
-  useEffect(() => destroySocket, [destroySocket]);
+  useEffect(
+    () => () => {
+      joinedConversationIdsRef.current.clear();
+      destroySocket();
+    },
+    [destroySocket],
+  );
 
   const requireSocket = useCallback(async (): Promise<ChatSocket> => {
     await connect();
@@ -150,17 +179,24 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
   const joinConversation = useCallback(
     async (conversationId: string) => {
-      const socket = await requireSocket();
-      await socket
-        .timeout(ACK_TIMEOUT_MS)
-        .emitWithAck("conversation:join", { conversationId });
+      joinedConversationIdsRef.current.add(conversationId);
+      try {
+        const socket = await requireSocket();
+        await socket
+          .timeout(ACK_TIMEOUT_MS)
+          .emitWithAck("conversation:join", { conversationId });
+      } catch (joinError) {
+        joinedConversationIdsRef.current.delete(conversationId);
+        throw joinError;
+      }
     },
     [requireSocket],
   );
 
   const leaveConversation = useCallback(async (conversationId: string) => {
+    joinedConversationIdsRef.current.delete(conversationId);
     const socket = socketRef.current;
-    if (!socket) return;
+    if (!socket?.connected) return;
     await socket
       .timeout(ACK_TIMEOUT_MS)
       .emitWithAck("conversation:leave", { conversationId });

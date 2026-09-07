@@ -33,7 +33,9 @@ export function createChatSocket(token: string): ChatSocket {
     autoConnect: false,
     auth: { token },
     reconnection: true,
-    reconnectionAttempts: 8,
+    // A production deployment or temporary network outage can outlast a small
+    // retry budget. Keep recovering while the authenticated page remains open.
+    reconnectionAttempts: Infinity,
     reconnectionDelay: 1_000,
     reconnectionDelayMax: 10_000,
     randomizationFactor: 0.5,

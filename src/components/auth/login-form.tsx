@@ -27,7 +27,6 @@ export function LoginForm({ nextPath }: { nextPath: string | undefined }) {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
-  const destination = safeRedirectPath(nextPath, "/account");
 
   return (
     <div className="namou-container grid items-stretch gap-4 py-6 lg:min-h-[44rem] lg:grid-cols-[1.1fr_1fr]">
@@ -55,7 +54,14 @@ export function LoginForm({ nextPath }: { nextPath: string | undefined }) {
           <form
             className="mt-10 space-y-5"
             onSubmit={handleSubmit(async (values) => {
-              await login.mutateAsync(values);
+              const result = await login.mutateAsync(values);
+              const hasAdminAccess = result.user.permissions.some((permission) =>
+                permission.startsWith("manage_"),
+              );
+              const destination = safeRedirectPath(
+                nextPath,
+                hasAdminAccess ? "/admin" : "/",
+              );
               router.push(destination);
             })}
             noValidate
