@@ -30,9 +30,7 @@ export function CategoryEditor({
   const [parentId, setParentId] = useState(
     category ? (category.parentId ?? "") : (initialParentId ?? ""),
   );
-  const [sortOrder, setSortOrder] = useState(
-    String(category?.sortOrder ?? 0),
-  );
+  const [sortOrder, setSortOrder] = useState(String(category?.sortOrder ?? 0));
 
   const refresh = async () => {
     await queryClient.invalidateQueries({
@@ -94,7 +92,7 @@ export function CategoryEditor({
                   remove.mutate();
                 }
               }}
-              className="text-danger grid size-10 place-items-center rounded-lg hover:bg-red-50 cursor-pointer"
+              className="text-danger grid size-10 cursor-pointer place-items-center rounded-lg hover:bg-red-50"
               aria-label={`Delete ${category.name}`}
               title="Delete category"
             >
@@ -104,7 +102,7 @@ export function CategoryEditor({
           <button
             type="button"
             onClick={onComplete}
-            className="text-subtle hover:text-ink grid size-10 place-items-center rounded-lg hover:bg-muted cursor-pointer"
+            className="text-subtle hover:text-ink hover:bg-muted grid size-10 cursor-pointer place-items-center rounded-lg"
             aria-label="Close editor"
             title="Close editor"
           >
@@ -194,7 +192,7 @@ export function CategoryEditor({
 
         <button
           disabled={!name.trim() || !slug.trim() || save.isPending}
-          className="bg-ink min-h-11 w-full rounded-lg font-mono text-[10px] text-white uppercase disabled:opacity-40 cursor-pointer"
+          className="bg-ink min-h-11 w-full cursor-pointer rounded-lg font-mono text-[10px] text-white uppercase disabled:opacity-40"
         >
           {save.isPending ? "Saving…" : "Save changes"}
         </button>

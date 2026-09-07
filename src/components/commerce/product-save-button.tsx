@@ -17,7 +17,7 @@ export function ProductSaveButton({ product }: { product: ProductListItem }) {
   const { authenticated } = useSession();
   const guestItems = useGuestCommerce((state) => state.wishlistItems);
   const toggleGuest = useGuestCommerce((state) => state.toggleWishlistItem);
-  const wishlist = useWishlist({ pageSize: 100 });
+  const wishlist = useWishlist({ pageSize: 100 }, { enabled: authenticated });
   const add = useAddToWishlist();
   const remove = useRemoveFromWishlist();
   const [optimisticSaved, setOptimisticSaved] = useState<{
@@ -83,7 +83,7 @@ export function ProductSaveButton({ product }: { product: ProductListItem }) {
             variantId: null,
             title: product.title,
             slug: product.slug,
-            imageUrl: product.primaryImageUrl,
+            imageUrl: product.primaryImageUrl ?? null,
             price: product.minimumPrice,
             currencyCode: product.currencyCode,
           });

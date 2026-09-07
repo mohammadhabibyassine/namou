@@ -83,8 +83,8 @@ button:disabled,
 .display-title {
   font-family: var(--font-anton), Impact, sans-serif;
   font-weight: 400;
-  letter-spacing: -0.035em;
-  line-height: 0.84;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
   text-transform: uppercase;
 }
 
@@ -96,10 +96,10 @@ button:disabled,
   text-transform: uppercase;
 }
 
-.hairline-panel {
+@utility hairline-panel {
   border: 1px solid color-mix(in srgb, var(--line), transparent 12%);
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface), transparent 10%);
+  background-color: color-mix(in srgb, var(--surface), transparent 10%);
 }
 
 .technical-grid {

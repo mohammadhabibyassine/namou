@@ -7,6 +7,7 @@ import {
 import {
   createProduct,
   deleteProduct,
+  getAdminProductById,
   updateProduct,
 } from "@/services/api/v1/products.api";
 import {
@@ -43,12 +44,11 @@ export const adminApi = {
   createProduct: (input: ProductCreateInput) => createProduct(input),
   updateProduct: (id: string, input: Partial<ProductMetadataInput>) =>
     updateProduct(id, input),
+  product: getAdminProductById,
   deleteProduct,
   variantConfiguration: getVariantConfiguration,
   images: getProductImages,
   replaceVariantConfiguration,
-  replaceImages: (
-    productId: string,
-    input: ReplaceProductImagesDto,
-  ) => replaceProductImages(productId, input),
+  replaceImages: (productId: string, input: ReplaceProductImagesDto) =>
+    replaceProductImages(productId, input),
 };

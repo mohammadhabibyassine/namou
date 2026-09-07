@@ -13,6 +13,8 @@ export function StoreFooter() {
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-3 font-mono text-[10px] uppercase">
           <Link href="/shop">Shop</Link>
+          <Link href="/drops">Drops</Link>
+          <Link href="/categories">Categories</Link>
           <Link href="/account">Account</Link>
           <Link href="/orders">Orders</Link>
           <Link href="/admin">Admin</Link>

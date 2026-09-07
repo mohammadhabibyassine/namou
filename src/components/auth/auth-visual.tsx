@@ -1,26 +1,67 @@
+import Image from "next/image";
+
 export function AuthVisual() {
   return (
-    <div className="relative hidden min-h-[42rem] overflow-hidden rounded-xl bg-[radial-gradient(circle_at_40%_38%,#3b403d,#0b0d0d_68%)] lg:block">
-      <div className="absolute top-[44%] left-1/2 h-[64%] w-[55%] -translate-x-1/2 -translate-y-1/2 -rotate-[28deg] rounded-[22%] border border-white/10 bg-gradient-to-br from-[#444945] via-[#141716] to-[#292d2a] shadow-[0_35px_80px_rgb(0_0_0/.65)] before:absolute before:top-[18%] before:-left-[35%] before:h-[14%] before:w-[165%] before:rounded-full before:border-[14px] before:border-[#171a19] after:absolute after:inset-[12%] after:rounded-[18%] after:border after:border-white/20" />
-      <div className="absolute inset-x-7 top-7 flex justify-between font-mono text-[9px] text-white/55 uppercase">
-        <span>
-          37.5665° N<br />
-          126.9780° E
-        </span>
-        <span className="text-right">
-          Identity layer
-          <br />
-          Secure access
-        </span>
-      </div>
-      <div className="absolute inset-x-8 bottom-8 flex items-end justify-between text-white">
+    <div className="relative hidden min-h-[38rem] overflow-hidden rounded-xl border border-white/10 bg-[#0c0e0e] lg:block lg:min-h-[44rem]">
+      {/* High-Resolution Campaign Imagery */}
+      <Image
+        src="/images/auth-editorial.jpg"
+        alt="Namou Identity Campaign - Technical Outerwear"
+        fill
+        priority
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        className="object-cover object-center brightness-95 contrast-[1.08] transition-transform duration-700 motion-safe:hover:scale-105"
+      />
+
+      {/* Cinematic Vignette & Gradient Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/60" />
+      <div className="bg-radial-at-c absolute inset-0 from-transparent via-transparent to-black/50" />
+
+      {/* Subtle Tactical HUD Grid Lines */}
+      <div
+        className="pointer-events-none absolute inset-0 [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:56px_56px] opacity-15"
+        aria-hidden="true"
+      />
+
+      {/* Top HUD Metadata */}
+      <div className="relative z-10 flex items-start justify-between p-8 font-mono text-[9px] tracking-widest text-white/70 uppercase">
         <div>
-          <p className="text-4xl font-black tracking-[.14em]">NAMOU</p>
-          <p className="mt-2 font-mono text-[9px] text-white/50 uppercase">
-            Move to begin.
+          <span className="block text-white/40">Location Coordinates</span>
+          <span className="font-medium text-white/80">
+            37.5665° N · 126.9780° E
+          </span>
+        </div>
+        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1 backdrop-blur-md">
+          <span className="bg-acid size-1.5 animate-pulse rounded-full" />
+          <span className="text-acid">Identity System</span>
+        </div>
+      </div>
+
+      {/* Center Atmospheric Quote / Spec */}
+      <div className="relative z-10 my-auto px-8 py-16">
+        <span className="border-acid block border-l-2 pl-3 font-mono text-[10px] tracking-widest text-white/60 uppercase">
+          Protocol // N-02
+        </span>
+        <h2 className="mt-2 font-mono text-2xl font-bold tracking-tight text-white uppercase sm:text-3xl">
+          Your Objects.
+          <br />
+          Your Movement.
+        </h2>
+      </div>
+
+      {/* Bottom Brand Mark & Status */}
+      <div className="relative z-10 flex items-end justify-between border-t border-white/10 bg-black/30 p-8 text-white backdrop-blur-sm">
+        <div>
+          <p className="text-2xl font-black tracking-[.18em] text-white">
+            NAMOU
+          </p>
+          <p className="mt-1 font-mono text-[9px] tracking-wider text-white/50 uppercase">
+            Move to begin · Encrypted session
           </p>
         </div>
-        <span className="bg-acid size-2 rounded-full" />
+        <span className="font-mono text-[9px] tracking-widest text-white/40 uppercase">
+          Secured Port
+        </span>
       </div>
     </div>
   );

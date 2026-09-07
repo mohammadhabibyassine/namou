@@ -2,10 +2,10 @@ import Decimal from "decimal.js";
 
 export function formatMoney(
   amount: string,
-  currencyCode: string,
-  locale?: string,
+  currencyCode = "USD",
+  locale = "en-US",
 ): string {
-  const numericAmount = new Decimal(amount).toNumber();
+  const numericAmount = new Decimal(amount || "0").toNumber();
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currencyCode,

@@ -55,7 +55,7 @@ export function ProductQuickAdd({
             productId: detail.id,
             title: detail.title,
             slug: detail.slug,
-            imageUrl: product.primaryImageUrl,
+            imageUrl: product.primaryImageUrl ?? null,
             sku: variant.sku,
             options: variant.options.map((option) => ({
               attributeType: option.attributeTypeName,

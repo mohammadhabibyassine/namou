@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ShoppingBag, Trash2 } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  ShoppingBag,
+  Trash2,
+} from "lucide-react";
 import { EmptyState } from "@/components/commerce/empty-state";
 import { Price } from "@/components/commerce/price";
 import { ProductMedia } from "@/components/commerce/product-media";
@@ -25,7 +31,7 @@ export function CartView() {
   const guestItems = useGuestCommerce((state) => state.cartItems);
   const setGuestQuantity = useGuestCommerce((state) => state.setCartQuantity);
   const removeGuestItem = useGuestCommerce((state) => state.removeCartItem);
-  const cartQuery = useCart();
+  const cartQuery = useCart({ enabled: authenticated });
   const quantityMutation = useSetCartItemQuantity();
   const removeMutation = useRemoveCartItem();
   const mutationPending =
@@ -49,6 +55,7 @@ export function CartView() {
     : guestItems.map((item) => ({
         ...item,
         id: item.variantId,
+        imageUrl: item.imageUrl ?? null,
         availableQuantity: 999,
         available: true,
       }));
@@ -73,7 +80,12 @@ export function CartView() {
     return (
       <div className="namou-container py-8">
         <EmptyState
-          code="N/ERR"
+          icon={
+            <AlertCircle
+              className="size-14 stroke-[1.25] text-amber-600 sm:size-16"
+              aria-hidden="true"
+            />
+          }
           title="Cart link interrupted."
           message="We could not load your cart. Your items are still stored safely on the server."
           actionLabel="Try again"
@@ -86,7 +98,12 @@ export function CartView() {
     return (
       <div className="namou-container py-8">
         <EmptyState
-          code="N/00"
+          icon={
+            <ShoppingBag
+              className="size-14 stroke-[1.25] sm:size-16"
+              aria-hidden="true"
+            />
+          }
           title="Your cart has room to move."
           message="Nothing here yet. Enter the system and find an object built for your next move."
           actionLabel="Enter the shop"

@@ -22,18 +22,28 @@ import { useAuthStore } from "@/store";
 export const WISHLIST_QUERY_KEY = (query?: ListWishlistQueryDto) =>
   queryKeys.wishlist.page(query ?? {});
 
-export const useWishlist = (query?: ListWishlistQueryDto) => {
+export const useWishlist = (
+  query?: ListWishlistQueryDto,
+  options?: { enabled?: boolean },
+) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const enabled =
+    options?.enabled !== undefined ? options.enabled : isAuthenticated;
 
   return useQuery({
     queryKey: WISHLIST_QUERY_KEY(query),
     queryFn: () => getWishlist(query),
-    enabled: isAuthenticated,
+    enabled,
   });
 };
 
-export const useInfiniteWishlist = (pageSize = 20) => {
+export const useInfiniteWishlist = (
+  pageSize = 20,
+  options?: { enabled?: boolean },
+) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const enabled =
+    options?.enabled !== undefined ? options.enabled : isAuthenticated;
 
   return useInfiniteQuery({
     queryKey: queryKeys.wishlist.list,
@@ -47,7 +57,7 @@ export const useInfiniteWishlist = (pageSize = 20) => {
       page.pageInfo.hasNextPage
         ? (page.pageInfo.endCursor ?? undefined)
         : undefined,
-    enabled: isAuthenticated,
+    enabled,
   });
 };
 
@@ -57,8 +67,11 @@ export const useAddToWishlist = () => {
   return useMutation({
     mutationFn: (input: AddWishlistItemDto) => addWishlistItem(input),
     onSuccess: (updatedWishlist) => {
-      queryClient.setQueryData(WISHLIST_QUERY_KEY(), updatedWishlist);
-      queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
+      queryClient.setQueriesData(
+        { queryKey: queryKeys.wishlist.all },
+        updatedWishlist,
+      );
+      void queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
     },
   });
 };
@@ -69,8 +82,11 @@ export const useRemoveFromWishlist = () => {
   return useMutation({
     mutationFn: (wishlistItemId: string) => removeWishlistItem(wishlistItemId),
     onSuccess: (updatedWishlist) => {
-      queryClient.setQueryData(WISHLIST_QUERY_KEY(), updatedWishlist);
-      queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
+      queryClient.setQueriesData(
+        { queryKey: queryKeys.wishlist.all },
+        updatedWishlist,
+      );
+      void queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
     },
   });
 };
@@ -81,8 +97,11 @@ export const useMergeWishlist = () => {
   return useMutation({
     mutationFn: (input: MergeWishlistDto) => mergeWishlist(input),
     onSuccess: (updatedWishlist) => {
-      queryClient.setQueryData(WISHLIST_QUERY_KEY(), updatedWishlist);
-      queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
+      queryClient.setQueriesData(
+        { queryKey: queryKeys.wishlist.all },
+        updatedWishlist,
+      );
+      void queryClient.invalidateQueries({ queryKey: queryKeys.wishlist.all });
     },
   });
 };

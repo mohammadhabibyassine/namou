@@ -37,6 +37,7 @@ export const queryKeys = {
     categories: ["admin", "categories"] as const,
     attributes: ["admin", "attributes"] as const,
     products: ["admin", "products"] as const,
+    product: (id: string) => ["admin", "products", id] as const,
     variantConfiguration: (productId: string) =>
       ["admin", "products", productId, "variants"] as const,
     productImages: (productId: string) =>

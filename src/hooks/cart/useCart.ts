@@ -16,9 +16,11 @@ import { useAuthStore, useCartStore } from "@/store";
 
 export const CART_QUERY_KEY = queryKeys.cart;
 
-export const useCart = () => {
+export const useCart = (options?: { enabled?: boolean }) => {
   const setCart = useCartStore((state) => state.setCart);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const enabled =
+    options?.enabled !== undefined ? options.enabled : isAuthenticated;
 
   return useQuery({
     queryKey: CART_QUERY_KEY,
@@ -27,7 +29,7 @@ export const useCart = () => {
       setCart(cart);
       return cart;
     },
-    enabled: isAuthenticated,
+    enabled,
   });
 };
 
@@ -40,6 +42,7 @@ export const useAddToCart = () => {
     onSuccess: (updatedCart) => {
       setCart(updatedCart);
       queryClient.setQueryData(CART_QUERY_KEY, updatedCart);
+      void queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
     },
   });
 };
@@ -59,6 +62,7 @@ export const useSetCartItemQuantity = () => {
     onSuccess: (updatedCart) => {
       setCart(updatedCart);
       queryClient.setQueryData(CART_QUERY_KEY, updatedCart);
+      void queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
     },
   });
 };
@@ -72,6 +76,7 @@ export const useRemoveCartItem = () => {
     onSuccess: (updatedCart) => {
       setCart(updatedCart);
       queryClient.setQueryData(CART_QUERY_KEY, updatedCart);
+      void queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
     },
   });
 };
@@ -85,6 +90,7 @@ export const useMergeCart = () => {
     onSuccess: (updatedCart) => {
       setCart(updatedCart);
       queryClient.setQueryData(CART_QUERY_KEY, updatedCart);
+      void queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
     },
   });
 };

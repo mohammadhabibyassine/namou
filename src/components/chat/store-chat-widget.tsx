@@ -57,26 +57,27 @@ export function StoreChatWidget() {
   });
 
   useEffect(() => {
-    if (!open || !active) return;
+    const conversationId = active?.id;
+    if (!open || !conversationId) return;
     let mounted = true;
     void connect()
       .then(async () => {
-        if (mounted) await joinConversation(active.id);
+        if (mounted) await joinConversation(conversationId);
       })
       .catch(() => undefined);
     const unsubscribe = subscribeToMessages((message) => {
-      if (message.conversationId === active.id)
+      if (message.conversationId === conversationId)
         void queryClient.invalidateQueries({
-          queryKey: queryKeys.chat.messages(active.id),
+          queryKey: queryKeys.chat.messages(conversationId),
         });
     });
     return () => {
       mounted = false;
       unsubscribe();
-      void leaveConversation(active.id).catch(() => undefined);
+      void leaveConversation(conversationId).catch(() => undefined);
     };
   }, [
-    active,
+    active?.id,
     connect,
     joinConversation,
     leaveConversation,

@@ -17,6 +17,8 @@ import { useAuthStore } from "@/store";
 import { setOnUnauthorized } from "@/utils/errorHandler";
 import { protectedRoutePrefixes } from "@/lib/auth/constants";
 
+const PUBLIC_QUERY_ROOTS = new Set(["products", "categories"]);
+
 interface SessionContextValue {
   user: SessionUser | null;
   authenticated: boolean;
@@ -58,7 +60,12 @@ export function SessionProvider({
   useEffect(() => {
     setOnUnauthorized(() => {
       setUser(null);
-      queryClient.removeQueries();
+      queryClient.removeQueries({
+        predicate: (query) => {
+          const root = query.queryKey[0];
+          return typeof root === "string" && !PUBLIC_QUERY_ROOTS.has(root);
+        },
+      });
       if (
         protectedRoutePrefixes.some(
           (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),

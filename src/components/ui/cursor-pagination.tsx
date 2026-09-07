@@ -51,7 +51,8 @@ export function CursorPagination({
       ) : null}
       {totalLoaded > 0 ? (
         <p className="text-subtle font-mono text-[8px] uppercase">
-          Showing {totalLoaded} {totalLoaded === 1 ? noun.replace(/s$/, "") : noun}
+          Showing {totalLoaded}{" "}
+          {totalLoaded === 1 ? noun.replace(/s$/, "") : noun}
         </p>
       ) : null}
     </div>

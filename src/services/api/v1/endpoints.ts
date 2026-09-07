@@ -31,6 +31,7 @@ export const API_ENDPOINTS = {
     FACETS: "/products/facets",
     BY_SLUG: (slug: string) => `/products/${slug}`,
     BY_ID: (id: string) => `/products/${id}`,
+    ADMIN_BY_ID: (id: string) => `/products/admin/${id}`,
   },
 
   UPLOADS: {

@@ -3,16 +3,16 @@ import { cn } from "@/lib/utils/cn";
 
 export function Price({
   amount,
-  currencyCode,
+  currencyCode = "USD",
   className,
 }: {
   amount: string;
-  currencyCode: string;
+  currencyCode?: string;
   className?: string;
 }) {
   return (
     <span className={cn("font-mono text-xs tabular-nums", className)}>
-      {formatMoney(amount, currencyCode)}
+      {formatMoney(amount, currencyCode || "USD")}
     </span>
   );
 }

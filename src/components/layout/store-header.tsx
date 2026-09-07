@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils/cn";
 
 const links = [
   { href: "/shop", label: "Shop" },
-  { href: "/shop?sort=newest", label: "Drops" },
-  { href: "/shop#catalog-filters", label: "Categories" },
+  { href: "/drops", label: "Drops" },
+  { href: "/categories", label: "Categories" },
 ] as const;
 
 function Count({ value }: { value: number }) {
@@ -38,8 +38,8 @@ export function StoreHeader() {
   const guestWishlistCount = useGuestCommerce(
     (state) => state.wishlistItems.length,
   );
-  const cart = useCart();
-  const wishlist = useWishlist({ pageSize: 100 });
+  const cart = useCart({ enabled: authenticated });
+  const wishlist = useWishlist({ pageSize: 100 }, { enabled: authenticated });
   const cartCount = authenticated
     ? (cart.data?.quantityTotal ?? 0)
     : guestCartCount;
@@ -62,7 +62,7 @@ export function StoreHeader() {
                 key={link.label}
                 href={link.href}
                 aria-current={
-                  pathname === "/shop" && link.label === "Shop"
+                  pathname === link.href || pathname.startsWith(`${link.href}/`)
                     ? "page"
                     : undefined
                 }
@@ -90,7 +90,17 @@ export function StoreHeader() {
               className="hover:bg-muted relative hidden size-11 place-items-center rounded-full transition-colors sm:grid"
               aria-label={`Wishlist${wishlistCount ? `, ${wishlistCount} items` : ""}`}
             >
-              <Heart aria-hidden="true" size={19} strokeWidth={1.6} />
+              <Heart
+                aria-hidden="true"
+                size={19}
+                strokeWidth={1.6}
+                className={wishlistCount > 0 ? "fill-current" : undefined}
+              />
+              {wishlistCount > 0 ? (
+                <span className="bg-acid text-ink absolute top-1.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 font-mono text-[9px] leading-none font-bold shadow-sm">
+                  {wishlistCount > 99 ? "99+" : wishlistCount}
+                </span>
+              ) : null}
             </Link>
             <Link
               href={authenticated ? "/account" : "/login"}

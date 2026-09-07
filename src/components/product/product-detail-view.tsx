@@ -49,7 +49,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
   const addToServerCart = useAddToCart();
   const addToServerWishlist = useAddToWishlist();
   const removeFromServerWishlist = useRemoveFromWishlist();
-  const wishlist = useWishlist({ pageSize: 100 });
+  const wishlist = useWishlist({ pageSize: 100 }, { enabled: authenticated });
   const addGuestCartItem = useGuestCommerce((state) => state.addCartItem);
   const guestWishlistItems = useGuestCommerce((state) => state.wishlistItems);
   const toggleGuestWishlistItem = useGuestCommerce(

@@ -1,5 +1,16 @@
 import { z } from "zod";
 
+const chatEnabled = process.env.NEXT_PUBLIC_CHAT_ENABLED === "true";
+if (
+  process.env.NODE_ENV === "production" &&
+  chatEnabled &&
+  !process.env.NEXT_PUBLIC_SOCKET_URL
+) {
+  throw new Error(
+    "NEXT_PUBLIC_SOCKET_URL is required when chat is enabled in production",
+  );
+}
+
 const publicEnvironmentSchema = z.object({
   NEXT_PUBLIC_CHAT_ENABLED: z.enum(["true", "false"]).default("false"),
   NEXT_PUBLIC_SOCKET_URL: z.url().default("http://localhost:3000"),

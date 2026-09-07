@@ -24,7 +24,10 @@ export function AdminProducts() {
         ? (page.pageInfo.endCursor ?? undefined)
         : undefined,
   });
-  const products = query.data?.pages.flatMap((page) => page.items) ?? [];
+  const products =
+    query.data?.pages && Array.isArray(query.data.pages)
+      ? query.data.pages.flatMap((page) => page.items ?? [])
+      : [];
   return (
     <div className="p-4 sm:p-7">
       <div className="flex items-end justify-between gap-4">
@@ -42,9 +45,8 @@ export function AdminProducts() {
         </Link>
       </div>
       <div className="mt-7 rounded-xl border border-[#ded3a7] bg-[#f6f0d8] p-3 font-mono text-[8px] text-[#765b00] uppercase">
-        The current backend exposes only the public active catalog as a product
-        index. Inactive and deleted products require a future admin list
-        endpoint.
+        The list currently shows active catalog products. Product editing loads
+        authoritative metadata through the protected admin detail endpoint.
       </div>
       <section className="hairline-panel mt-4 overflow-hidden">
         {query.isPending ? (
@@ -91,9 +93,9 @@ export function AdminProducts() {
                 </div>
                 <Link
                   href={`/admin/products/${product.id}`}
-                  className="bg-ink inline-flex min-h-9 items-center gap-4 rounded-lg px-4 font-mono text-[9px] text-white uppercase"
+                  className="bg-ink inline-flex min-h-9 items-center gap-2 rounded-lg px-4 font-mono text-[9px] tracking-wider text-white uppercase shadow-sm transition-colors hover:bg-black"
                 >
-                  Variants <ArrowRight size={13} />
+                  View & Edit <ArrowRight size={13} />
                 </Link>
               </article>
             ))}

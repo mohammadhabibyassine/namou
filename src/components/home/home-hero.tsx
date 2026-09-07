@@ -10,7 +10,9 @@ export function HomeHero() {
         <div className="border-line relative flex min-h-[31rem] flex-col justify-between overflow-hidden border-b p-6 sm:p-9 lg:border-r lg:border-b-0">
           <span className="technical-label text-subtle">
             Drop index{" "}
-            <strong className="text-foreground ml-7 font-medium">N/02</strong>
+            <strong className="text-foreground ml-7 font-medium">
+              DROP 02
+            </strong>
           </span>
           <div className="relative z-10 py-12">
             <h1 className="display-title text-[clamp(5.8rem,12vw,11rem)]">
@@ -44,17 +46,37 @@ export function HomeHero() {
         </div>
         <div className="group border-line relative min-h-[28rem] overflow-hidden border-b bg-[#111215] lg:border-r lg:border-b-0">
           <Image
-            src="/images/home-editorial.jpg"
+            src="/images/hero-editorial.jpg"
             alt="Namou technical outerwear in motion"
             fill
             priority
             sizes="(min-width: 1024px) 30vw, 100vw"
-            className="object-cover object-center contrast-125 grayscale transition-transform duration-700 motion-safe:group-hover:scale-105"
+            className="object-cover object-center contrast-105 transition-transform duration-700 motion-safe:group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
-          <span className="absolute bottom-5 left-5 font-mono text-[9px] text-white/55 uppercase">
-            Field shell / 02
-          </span>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/40" />
+
+          {/* Top Editorial Label */}
+          <div className="absolute top-6 left-6 z-10 flex items-center gap-2">
+            <span className="bg-acid size-1.5 animate-pulse rounded-full" />
+            <span className="font-mono text-[9px] tracking-widest text-white/70 uppercase">
+              Lookbook // N-02
+            </span>
+          </div>
+
+          {/* Bottom Spec & Classification */}
+          <div className="absolute inset-x-6 bottom-6 z-10 flex items-end justify-between border-t border-white/10 pt-3">
+            <div>
+              <span className="text-acid block font-mono text-[9px] tracking-wider uppercase">
+                Technical Outerwear
+              </span>
+              <span className="font-mono text-xs font-semibold tracking-wide text-white uppercase">
+                Field Shell / 02
+              </span>
+            </div>
+            <span className="font-mono text-[9px] text-white/50 uppercase">
+              Stormproof Spec
+            </span>
+          </div>
         </div>
         <HeroObject />
       </div>

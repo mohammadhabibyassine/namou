@@ -15,7 +15,14 @@ let refreshOperation: Promise<void> | null = null;
 
 const performRefresh = () =>
   axios
-    .post("/api/auth/refresh", {}, { withCredentials: true })
+    .post(
+      "/api/auth/refresh",
+      {},
+      {
+        withCredentials: true,
+        timeout: API_CONFIG.timeout,
+      },
+    )
     .then(() => undefined);
 
 export const refreshBrowserSession = (): Promise<void> => {

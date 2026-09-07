@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, MoveRight, X } from "lucide-react";
+import { ArrowRight, Heart, MoveRight, X } from "lucide-react";
 import { EmptyState } from "@/components/commerce/empty-state";
 import { Price } from "@/components/commerce/price";
 import { ProductMedia } from "@/components/commerce/product-media";
@@ -23,7 +23,7 @@ export function WishlistView() {
   const guestItems = useGuestCommerce((state) => state.wishlistItems);
   const toggleGuest = useGuestCommerce((state) => state.toggleWishlistItem);
   const addGuestCart = useGuestCommerce((state) => state.addCartItem);
-  const query = useInfiniteWishlist();
+  const query = useInfiniteWishlist(20, { enabled: authenticated });
   const removeMutation = useRemoveFromWishlist();
   const moveMutation = useMoveWishlistItemToCart();
   const items = authenticated
@@ -42,6 +42,7 @@ export function WishlistView() {
     : guestItems.map((item) => ({
         ...item,
         id: `${item.productId}:${item.variantId ?? "product"}`,
+        imageUrl: item.imageUrl ?? null,
         available: true,
         sku: null,
       }));
@@ -60,7 +61,12 @@ export function WishlistView() {
     return (
       <div className="namou-container py-8">
         <EmptyState
-          code="N/00"
+          icon={
+            <Heart
+              className="size-14 stroke-[1.25] sm:size-16"
+              aria-hidden="true"
+            />
+          }
           title="Nothing saved yet."
           message="Build a collection of objects to return to later. Your saved system stays ready when you do."
           actionLabel="View all objects"

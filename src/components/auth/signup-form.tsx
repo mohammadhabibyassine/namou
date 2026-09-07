@@ -40,9 +40,9 @@ export function SignupForm({ nextPath }: { nextPath: string | undefined }) {
   const destination = safeRedirectPath(nextPath, "/account");
 
   return (
-    <div className="namou-container grid gap-3 py-4 lg:grid-cols-[.8fr_1fr]">
+    <div className="namou-container grid items-stretch gap-4 py-6 lg:min-h-[44rem] lg:grid-cols-[1fr_1.15fr]">
       <AuthVisual />
-      <section className="hairline-panel flex min-h-[42rem] flex-col p-6 sm:p-9">
+      <section className="hairline-panel flex flex-col justify-between p-7 sm:p-10 lg:p-12">
         <div className="flex items-start justify-between">
           <div>
             <p className="technical-label text-subtle">Identity / A-02</p>

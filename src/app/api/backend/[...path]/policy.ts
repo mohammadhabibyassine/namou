@@ -11,6 +11,11 @@ interface RoutePolicy {
 const policies: readonly RoutePolicy[] = [
   {
     methods: ["GET"],
+    pattern: new RegExp(`^/products/admin/${UUID}$`),
+    requiresAuth: true,
+  },
+  {
+    methods: ["GET"],
     pattern: new RegExp(`^/categories(?:/tree|/${UUID}(?:/subtree)?)$`),
     requiresAuth: false,
   },
@@ -40,7 +45,7 @@ const policies: readonly RoutePolicy[] = [
     requiresAuth: true,
   },
   {
-    methods: ["PUT"],
+    methods: ["GET", "PUT"],
     pattern: new RegExp(`^/products/${UUID}/images$`),
     requiresAuth: true,
   },

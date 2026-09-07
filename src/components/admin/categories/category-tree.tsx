@@ -40,7 +40,7 @@ export function CategoryTree({
         <div className="flex items-center gap-2">
           <span className="technical-label">Category / hierarchy</span>
           {totalCount > 0 ? (
-            <span className="rounded bg-muted/70 px-1.5 py-0.5 font-mono text-[9px] text-subtle">
+            <span className="bg-muted/70 text-subtle rounded px-1.5 py-0.5 font-mono text-[9px]">
               {totalCount}
             </span>
           ) : null}
@@ -50,7 +50,7 @@ export function CategoryTree({
           <button
             type="button"
             onClick={onExpandAll}
-            className="flex items-center gap-1 rounded px-2 py-1 font-mono text-[9px] text-subtle uppercase transition-colors hover:bg-muted hover:text-ink cursor-pointer"
+            className="text-subtle hover:bg-muted hover:text-ink flex cursor-pointer items-center gap-1 rounded px-2 py-1 font-mono text-[9px] uppercase transition-colors"
             title="Expand all folders"
             aria-label="Expand all folders"
           >
@@ -60,14 +60,14 @@ export function CategoryTree({
           <button
             type="button"
             onClick={onCollapseAll}
-            className="flex items-center gap-1 rounded px-2 py-1 font-mono text-[9px] text-subtle uppercase transition-colors hover:bg-muted hover:text-ink cursor-pointer"
+            className="text-subtle hover:bg-muted hover:text-ink flex cursor-pointer items-center gap-1 rounded px-2 py-1 font-mono text-[9px] uppercase transition-colors"
             title="Collapse all folders"
             aria-label="Collapse all folders"
           >
             <ChevronsDownUp size={13} />
             <span className="hidden sm:inline">Collapse all</span>
           </button>
-          <div className="mx-1 h-3.5 w-px bg-line/60" />
+          <div className="bg-line/60 mx-1 h-3.5 w-px" />
           <FolderTree size={16} className="text-subtle" />
         </div>
       </div>

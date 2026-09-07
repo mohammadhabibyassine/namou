@@ -48,7 +48,9 @@ export function findAncestorIds(
   return null;
 }
 
-export function flattenCategoryTree(nodes: CategoryTreeNode[]): CategoryTreeNode[] {
+export function flattenCategoryTree(
+  nodes: CategoryTreeNode[],
+): CategoryTreeNode[] {
   return nodes.flatMap(function walk(node): CategoryTreeNode[] {
     return [node, ...node.children.flatMap(walk)];
   });

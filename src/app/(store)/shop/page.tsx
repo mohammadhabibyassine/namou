@@ -73,10 +73,6 @@ export default async function ShopPage({
               All objects
             </h1>
           </div>
-          <p className="text-subtle max-w-xl text-sm leading-6 md:justify-self-end">
-            Objects engineered for movement. Built with utility, shaped by edge,
-            and designed to adapt.
-          </p>
         </div>
         <CatalogFilters
           categories={categories}

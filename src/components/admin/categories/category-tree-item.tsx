@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ChevronRight,
-  Folder,
-  FolderOpen,
-  Plus,
-} from "lucide-react";
+import { ChevronRight, Folder, FolderOpen, Plus } from "lucide-react";
 import type { CategoryTreeNode } from "@/types/api";
 import { cn } from "@/lib/utils/cn";
 
@@ -65,7 +60,7 @@ export function CategoryTreeItem({
           className={cn(
             "grid size-6 shrink-0 place-items-center rounded transition-colors",
             hasChildren
-              ? "cursor-pointer text-subtle hover:bg-black/10 hover:text-ink"
+              ? "text-subtle hover:text-ink cursor-pointer hover:bg-black/10"
               : "pointer-events-none opacity-0",
             isActive && "text-ink hover:bg-black/15",
           )}
@@ -150,7 +145,7 @@ export function CategoryTreeItem({
             className={cn(
               "rounded-full px-1.5 py-0.5 font-mono text-[8px] transition-colors",
               isActive
-                ? "bg-black/15 text-ink font-semibold"
+                ? "text-ink bg-black/15 font-semibold"
                 : "bg-muted/90 text-subtle",
             )}
             title={`${node.children.length} subcategories`}
@@ -170,7 +165,7 @@ export function CategoryTreeItem({
             "grid size-5 shrink-0 place-items-center rounded opacity-0 transition-opacity group-hover:opacity-100",
             isActive
               ? "text-ink hover:bg-black/15"
-              : "text-subtle hover:bg-black/10 hover:text-ink",
+              : "text-subtle hover:text-ink hover:bg-black/10",
           )}
         >
           <Plus size={12} />
@@ -181,7 +176,7 @@ export function CategoryTreeItem({
           className={cn(
             "shrink-0 rounded border px-1.5 py-0.5 font-mono text-[8px] transition-colors",
             isActive
-              ? "border-black/20 bg-black/5 text-ink font-semibold"
+              ? "text-ink border-black/20 bg-black/5 font-semibold"
               : "border-line/40 bg-surface/80 text-subtle",
           )}
           title={`Sort order: ${node.sortOrder}`}
@@ -194,7 +189,7 @@ export function CategoryTreeItem({
       {hasChildren && expanded ? (
         <div
           role="group"
-          className="relative ml-[19px] my-0.5 border-l border-line/50 pl-2 space-y-0.5"
+          className="border-line/50 relative my-0.5 ml-[19px] space-y-0.5 border-l pl-2"
         >
           {node.children.map((child) => (
             <CategoryTreeItem

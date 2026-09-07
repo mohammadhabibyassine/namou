@@ -3,7 +3,8 @@ import { authCookieNames } from "@/lib/auth/constants";
 import { clearAuthCookies, setAuthCookies } from "@/lib/auth/cookies";
 import { refreshAccessToken } from "@/lib/auth/refresh";
 import { hasTrustedOrigin } from "@/lib/auth/request-security";
-import { verifySessionToken } from "@/lib/auth/session";
+import { requestBackend } from "@/lib/api/backend";
+import type { SessionUser } from "@/types/api";
 import { invalidRequest, routeError } from "../../_shared/responses";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -15,12 +16,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const tokens = await refreshAccessToken(refreshToken);
-    const session = await verifySessionToken(
-      request.cookies.get(authCookieNames.session)?.value,
+    const session = await requestBackend<{ user: SessionUser }>(
+      "/auth/session",
+      {
+        cache: "no-store",
+        headers: { authorization: `Bearer ${tokens.accessToken}` },
+      },
     );
     const response = new NextResponse(null, { status: 204 });
     response.headers.set("cache-control", "no-store");
-    await setAuthCookies(response.cookies, tokens, session ?? undefined);
+    await setAuthCookies(response.cookies, tokens, session.user);
     return response;
   } catch (error) {
     const response = routeError(error);

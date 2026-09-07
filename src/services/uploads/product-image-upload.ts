@@ -7,17 +7,27 @@ import {
 
 export const MAX_PRODUCT_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
 
+function resolveImageContentType(file: File): ProductImageContentType {
+  const type = file.type.toLowerCase();
+  if (PRODUCT_IMAGE_CONTENT_TYPES.includes(type as ProductImageContentType)) {
+    return type as ProductImageContentType;
+  }
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".jpg") || name.endsWith(".jpeg")) return "image/jpeg";
+  if (name.endsWith(".png")) return "image/png";
+  if (name.endsWith(".webp")) return "image/webp";
+  if (name.endsWith(".avif")) return "image/avif";
+  throw new Error(
+    `${file.name} is not a supported format. Please upload JPEG, PNG, WebP, or AVIF.`,
+  );
+}
+
 function validateProductImage(file: File): ProductImageContentType {
   if (!file.size) throw new Error(`${file.name} is empty.`);
   if (file.size > MAX_PRODUCT_IMAGE_SIZE_BYTES) {
     throw new Error(`${file.name} exceeds the 10 MB image limit.`);
   }
-  if (
-    !PRODUCT_IMAGE_CONTENT_TYPES.includes(file.type as ProductImageContentType)
-  ) {
-    throw new Error(`${file.name} is not a supported image format.`);
-  }
-  return file.type as ProductImageContentType;
+  return resolveImageContentType(file);
 }
 
 function putImage(
@@ -42,7 +52,9 @@ function putImage(
         onProgress?.(100);
         resolve();
       } else {
-        reject(new Error(`Cloudflare upload failed with status ${request.status}.`));
+        reject(
+          new Error(`Cloudflare upload failed with status ${request.status}.`),
+        );
       }
     });
     request.addEventListener("error", () => {

@@ -6,11 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { adminApi } from "@/features/admin/api";
 import { queryKeys } from "@/lib/query/keys";
 import type { CategoryTreeNode } from "@/types/api";
-import {
-  CategoryEditor,
-  CategoryTree,
-  useCategoryTree,
-} from "./categories";
+import { CategoryEditor, CategoryTree, useCategoryTree } from "./categories";
 
 export function CategoryManager() {
   const query = useQuery({
@@ -69,7 +65,7 @@ export function CategoryManager() {
         </div>
         <button
           onClick={handleCreateRoot}
-          className="bg-ink inline-flex min-h-11 items-center gap-3 rounded-lg px-4 font-mono text-[9px] text-white uppercase cursor-pointer"
+          className="bg-ink inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-4 font-mono text-[9px] text-white uppercase"
         >
           <Plus size={14} /> Create category
         </button>
@@ -106,7 +102,7 @@ export function CategoryManager() {
             <div className="text-center">
               <FolderTree className="mx-auto" size={28} />
               <p className="display-title mt-4 text-4xl">Select a branch.</p>
-              <p className="mt-2 font-mono text-xs text-subtle">
+              <p className="text-subtle mt-2 font-mono text-xs">
                 Click any category to edit, or toggle folders to explore.
               </p>
             </div>

@@ -7,7 +7,7 @@ const guestCartItemSchema = z.object({
   productId: z.uuid(),
   title: z.string(),
   slug: z.string(),
-  imageUrl: z.string().nullable(),
+  imageUrl: z.string().nullish(),
   sku: z.string(),
   options: z.array(z.object({ attributeType: z.string(), value: z.string() })),
   unitPrice: z.string(),
@@ -17,10 +17,10 @@ const guestCartItemSchema = z.object({
 
 const guestWishlistItemSchema = z.object({
   productId: z.uuid(),
-  variantId: z.uuid().nullable(),
+  variantId: z.uuid().nullish(),
   title: z.string(),
   slug: z.string(),
-  imageUrl: z.string().nullable(),
+  imageUrl: z.string().nullish(),
   price: z.string(),
   currencyCode: z.string(),
 });

@@ -64,6 +64,15 @@ export const updateProduct = async (
   return response.data;
 };
 
+export const getAdminProductById = async (
+  productId: string,
+): Promise<ProductAdminView> => {
+  const response = await apiClient.get<ProductAdminView>(
+    API_ENDPOINTS.PRODUCTS.ADMIN_BY_ID(productId),
+  );
+  return response.data;
+};
+
 export const deleteProduct = async (productId: string): Promise<void> => {
   await apiClient.delete(API_ENDPOINTS.PRODUCTS.BY_ID(productId));
 };

@@ -18,8 +18,8 @@ export function StoreMobileDock() {
   const guestWishlistCount = useGuestCommerce(
     (state) => state.wishlistItems.length,
   );
-  const cart = useCart();
-  const wishlist = useWishlist({ pageSize: 100 });
+  const cart = useCart({ enabled: authenticated });
+  const wishlist = useWishlist({ pageSize: 100 }, { enabled: authenticated });
   const cartCount = authenticated
     ? (cart.data?.quantityTotal ?? 0)
     : guestCartCount;
@@ -44,10 +44,10 @@ export function StoreMobileDock() {
       active: pathname === "/shop",
     },
     {
-      href: "/shop?sort=newest",
+      href: "/drops",
       label: "Drops",
       icon: Sparkles,
-      active: false,
+      active: pathname.startsWith("/drops"),
     },
     {
       href: "/wishlist",
